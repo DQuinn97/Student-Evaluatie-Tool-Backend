@@ -1,0 +1,30 @@
+{
+  "name": "student-evaluatie-tool-backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "exports": "./dist/server.mjs",
+  "type": "module",
+  "scripts": {
+    "dev": "npx tsx watch ./src/server.ts",
+    "build": "pkgroll --clean-dist --minify",
+    "start": "node dist/server.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7",
+    "pkgroll": "^2.6.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}
