@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
+import { Gebruiker } from "./GebruikerModel";
 
 const graderingSchema = new mongoose.Schema(
   {
@@ -10,6 +11,10 @@ const graderingSchema = new mongoose.Schema(
     score: {
       type: Number,
       required: true,
+    },
+    docent: {
+      type: Schema.Types.ObjectId,
+      ref: Gebruiker,
     },
   },
   {
