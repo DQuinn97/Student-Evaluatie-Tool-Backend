@@ -1,4 +1,6 @@
 import mongoose, { Schema } from "mongoose";
+import { Gebruiker } from "./GebruikerModel";
+import { Vak } from "./VakModel";
 
 const klasgroepSchema = new mongoose.Schema(
   {
@@ -20,7 +22,13 @@ const klasgroepSchema = new mongoose.Schema(
     studenten: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Gebruiker",
+        ref: Gebruiker,
+      },
+    ],
+    vakken: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: Vak,
       },
     ],
   },
