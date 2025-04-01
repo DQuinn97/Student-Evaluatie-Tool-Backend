@@ -35,7 +35,7 @@ const taakSchema = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: Vak,
       required: true,
-    }
+    },
     bijlagen: [
       {
         type: Schema.Types.ObjectId,
