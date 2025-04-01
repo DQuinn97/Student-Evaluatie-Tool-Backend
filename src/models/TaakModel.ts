@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { Bijlage } from "./BijlageModel";
+import { Vak } from "./VakModel";
 
 const taakSchema = new mongoose.Schema(
   {
@@ -30,6 +31,11 @@ const taakSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    vak: {
+      type: Schema.Types.ObjectId,
+      ref: Vak,
+      required: true,
+    }
     bijlagen: [
       {
         type: Schema.Types.ObjectId,
