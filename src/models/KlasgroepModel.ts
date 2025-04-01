@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const klasgroepSchema = new mongoose.Schema(
   {
@@ -17,6 +17,12 @@ const klasgroepSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
+    studenten: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Gebruiker",
+      },
+    ],
   },
   {
     timestamps: true,
