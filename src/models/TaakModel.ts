@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { Bijlage } from "./BijlageModel";
 
 const taakSchema = new mongoose.Schema(
   {
