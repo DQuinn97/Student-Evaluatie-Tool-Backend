@@ -1,5 +1,8 @@
 import mongoose, { Schema } from "mongoose";
 import { Bijlage } from "./BijlageModel";
+import { Gradering } from "./GraderingModel";
+import { Gebruiker } from "./GebruikerModel";
+import { Taak } from "./TaakModel";
 
 const inzendingSchema = new mongoose.Schema(
   {
@@ -18,11 +21,27 @@ const inzendingSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    student: {
+      type: Schema.Types.ObjectId,
+      ref: Gebruiker,
+      required: true,
+    },
+    taak: {
+      type: Schema.Types.ObjectId,
+      ref: Taak,
+      required: true,
+    },
     bijlagen: [
       {
         type: Schema.Types.ObjectId,
         ref: Bijlage,
         trim: true,
+      },
+    ],
+    gradering: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: Gradering,
       },
     ],
   },
