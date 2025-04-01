@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
+import { Bijlage } from "./BijlageModel";
 
 const stageverslagSchema = new mongoose.Schema(
   {
@@ -35,6 +36,13 @@ const stageverslagSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    bijlagen: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: Bijlage,
+        trim: true,
+      },
+    ],
   },
   {
     timestamps: true,
