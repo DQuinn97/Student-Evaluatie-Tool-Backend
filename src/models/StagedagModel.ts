@@ -24,10 +24,13 @@ const stagedagSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    bijlagen: {
-      type: Schema.Types.ObjectId,
-      ref: Bijlage,
-    },
+    bijlagen: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: Bijlage,
+        trim: true,
+      },
+    ],
   },
   {
     timestamps: true,
