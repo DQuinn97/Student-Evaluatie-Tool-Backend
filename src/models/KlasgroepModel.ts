@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { Gebruiker } from "./GebruikerModel";
 import { Vak } from "./VakModel";
 
+//@ts-ignore zegt dat gebruiker circulair is met klasgroep, maar dient ander doel
 const klasgroepSchema = new mongoose.Schema(
   {
     naam: {
@@ -36,5 +37,5 @@ const klasgroepSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
+//@ts-ignore zegt dat gebruiker circulair is met klasgroep, maar dient ander doel
 export const Klasgroep = mongoose.model("Klasgroep", klasgroepSchema);

@@ -6,6 +6,7 @@ import { notFound } from "./controllers/notFoundController";
 import testRoutes from "./routes/exampleRoutes";
 import { helloMiddleware } from "./middleware/exampleMiddleware";
 import mongoose from "mongoose";
+import stagedagboekRoutes from "./routes/stagedagboekRoutes";
 
 // Variables
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api", helloMiddleware, testRoutes);
+app.use("/api/dagboek", stagedagboekRoutes);
 app.all("*", notFound);
 
 // Database connection
