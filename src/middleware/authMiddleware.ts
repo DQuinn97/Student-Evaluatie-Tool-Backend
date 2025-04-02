@@ -10,6 +10,7 @@ export const isAuth = async (
   try {
     const token = req.cookies.token;
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string);
+
     if (typeof decodedToken === "string" || !("email" in decodedToken)) {
       res.status(400).json({ message: "Foutieve token" });
       return;
