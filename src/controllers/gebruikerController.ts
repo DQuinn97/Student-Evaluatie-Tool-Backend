@@ -16,16 +16,6 @@ export const setGebruikerData = async (req: Request, res: Response) => {
       res.status(400).json({ message: "Onbekende gebruiker" });
       return;
     }
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string);
-    if (typeof decodedToken === "string" || !("email" in decodedToken)) {
-      res.status(400).json({ message: "Foutieve reset link." });
-      return;
-    }
-    const gebruiker = await Gebruiker.findOne({ email: decodedToken.email });
-    if (!gebruiker) {
-      res.status(400).json({ message: "Geen herkende gebruiker" });
-      return;
-    }
 
     if (naam) gebruiker.naam = naam;
     if (achternaam) gebruiker.achternaam = achternaam;
