@@ -14,8 +14,9 @@ export const getHelloWorld = (req: Request, res: Response) => {
  */
 export const getDagboek = async (req: Request, res: Response) => {
   try {
+    const { id } = req.params;
     const dagboek = await Stagedagboek.findOne({
-      student: req.params.id,
+      student: id,
     }).populate(["Stageverslag", "Stagedagen"]);
     res.status(200).json(dagboek);
   } catch (error: unknown) {
@@ -115,7 +116,6 @@ export const deleteDag = async (req: Request, res: Response) => {
 /*
  * STAGEVERSLAG
  */
-
 export const getVerslag = async (req: Request, res: Response) => {
   try {
     const verslag = await Stageverslag.findOne({
@@ -156,11 +156,11 @@ export const addVerslag = async (req: Request, res: Response) => {
       reflectie,
       bijlagen,
     });
+    const { id } = req.params;
     const dagboek = await Stagedagboek.findOne({
-      student: req.params.id,
+      student: id,
     });
-    //@ts-ignore
-    dagboek?.stageverslag = verslag._id;
+    if (dagboek) dagboek.stageverslag = verslag._id;
     await dagboek?.save();
     res.status(201).json(verslag);
   } catch (error: unknown) {

@@ -34,11 +34,6 @@ const gebruikerSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    actieveKlas: {
-      type: Schema.Types.ObjectId,
-      ref: Klasgroep,
-      nullable: true,
-    },
     foto: {
       type: String,
       nullable: true,
