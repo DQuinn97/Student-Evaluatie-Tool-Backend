@@ -21,6 +21,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "generate-password": "^1.7.1",
+    "mailersend": "^2.4.1",
     "mongoose": "^8.9.5"
   },
   "devDependencies": {

@@ -45,6 +45,10 @@ const gebruikerSchema = new mongoose.Schema(
       nullable: true,
       trim: true,
     },
+    resetToken: {
+      type: String,
+      nullable: true,
+    },
   },
   {
     timestamps: true,
