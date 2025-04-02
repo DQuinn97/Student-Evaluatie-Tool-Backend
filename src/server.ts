@@ -8,6 +8,7 @@ import { helloMiddleware } from "./middleware/exampleMiddleware";
 import mongoose from "mongoose";
 import stagedagboekRoutes from "./routes/stagedagboekRoutes";
 import authRoutes from "./routes/authRoutes";
+import gebruikerRoutes from "./routes/gebruikerRoutes";
 
 // Variables
 const app = express();
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use("/api", helloMiddleware, testRoutes);
 app.use("/api/dagboek", stagedagboekRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/profiel", gebruikerRoutes);
 app.all("*", notFound);
 
 // Database connection

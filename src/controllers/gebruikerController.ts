@@ -2,12 +2,37 @@ import "dotenv/config";
 import { Request, Response } from "express";
 import { Error as MongooseError } from "mongoose";
 import { Gebruiker } from "../models/GebruikerModel";
-import multer from "multer";
-import { v2 as cloudinary } from "cloudinary";
-import { CloudinaryStorage, type Options } from "multer-storage-cloudinary";
-import path from "path";
-import sanitize from "sanitize-filename";
 
+export const getGebruikerById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const gebruiker = await Gebruiker.findById(id).select("-wachtwoord");
+    res.status(200).json(gebruiker);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "Something went wrong" });
+    }
+  }
+};
+export const getAuthGebruiker = async (req: Request, res: Response) => {
+  try {
+    //@ts-ignore
+    const gebruiker = req.gebruiker;
+    if (!gebruiker) {
+      res.status(400).json({ message: "Onbekende gebruiker" });
+      return;
+    }
+    res.status(200).json(gebruiker);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "Something went wrong" });
+    }
+  }
+};
 export const setGebruikerData = async (req: Request, res: Response) => {
   try {
     const { naam, achternaam, gsm } = req.body;
