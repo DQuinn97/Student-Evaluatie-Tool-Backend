@@ -40,8 +40,7 @@ const gebruikerSchema = new mongoose.Schema(
       nullable: true,
     },
     foto: {
-      type: Schema.Types.ObjectId,
-      ref: Bijlage,
+      type: String,
       nullable: true,
       trim: true,
     },

@@ -2,15 +2,17 @@ import "dotenv/config";
 import { Request, Response } from "express";
 import { Error as MongooseError } from "mongoose";
 import { Gebruiker } from "../models/GebruikerModel";
-import jwt from "jsonwebtoken";
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage, type Options } from "multer-storage-cloudinary";
+import path from "path";
+import sanitize from "sanitize-filename";
 
 export const setGebruikerData = async (req: Request, res: Response) => {
   try {
-    const { naam, achternaam, gsm, gebruiker } = req.body;
-
-    if (!process.env.JWT_SECRET) {
-      throw new Error("Internal server error");
-    }
+    const { naam, achternaam, gsm } = req.body;
+    //@ts-ignore
+    const gebruiker = req.gebruiker;
 
     if (!gebruiker) {
       res.status(400).json({ message: "Onbekende gebruiker" });
@@ -22,7 +24,37 @@ export const setGebruikerData = async (req: Request, res: Response) => {
     if (gsm) gebruiker.tel = gsm;
     await gebruiker.save();
 
-    res.status(200).json({ message: "Wachtwoord reset aanvraag verstuurd" });
+    res.status(200).json({ message: "Gebruiker data aangepast" });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "Something went wrong" });
+    }
+  }
+};
+
+export const setGebruikerFoto = async (req: Request, res: Response) => {
+  try {
+    if (!req.file) {
+      throw new Error("No file uploaded");
+    }
+    //@ts-ignore
+    const gebruiker = req.gebruiker;
+
+    if (!gebruiker) {
+      res.status(400).json({ message: "Onbekende gebruiker" });
+      return;
+    }
+
+    const baseUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/`;
+    const transform = "c_thumb,g_center,h_200,w_200/r_max/f_auto/";
+    const imageUrl = req.file.filename;
+
+    gebruiker.foto = `${baseUrl}${transform}${imageUrl}`;
+    await gebruiker.save();
+
+    res.status(200).json({ message: "Gebruiker foto aangepast" });
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(500).json({ message: error.message });
