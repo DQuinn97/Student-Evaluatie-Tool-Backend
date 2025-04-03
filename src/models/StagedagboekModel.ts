@@ -33,6 +33,7 @@ const stagedagboekSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    collection: "stagedagboeken"
   }
 );
 

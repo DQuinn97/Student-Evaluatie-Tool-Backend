@@ -34,6 +34,7 @@ const stagedagSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    collection: "stagedagen",
   }
 );
 

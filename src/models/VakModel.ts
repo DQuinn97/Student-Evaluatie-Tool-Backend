@@ -10,6 +10,7 @@ const vakSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    collection: "vakken",
   }
 );
 

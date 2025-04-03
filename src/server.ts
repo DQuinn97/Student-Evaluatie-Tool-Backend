@@ -12,6 +12,7 @@ import { specs } from "./swagger";
 import stagedagboekRoutes from "./routes/stagedagboekRoutes";
 import authRoutes from "./routes/authRoutes";
 import gebruikerRoutes from "./routes/gebruikerRoutes";
+import klasgroepRoutes from "./routes/klasgroepRoutes";
 
 // Variables
 const app = express();
@@ -27,6 +28,7 @@ app.get("/", (req, res) => res.redirect("/docs"));
 app.use("/api/dagboek", stagedagboekRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/profiel", gebruikerRoutes);
+app.use("/api/klassen", klasgroepRoutes);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.all("*", notFound);
 

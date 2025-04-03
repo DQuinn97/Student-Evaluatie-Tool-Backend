@@ -53,6 +53,7 @@ const taakSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    collection: "taken"
   }
 );
 

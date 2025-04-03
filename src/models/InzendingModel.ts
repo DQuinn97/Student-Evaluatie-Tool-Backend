@@ -43,6 +43,7 @@ const inzendingSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    collection: "inzendingen",
   }
 );
 

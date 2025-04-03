@@ -10,6 +10,7 @@ const bijlageSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    collection: "bijlagen",
   }
 );
 
