@@ -10,16 +10,19 @@ import {
   updateDag,
   updateVerslag,
 } from "../controllers/stagedagboekController";
+import { isAuth } from "../middleware/authMiddleware";
 
 const router = express.Router();
 /**
  * @swagger
- * /dagboek/{id}:
+ * /dagboek/{dagboekId}:
  *   get:
+ *     security:
+ *       - cookieAuth: []
  *     summary: Vraag een stagedagboek op
  *     tags: [Dagboek]
  *     parameters:
- *       - name: id
+ *       - name: dagboekId
  *         in: path
  *         description: ID van het op te vragen stagedagboek
  *         required: true
@@ -31,13 +34,17 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Stagedagboek'
+ *       '401':
+ *        description: Geen herkende gebruiker / docent
  *
- * /dagboek/dag/{id}:
+ * /dagboek/dag/{dagId}:
  *   get:
+ *     security:
+ *       - cookieAuth: []
  *     summary: Vraag een stagedag op
  *     tags: [Dagboek]
  *     parameters:
- *       - name: id
+ *       - name: dagId
  *         in: path
  *         description: ID van de op te vragen stagedag
  *         required: true
@@ -49,13 +56,15 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Stagedag'
+ *       '401':
+ *        description: Geen herkende gebruiker / docent
  *   patch:
  *     security:
  *       - cookieAuth: []
  *     summary: Update een stagedag
  *     tags: [Dagboek]
  *     parameters:
- *       - name: id
+ *       - name: dagId
  *         in: path
  *         description: ID van het te updaten stagedag
  *         required: true
@@ -88,14 +97,33 @@ const router = express.Router();
  *       '200':
  *         description: Stagedag succesvol geupdate
  *       '401':
- *         description: Gebruiker is niet ingelogd
+ *         description: Geen herkende gebruiker / docent
+ *   delete:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Verwijder een stagedag
+ *     tags: [Dagboek]
+ *     parameters:
+ *       - name: dagId
+ *         in: path
+ *         description: ID van het te verwijderen stagedag
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Stagedag succesvol verwijderd
+ *       '401':
+ *         description: Geen herkende gebruiker / docent
  *
- * /dagboek/verslag/{id}:
+ * /dagboek/verslag/{verslagId}:
  *   get:
+ *     security:
+ *       - cookieAuth: []
  *     summary: Vraag een stageverslag op
  *     tags: [Dagboek]
  *     parameters:
- *       - name: id
+ *       - name: verslagId
  *         in: path
  *         description: ID van het op te vragen stageverslag
  *         required: true
@@ -113,7 +141,7 @@ const router = express.Router();
  *     summary: Update een stageverslag
  *     tags: [Dagboek]
  *     parameters:
- *       - name: id
+ *       - name: verslagId
  *         in: path
  *         description: ID van het te updaten stageverslag
  *         required: true
@@ -146,7 +174,24 @@ const router = express.Router();
  *       '200':
  *         description: Stageverslag succesvol geupdate
  *       '401':
- *         description: Gebruiker is niet ingelogd
+ *         description: Geen herkende gebruiker / docent
+ *   delete:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Verwijder een stageverslag
+ *     tags: [Dagboek]
+ *     parameters:
+ *       - name: verslagId
+ *         in: path
+ *         description: ID van het te verwijderen stageverslag
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Stageverslag succesvol verwijderd
+ *       '401':
+ *         description: Geen herkende gebruiker / docent
  *
  * /dagboek/dag/nieuw:
  *   post:
@@ -181,7 +226,7 @@ const router = express.Router();
  *       '200':
  *         description: Stagedag succesvol aangemaakt
  *       '401':
- *         description: Gebruiker is niet ingelogd
+ *         description: Geen herkende gebruiker / docent
  *
  * /dagboek/verslag/nieuw:
  *   post:
@@ -222,18 +267,18 @@ const router = express.Router();
  *       '200':
  *         description: Stageverslag succesvol aangemaakt
  *       '401':
- *         description: Gebruiker is niet ingelogd
+ *         description: Geen herkende gebruiker / docent
  *
  */
 router
-  .get("/:dagboekId", getDagboek)
-  .get("/dag/:dagId", getDag)
-  .get("/verslag/:verslagId", getVerslag)
-  .post("/verslag/nieuw", addVerslag)
-  .post("/dag/nieuw", addDag)
-  .patch("/verslag/:verslagId", updateVerslag)
-  .patch("/dag/:dagId", updateDag)
-  .delete("/dag/:dagId", deleteDag)
-  .delete("/verslag/:verslagId", deleteVerslag);
+  .get("/:dagboekId", isAuth, getDagboek)
+  .get("/dag/:dagId", isAuth, getDag)
+  .get("/verslag/:verslagId", isAuth, getVerslag)
+  .post("/verslag/nieuw", isAuth, addVerslag)
+  .post("/dag/nieuw", isAuth, addDag)
+  .patch("/verslag/:verslagId", isAuth, updateVerslag)
+  .patch("/dag/:dagId", isAuth, updateDag)
+  .delete("/dag/:dagId", isAuth, deleteDag)
+  .delete("/verslag/:verslagId", isAuth, deleteVerslag);
 
 export default router;

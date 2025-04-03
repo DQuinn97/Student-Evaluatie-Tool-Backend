@@ -359,6 +359,7 @@ const options = {
         description: "Stagedagboek endpoints",
       },
       { name: "Klassen", description: "Klasgroepen endpoints" },
+      { name: "Taken", description: "Taken endpoints" },
     ],
   },
   apis: ["**/*.ts"],

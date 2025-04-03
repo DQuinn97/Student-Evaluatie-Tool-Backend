@@ -16,6 +16,8 @@ const router = express.Router();
  * @swagger
  * /klassen:
  *   get:
+ *     security:
+ *       - cookieAuth: []
  *     summary: Vraag alle klasgroepen op
  *     tags: [Klassen]
  *     responses:
@@ -55,12 +57,14 @@ const router = express.Router();
  *       '401':
  *         description: Geen herkende gebruiker / docent
  *
- * /klassen/{id}:
+ * /klassen/{klasgroepId}:
  *   get:
+ *     security:
+ *       - cookieAuth: []
  *     summary: Vraag een klasgroep op
  *     tags: [Klassen]
  *     parameters:
- *       - name: id
+ *       - name: klasgroepId
  *         in: path
  *         description: ID van de op te vragen klasgroep
  *         required: true
@@ -73,14 +77,14 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Klasgroep'
  *
- * /klassen/{id}/studenten:
+ * /klassen/{klasgroepId}/studenten:
  *   post:
  *     security:
  *       - cookieAuth: []
  *     summary: Voeg een student toe aan een klasgroep
  *     tags: [Klassen]
  *     parameters:
- *       - name: id
+ *       - name: klasgroepId
  *         in: path
  *         description: ID van de te bewerken klasgroep
  *         required: true
@@ -109,7 +113,7 @@ const router = express.Router();
  *     summary: Verwijder een student uit een klasgroep
  *     tags: [Klassen]
  *     parameters:
- *       - name: id
+ *       - name: klasgroepId
  *         in: path
  *         description: ID van de te bewerken klasgroep
  *         required: true
@@ -133,14 +137,14 @@ const router = express.Router();
  *       '401':
  *         description: Geen herkende gebruiker / docent
  *
- * /klassen/{id}/vakken:
+ * /klassen/{klasgroepId}/vakken:
  *   post:
  *     security:
  *       - cookieAuth: []
  *     summary: Voeg een klas toe aan een klasgroep
  *     tags: [Klassen]
  *     parameters:
- *       - name: id
+ *       - name: klasgroepId
  *         in: path
  *         description: ID van de te bewerken klasgroep
  *         required: true
@@ -169,7 +173,7 @@ const router = express.Router();
  *     summary: Verwijder een vak uit een klasgroep
  *     tags: [Klassen]
  *     parameters:
- *       - name: id
+ *       - name: klasgroepId
  *         in: path
  *         description: ID van de te bewerken klasgroep
  *         required: true
@@ -190,6 +194,78 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Klasgroep'
+ *       '401':
+ *         description: Geen herkende gebruiker / docent
+ *
+ * /klassen/{klasgroepId}/taken:
+ *   get:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Vraag alle taken van een klasgroep
+ *     tags: [Klassen, Taken]
+ *     parameters:
+ *       - name: klasgroepId
+ *         in: path
+ *         description: ID van de te bewerken klasgroep
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Taak'
+ *       '401':
+ *         description: Geen herkende gebruiker / docent
+ *   post:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Voeg een taak toe aan een klasgroep
+ *     tags: [Klassen, Taken]
+ *     parameters:
+ *       - name: klasgroepId
+ *         in: path
+ *         description: ID van de te bewerken klasgroep
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               voormiddag:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *               titel:
+ *                 type: string
+ *               beschrijving:
+ *                 type: string
+ *               deadline:
+ *                 type: string
+ *               weging:
+ *                 type: number
+ *               vak:
+ *                 type: string
+ *               isGepubliceerd:
+ *                 type: boolean
+ *               bijlagen:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Taak'
  *       '401':
  *         description: Geen herkende gebruiker / docent
  *
