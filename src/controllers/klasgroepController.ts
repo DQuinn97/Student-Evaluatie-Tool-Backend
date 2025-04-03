@@ -20,7 +20,10 @@ export const getKlasgroepen = async (req: Request, res: Response) => {
 export const getKlasgroep = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const klasgroep = await Klasgroep.findById(id).populate("student", "-wachtwoord");
+    const klasgroep = await Klasgroep.findById(id).populate(
+      "studenten",
+      "-wachtwoord"
+    );
     res.status(200).json(klasgroep);
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -92,7 +95,7 @@ export const removeFromKlasgroep = async (req: Request, res: Response) => {
       throw new Error("studentId is verplicht");
     }
     const klasgroep = await Klasgroep.findById(id).populate(
-      "student",
+      "studenten",
       "-wachtwoord"
     );
 
@@ -100,12 +103,12 @@ export const removeFromKlasgroep = async (req: Request, res: Response) => {
       throw new Error("Klasgroep niet gevonden");
     }
 
-    if (!klasgroep.studenten.includes(studentId)) {
+    if (!klasgroep.studenten.find((s) => s.id == studentId)) {
       throw new Error("Student zit niet in deze klasgroep");
     }
 
     klasgroep.studenten = klasgroep.studenten.filter(
-      (student) => student !== studentId
+      (student) => student.id !== studentId
     );
     await klasgroep.save();
 
