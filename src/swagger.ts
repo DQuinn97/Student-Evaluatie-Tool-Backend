@@ -50,7 +50,7 @@ const options = {
             email: {
               type: "string",
             },
-            tel: {
+            gsm: {
               type: "string",
             },
             wachtwoord: {
@@ -77,6 +77,8 @@ const options = {
             },
             beginjaar: {
               type: "number",
+              minimum: new Date().getFullYear() - 2,
+              maximum: new Date().getFullYear() + 5,
             },
             eindjaar: {
               type: "number",
@@ -356,6 +358,7 @@ const options = {
         name: "Dagboek",
         description: "Stagedagboek endpoints",
       },
+      { name: "Klassen", description: "Klassen endpoints" },
     ],
   },
   apis: ["**/*.ts"],
