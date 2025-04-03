@@ -39,7 +39,7 @@ const router = express.Router();
  *                 type: string
  *               achternaam:
  *                 type: string
- *               tel:
+ *               gsm:
  *                 type: string
  *     responses:
  *       '200':
