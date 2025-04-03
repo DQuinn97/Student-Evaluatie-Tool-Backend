@@ -46,6 +46,7 @@ const stageverslagSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    collection: "stageverslagen",
   }
 );
 

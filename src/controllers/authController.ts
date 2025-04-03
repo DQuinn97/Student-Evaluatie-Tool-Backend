@@ -10,6 +10,18 @@ import { hashWachtwoord, mailData } from "../utils/helpers";
 export const register = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
+
+    if (!email) {
+      res.status(400).json({ message: "Email verplicht" });
+      return;
+    }
+
+    const gebruiker = await Gebruiker.findOne({ email });
+    if (gebruiker) {
+      res.status(400).json({ message: "Gebruiker bestaat al" });
+      return;
+    }
+
     const wachtwoord = generator.generate({
       length: 10,
       numbers: true,

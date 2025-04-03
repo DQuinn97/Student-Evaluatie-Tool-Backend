@@ -19,6 +19,7 @@ const graderingSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    collection: "graderingen",
   }
 );
 

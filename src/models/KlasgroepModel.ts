@@ -35,6 +35,7 @@ const klasgroepSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    collection: "klasgroepen"
   }
 );
 //@ts-ignore zegt dat gebruiker circulair is met klasgroep, maar dient ander doel
