@@ -7,6 +7,8 @@ import testRoutes from "./routes/exampleRoutes";
 import { helloMiddleware } from "./middleware/exampleMiddleware";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
+import swaggerUi from "swagger-ui-express";
+import { specs } from "./swagger";
 import stagedagboekRoutes from "./routes/stagedagboekRoutes";
 import authRoutes from "./routes/authRoutes";
 import gebruikerRoutes from "./routes/gebruikerRoutes";
@@ -21,9 +23,11 @@ app.use(cookieParser());
 app.use(express.json());
 
 // Routes
+app.get("/", (req, res) => res.redirect("/docs"));
 app.use("/api/dagboek", stagedagboekRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/profiel", gebruikerRoutes);
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.all("*", notFound);
 
 // Database connection

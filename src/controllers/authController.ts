@@ -32,7 +32,7 @@ export const register = async (req: Request, res: Response) => {
 
     res
       .status(200)
-      .json({ message: "Gebruiker aangemaakt, wachtwoord per mail verzonden" });
+      .json({ message: "Gebruiker succesvol geregistreerd, wachtwoord per mail verzonden" });
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(500).json({ message: error.message });
@@ -77,7 +77,7 @@ export const login = async (req: Request, res: Response) => {
       sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.status(200).json({ message: "Login voltooid" });
+    res.status(200).json({ message: "Gebruiker succesvol ingelogd" });
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(500).json({ message: error.message });
@@ -94,7 +94,7 @@ export const logout = async (req: Request, res: Response) => {
       sameSite: "none",
       maxAge: 10,
     });
-    res.status(200).json({ message: "Logout voltooid" });
+    res.status(200).json({ message: "Gebruiker succesvol uitgelogd" });
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(500).json({ message: error.message });

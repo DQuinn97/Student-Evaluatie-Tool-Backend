@@ -5,19 +5,16 @@ import { Stagedag } from "../models/StagedagModel";
 import { Stageverslag } from "../models/StageverslagModel";
 const { ValidationError } = MongooseError;
 
-export const getHelloWorld = (req: Request, res: Response) => {
-  res.status(200).json({ message: "Hello World!" });
-};
-
 /*
  * STAGEDAGBOEK
  */
 export const getDagboek = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const dagboek = await Stagedagboek.findOne({
-      student: id,
-    }).populate(["Stageverslag", "Stagedagen"]);
+    const dagboek = await Stagedagboek.findById(id)
+      .lean()
+      .populate(["stageverslag", "stagedagen", "klasgroep"])
+      .populate("student", "-wachtwoord");
     res.status(200).json(dagboek);
   } catch (error: unknown) {
     if (error instanceof Error) {

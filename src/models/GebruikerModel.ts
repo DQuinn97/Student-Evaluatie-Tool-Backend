@@ -25,7 +25,7 @@ const gebruikerSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    tel: {
+    gsm: {
       type: String,
       nullable: true,
       trim: true,

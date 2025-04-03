@@ -46,7 +46,7 @@ export const setGebruikerData = async (req: Request, res: Response) => {
 
     if (naam) gebruiker.naam = naam;
     if (achternaam) gebruiker.achternaam = achternaam;
-    if (gsm) gebruiker.tel = gsm;
+    if (gsm) gebruiker.gsm = gsm;
     await gebruiker.save();
 
     res.status(200).json({ message: "Gebruiker data aangepast" });

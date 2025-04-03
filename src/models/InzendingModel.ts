@@ -26,11 +26,7 @@ const inzendingSchema = new mongoose.Schema(
       ref: Gebruiker,
       required: true,
     },
-    taak: {
-      type: Schema.Types.ObjectId,
-      ref: Taak,
-      required: true,
-    },
+
     bijlagen: [
       {
         type: Schema.Types.ObjectId,
