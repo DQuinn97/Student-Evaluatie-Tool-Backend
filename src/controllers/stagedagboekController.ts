@@ -10,7 +10,7 @@ const { ValidationError } = MongooseError;
  */
 export const getDagboek = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { dagboekId: id } = req.params;
     const dagboek = await Stagedagboek.findById(id)
       .lean()
       .populate(["stageverslag", "stagedagen", "klasgroep"])
@@ -30,7 +30,7 @@ export const getDagboek = async (req: Request, res: Response) => {
  */
 export const getDag = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { dagId: id } = req.params;
     const dag = await Stagedag.findById(id);
     res.status(200).json(dag);
   } catch (error: unknown) {
@@ -55,8 +55,10 @@ export const addDag = async (req: Request, res: Response) => {
       resultaat,
       bijlagen,
     });
+    //@ts-ignore
+    const gebruiker = req.gebruiker;
     const dagboek = await Stagedagboek.findOne({
-      student: req.params.id,
+      student: gebruiker._id,
     });
     dagboek?.stagedagen.push(dag._id);
     await dagboek?.save();
@@ -73,7 +75,7 @@ export const addDag = async (req: Request, res: Response) => {
 };
 export const updateDag = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { dagId: id } = req.params;
     const { datum, voormiddag, namiddag, tools, resultaat, bijlagen } =
       req.body;
     const dag = await Stagedag.findByIdAndUpdate(
@@ -96,7 +98,7 @@ export const updateDag = async (req: Request, res: Response) => {
 export const deleteDag = async (req: Request, res: Response) => {
   try {
     // TODO delete files related to this
-    const { id } = req.params;
+    const { dagId: id } = req.params;
     const dag = await Stagedag.findByIdAndDelete(id);
     res.status(200).json(dag);
   } catch (error: unknown) {
@@ -115,9 +117,8 @@ export const deleteDag = async (req: Request, res: Response) => {
  */
 export const getVerslag = async (req: Request, res: Response) => {
   try {
-    const verslag = await Stageverslag.findOne({
-      student: req.params.id,
-    });
+    const { verslagId: id } = req.params;
+    const verslag = await Stageverslag.findById(id);
     res.status(200).json(verslag);
   } catch (error: unknown) {
     if (error instanceof ValidationError) {
@@ -153,9 +154,10 @@ export const addVerslag = async (req: Request, res: Response) => {
       reflectie,
       bijlagen,
     });
-    const { id } = req.params;
+    //@ts-ignore
+    const gebruiker = req.gebruiker;
     const dagboek = await Stagedagboek.findOne({
-      student: id,
+      student: gebruiker._id,
     });
     if (dagboek) dagboek.stageverslag = verslag._id;
     await dagboek?.save();
@@ -173,7 +175,7 @@ export const addVerslag = async (req: Request, res: Response) => {
 
 export const updateVerslag = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { verslagId:id } = req.params;
     const {
       datum,
       stagebedrijf,
@@ -215,7 +217,7 @@ export const updateVerslag = async (req: Request, res: Response) => {
 export const deleteVerslag = async (req: Request, res: Response) => {
   try {
     // TODO delete files related to this
-    const { id } = req.params;
+    const { verslagId:id } = req.params;
     const verslag = await Stageverslag.findByIdAndDelete(id);
     res.status(200).json(verslag);
   } catch (error: unknown) {

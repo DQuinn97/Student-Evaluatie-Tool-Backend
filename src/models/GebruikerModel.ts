@@ -1,8 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { Klasgroep } from "./KlasgroepModel";
-import { Bijlage } from "./BijlageModel";
 
-//@ts-ignore zegt dat gebruiker circulair is met klasgroep, maar dient ander doel
 const gebruikerSchema = new mongoose.Schema(
   {
     naam: {
@@ -49,5 +46,4 @@ const gebruikerSchema = new mongoose.Schema(
     collection: "gebruikers",
   }
 );
-//@ts-ignore zegt dat gebruiker circulair is met klasgroep, maar dient ander doel
 export const Gebruiker = mongoose.model("Gebruiker", gebruikerSchema);

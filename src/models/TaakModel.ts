@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { Bijlage } from "./BijlageModel";
 import { Vak } from "./VakModel";
 import { Inzending } from "./InzendingModel";
+import { Klasgroep } from "./KlasgroepModel";
 
 const taakSchema = new mongoose.Schema(
   {
@@ -35,6 +36,11 @@ const taakSchema = new mongoose.Schema(
     vak: {
       type: Schema.Types.ObjectId,
       ref: Vak,
+      nullable: true,
+    },
+    klasgroep: {
+      type: Schema.Types.ObjectId,
+      ref: Klasgroep,
       required: true,
     },
     bijlagen: [
@@ -53,7 +59,7 @@ const taakSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    collection: "taken"
+    collection: "taken",
   }
 );
 

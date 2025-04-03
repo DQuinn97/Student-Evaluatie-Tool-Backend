@@ -8,7 +8,8 @@ import {
   removeStudentFromKlasgroep,
   removeVakFromKlasgroep,
 } from "../controllers/klasgroepController";
-import { isAuth, isDocent } from "../middleware/authMiddleware";
+import { hasAccess, isAuth, isDocent } from "../middleware/authMiddleware";
+import { getTaken, addTaak } from "../controllers/taakController";
 
 const router = express.Router();
 /**
@@ -194,12 +195,19 @@ const router = express.Router();
  *
  */
 router
-  .get("/", getKlasgroepen)
+  .get("/", isAuth, getKlasgroepen)
   .post("/", isAuth, isDocent, addKlasgroep)
-  .get("/:id", getKlasgroep)
-  .post("/:id/studenten", isAuth, isDocent, pushStudentToKlasgroep)
-  .patch("/:id/studenten", isAuth, isDocent, removeStudentFromKlasgroep)
-  .post("/:id/vakken", isAuth, isDocent, pushVakToKlasgroep)
-  .patch("/:id/vakken", isAuth, isDocent, removeVakFromKlasgroep);
+  .get("/:klasgroepId", isAuth, hasAccess, getKlasgroep)
+  .post("/:klasgroepId/studenten", isAuth, isDocent, pushStudentToKlasgroep)
+  .patch(
+    "/:klasgroepId/studenten",
+    isAuth,
+    isDocent,
+    removeStudentFromKlasgroep
+  )
+  .post("/:klasgroepId/vakken", isAuth, isDocent, pushVakToKlasgroep)
+  .patch("/:klasgroepId/vakken", isAuth, isDocent, removeVakFromKlasgroep)
+  .get("/:klasgroepId/taken", isAuth, hasAccess, getTaken)
+  .post("/:klasgroepId/taken", isAuth, isDocent, addTaak);
 
 export default router;
