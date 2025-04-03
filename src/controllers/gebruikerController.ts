@@ -20,10 +20,7 @@ export const getAuthGebruiker = async (req: Request, res: Response) => {
   try {
     //@ts-ignore
     const gebruiker = req.gebruiker;
-    if (!gebruiker) {
-      res.status(400).json({ message: "Onbekende gebruiker" });
-      return;
-    }
+    
     res.status(200).json(gebruiker);
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -38,11 +35,6 @@ export const setGebruikerData = async (req: Request, res: Response) => {
     const { naam, achternaam, gsm } = req.body;
     //@ts-ignore
     const gebruiker = req.gebruiker;
-
-    if (!gebruiker) {
-      res.status(400).json({ message: "Onbekende gebruiker" });
-      return;
-    }
 
     if (naam) gebruiker.naam = naam;
     if (achternaam) gebruiker.achternaam = achternaam;
@@ -66,11 +58,6 @@ export const setGebruikerFoto = async (req: Request, res: Response) => {
     }
     //@ts-ignore
     const gebruiker = req.gebruiker;
-
-    if (!gebruiker) {
-      res.status(400).json({ message: "Onbekende gebruiker" });
-      return;
-    }
 
     const baseUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/`;
     const transform = "c_thumb,g_center,h_200,w_200/r_max/f_auto/";

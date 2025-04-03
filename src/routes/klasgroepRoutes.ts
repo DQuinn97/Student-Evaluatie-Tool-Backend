@@ -3,10 +3,13 @@ import {
   addKlasgroep,
   getKlasgroep,
   getKlasgroepen,
-  pushToKlasgroep,
-  removeFromKlasgroep,
+  pushStudentToKlasgroep,
+  pushVakToKlasgroep,
+  removeStudentFromKlasgroep,
+  removeVakFromKlasgroep,
 } from "../controllers/klasgroepController";
-import { isAuth, isDocent } from "../middleware/authMiddleware";
+import { hasAccess, isAuth, isDocent } from "../middleware/authMiddleware";
+import { getTaken, addTaak } from "../controllers/taakController";
 
 const router = express.Router();
 /**
@@ -130,12 +133,81 @@ const router = express.Router();
  *       '401':
  *         description: Geen herkende gebruiker / docent
  *
+ * /klassen/{id}/vakken:
+ *   post:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Voeg een klas toe aan een klasgroep
+ *     tags: [Klassen]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID van de te bewerken klasgroep
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               naam:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Klasgroep'
+ *       '401':
+ *         description: Geen herkende gebruiker / docent
+ *   patch:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Verwijder een vak uit een klasgroep
+ *     tags: [Klassen]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID van de te bewerken klasgroep
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               vakId:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Klasgroep'
+ *       '401':
+ *         description: Geen herkende gebruiker / docent
+ *
  */
 router
-  .get("/", getKlasgroepen)
+  .get("/", isAuth, getKlasgroepen)
   .post("/", isAuth, isDocent, addKlasgroep)
-  .get("/:id", getKlasgroep)
-  .post("/:id/studenten", isAuth, isDocent, pushToKlasgroep)
-  .patch("/:id/studenten", isAuth, isDocent, removeFromKlasgroep);
+  .get("/:klasgroepId", isAuth, hasAccess, getKlasgroep)
+  .post("/:klasgroepId/studenten", isAuth, isDocent, pushStudentToKlasgroep)
+  .patch(
+    "/:klasgroepId/studenten",
+    isAuth,
+    isDocent,
+    removeStudentFromKlasgroep
+  )
+  .post("/:klasgroepId/vakken", isAuth, isDocent, pushVakToKlasgroep)
+  .patch("/:klasgroepId/vakken", isAuth, isDocent, removeVakFromKlasgroep)
+  .get("/:klasgroepId/taken", isAuth, hasAccess, getTaken)
+  .post("/:klasgroepId/taken", isAuth, isDocent, addTaak);
 
 export default router;

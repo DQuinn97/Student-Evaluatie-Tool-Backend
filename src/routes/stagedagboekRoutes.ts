@@ -226,14 +226,14 @@ const router = express.Router();
  *
  */
 router
-  .get("/:id", getDagboek)
-  .get("/dag/:id", getDag)
-  .get("/verslag/:id", getVerslag)
+  .get("/:dagboekId", getDagboek)
+  .get("/dag/:dagId", getDag)
+  .get("/verslag/:verslagId", getVerslag)
   .post("/verslag/nieuw", addVerslag)
   .post("/dag/nieuw", addDag)
-  .patch("/verslag/:id", updateVerslag)
-  .patch("/dag/:id", updateDag)
-  .delete("/dag/:id", deleteDag)
-  .delete("/verslag/:id", deleteVerslag);
+  .patch("/verslag/:verslagId", updateVerslag)
+  .patch("/dag/:dagId", updateDag)
+  .delete("/dag/:dagId", deleteDag)
+  .delete("/verslag/:verslagId", deleteVerslag);
 
 export default router;
