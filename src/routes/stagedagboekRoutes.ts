@@ -64,9 +64,26 @@ const router = express.Router();
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Stagedag'
+ *             type: object
+ *             properties:
+ *               datum:
+ *                 type: string
+ *                 format: date
+ *               voormiddag:
+ *                 type: string
+ *               namiddag:
+ *                 type: string
+ *               tools:
+ *                 type: string
+ *               resultaat:
+ *                 type: string
+ *               bijlagen:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
  *     responses:
  *       '200':
  *         description: Stagedag succesvol geupdate
@@ -140,9 +157,26 @@ const router = express.Router();
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Stagedag'
+ *             type: object
+ *             properties:
+ *               datum:
+ *                 type: string
+ *                 format: date
+ *               voormiddag:
+ *                 type: string
+ *               namiddag:
+ *                 type: string
+ *               tools:
+ *                 type: string
+ *               resultaat:
+ *                 type: string
+ *               bijlagen:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
  *     responses:
  *       '200':
  *         description: Stagedag succesvol aangemaakt
