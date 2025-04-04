@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { HydratedDocumentFromSchema, Schema } from "mongoose";
 import { Bijlage } from "./BijlageModel";
 import { Gradering } from "./GraderingModel";
 import { Gebruiker } from "./GebruikerModel";
@@ -46,5 +46,5 @@ const inzendingSchema = new mongoose.Schema(
     collection: "inzendingen",
   }
 );
-
+export type TInzending = HydratedDocumentFromSchema<typeof inzendingSchema>;
 export const Inzending = mongoose.model("Inzending", inzendingSchema);

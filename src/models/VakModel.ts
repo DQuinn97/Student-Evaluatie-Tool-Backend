@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { HydratedDocumentFromSchema } from "mongoose";
 
 const vakSchema = new mongoose.Schema(
   {
@@ -13,5 +13,5 @@ const vakSchema = new mongoose.Schema(
     collection: "vakken",
   }
 );
-
+export type TVak = HydratedDocumentFromSchema<typeof vakSchema>;
 export const Vak = mongoose.model("Vak", vakSchema);

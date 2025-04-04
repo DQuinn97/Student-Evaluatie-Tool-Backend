@@ -7,6 +7,11 @@ import {
   deleteTaak,
 } from "../controllers/taakController";
 import { hasAccess, isAuth, isDocent } from "../middleware/authMiddleware";
+import {
+  addInzending,
+  getInzendingenPerTaak,
+} from "../controllers/inzendingController";
+import { isUnique } from "../middleware/uniqueMiddleware";
 
 const router = express.Router();
 /**
@@ -151,6 +156,8 @@ router
   .get("/:taakId", isAuth, hasAccess, getTaak)
   .patch("/:taakId", isAuth, isDocent, updateTaak)
   .post("/:taakId/dupliceer", isAuth, isDocent, dupliceerTaak)
-  .delete("/:taakId", isAuth, isDocent, deleteTaak);
+  .delete("/:taakId", isAuth, isDocent, deleteTaak)
+  .get("/:taakId/inzendingen", isAuth, isDocent, getInzendingenPerTaak)
+  .post("/:taakId/inzendingen", isAuth, hasAccess, isUnique, addInzending);
 
 export default router;

@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { Bijlage } from "./BijlageModel";
+import { HydratedDocumentFromSchema } from "mongoose";
 
 const stageverslagSchema = new mongoose.Schema(
   {
@@ -49,5 +50,7 @@ const stageverslagSchema = new mongoose.Schema(
     collection: "stageverslagen",
   }
 );
-
+export type TStageverslag = HydratedDocumentFromSchema<
+  typeof stageverslagSchema
+>;
 export const Stageverslag = mongoose.model("Stageverslag", stageverslagSchema);

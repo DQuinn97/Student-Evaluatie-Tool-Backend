@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { Gebruiker } from "../models/GebruikerModel";
 import { Klasgroep } from "../models/KlasgroepModel";
 import { Taak } from "../models/TaakModel";
+import { Inzending } from "../models/InzendingModel";
 export const isAuth = async (
   req: Request,
   res: Response,
@@ -69,7 +70,7 @@ export const hasAccess = async (
   try {
     //@ts-ignore
     const gebruiker = req.gebruiker;
-    const { klasgroepId, taakId } = req.params;
+    const { klasgroepId, taakId, inzendingId } = req.params;
     if (gebruiker.isDocent) return next();
 
     if (taakId) {
@@ -97,6 +98,17 @@ export const hasAccess = async (
       }
       if (!klasgroep.studenten.includes(gebruiker.id)) {
         res.status(400).json({ message: "Geen toegang tot deze klasgroep" });
+        return;
+      }
+    }
+    if(inzendingId){
+      const inzending = await Inzending.findById(inzendingId);
+      if(!inzending){
+        res.status(400).json({message: "Geen inzending gevonden"});
+        return
+      }
+      if(!inzending.student == gebruiker.id){
+        res.status(400).json({ message: "Geen toegang tot deze inzending" });
         return;
       }
     }

@@ -3,6 +3,7 @@ import { Bijlage } from "./BijlageModel";
 import { Vak } from "./VakModel";
 import { Inzending } from "./InzendingModel";
 import { Klasgroep } from "./KlasgroepModel";
+import { HydratedDocumentFromSchema } from "mongoose";
 
 const taakSchema = new mongoose.Schema(
   {
@@ -62,5 +63,5 @@ const taakSchema = new mongoose.Schema(
     collection: "taken",
   }
 );
-
+export type TTaak = HydratedDocumentFromSchema<typeof taakSchema>;
 export const Taak = mongoose.model("Taak", taakSchema);

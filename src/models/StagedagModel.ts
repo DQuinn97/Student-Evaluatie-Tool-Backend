@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { HydratedDocumentFromSchema, Schema } from "mongoose";
 import { Bijlage } from "./BijlageModel";
 
 const stagedagSchema = new mongoose.Schema(
@@ -37,5 +37,5 @@ const stagedagSchema = new mongoose.Schema(
     collection: "stagedagen",
   }
 );
-
+export type TStagedag = HydratedDocumentFromSchema<typeof stagedagSchema>;
 export const Stagedag = mongoose.model("Stagedag", stagedagSchema);

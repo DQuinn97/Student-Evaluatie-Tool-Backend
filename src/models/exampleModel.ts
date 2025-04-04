@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
-const todoSchema = new mongoose.Schema(
+interface ITodo {
+  task: string;
+  done: boolean;
+}
+const todoSchema = new mongoose.Schema<ITodo>(
   {
     task: {
       type: String,
@@ -17,4 +21,4 @@ const todoSchema = new mongoose.Schema(
   }
 );
 
-export const Todo = mongoose.model("Todo", todoSchema);
+export const Todo = mongoose.model<ITodo>("Todo", todoSchema);

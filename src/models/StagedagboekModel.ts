@@ -3,6 +3,7 @@ import { Gebruiker } from "./GebruikerModel";
 import { Klasgroep } from "./KlasgroepModel";
 import { Stageverslag } from "./StageverslagModel";
 import { Stagedag } from "./StagedagModel";
+import { HydratedDocumentFromSchema } from "mongoose";
 
 const stagedagboekSchema = new mongoose.Schema(
   {
@@ -36,5 +37,5 @@ const stagedagboekSchema = new mongoose.Schema(
     collection: "stagedagboeken"
   }
 );
-
+export type TStagedagboek = HydratedDocumentFromSchema<typeof stagedagboekSchema>;
 export const Stagedagboek = mongoose.model("Stagedagboek", stagedagboekSchema);

@@ -3,9 +3,11 @@ import {
   setGebruikerData,
   setGebruikerFoto,
   getAuthGebruiker,
+  getGebruikerById,
 } from "../controllers/gebruikerController";
-import { isAuth } from "../middleware/authMiddleware";
+import { isAuth, isDocent } from "../middleware/authMiddleware";
 import { upload } from "../middleware/multerMiddleware";
+import { getInzendingenPerStudent } from "../controllers/inzendingController";
 
 const router = express.Router();
 /**
@@ -69,6 +71,8 @@ const router = express.Router();
 router
   .get("/", isAuth, getAuthGebruiker)
   .post("/data", isAuth, setGebruikerData)
-  .post("/foto", isAuth, upload.single("foto"), setGebruikerFoto);
+  .post("/foto", isAuth, upload.single("foto"), setGebruikerFoto)
+  .get("/:gebruikerId", isAuth, isDocent, getGebruikerById)
+  .get("/:gebruikedId/inzendingen", isAuth, isDocent, getInzendingenPerStudent);
 
 export default router;

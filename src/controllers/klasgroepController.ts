@@ -68,10 +68,6 @@ export const pushStudentToKlasgroep = async (req: Request, res: Response) => {
       throw new Error("Klasgroep niet gevonden");
     }
 
-    if (klasgroep.studenten.find((s) => s.id == studentId)) {
-      throw new Error("Student is al toegevoegd aan deze klasgroep");
-    }
-
     klasgroep.studenten.push(studentId);
     await klasgroep.save();
 
@@ -156,11 +152,6 @@ export const pushVakToKlasgroep = async (req: Request, res: Response) => {
 
     if (!klasgroep) {
       throw new Error("Klasgroep niet gevonden");
-    }
-    const _vak = await Vak.findOne({ naam, _id: { $in: klasgroep.vakken } });
-
-    if (_vak) {
-      throw new Error("Vak met deze naam bestaat al in deze klasgroep");
     }
 
     const vak = await Vak.create({ naam });

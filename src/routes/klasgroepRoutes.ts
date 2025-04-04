@@ -10,6 +10,7 @@ import {
 } from "../controllers/klasgroepController";
 import { hasAccess, isAuth, isDocent } from "../middleware/authMiddleware";
 import { getTaken, addTaak } from "../controllers/taakController";
+import { isUnique } from "../middleware/uniqueMiddleware";
 
 const router = express.Router();
 /**
@@ -274,14 +275,20 @@ router
   .get("/", isAuth, getKlasgroepen)
   .post("/", isAuth, isDocent, addKlasgroep)
   .get("/:klasgroepId", isAuth, hasAccess, getKlasgroep)
-  .post("/:klasgroepId/studenten", isAuth, isDocent, pushStudentToKlasgroep)
+  .post(
+    "/:klasgroepId/studenten",
+    isAuth,
+    isDocent,
+    isUnique,
+    pushStudentToKlasgroep
+  )
   .patch(
     "/:klasgroepId/studenten",
     isAuth,
     isDocent,
     removeStudentFromKlasgroep
   )
-  .post("/:klasgroepId/vakken", isAuth, isDocent, pushVakToKlasgroep)
+  .post("/:klasgroepId/vakken", isAuth, isDocent, isUnique, pushVakToKlasgroep)
   .patch("/:klasgroepId/vakken", isAuth, isDocent, removeVakFromKlasgroep)
   .get("/:klasgroepId/taken", isAuth, hasAccess, getTaken)
   .post("/:klasgroepId/taken", isAuth, isDocent, addTaak);

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { HydratedDocumentFromSchema } from "mongoose";
 
 const bijlageSchema = new mongoose.Schema(
   {
@@ -13,5 +13,6 @@ const bijlageSchema = new mongoose.Schema(
     collection: "bijlagen",
   }
 );
+export type TBijlage = HydratedDocumentFromSchema<typeof bijlageSchema>;
 
 export const Bijlage = mongoose.model("Bijlage", bijlageSchema);

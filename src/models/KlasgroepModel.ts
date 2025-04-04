@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { HydratedDocumentFromSchema, Schema } from "mongoose";
 import { Gebruiker } from "./GebruikerModel";
 import { Vak } from "./VakModel";
 
@@ -38,5 +38,5 @@ const klasgroepSchema = new mongoose.Schema(
     collection: "klasgroepen"
   }
 );
-//@ts-ignore zegt dat gebruiker circulair is met klasgroep, maar dient ander doel
+export type TKlasgroep = HydratedDocumentFromSchema<typeof klasgroepSchema>;
 export const Klasgroep = mongoose.model("Klasgroep", klasgroepSchema);

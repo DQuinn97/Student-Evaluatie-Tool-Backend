@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { HydratedDocumentFromSchema } from "mongoose";
 
 const gebruikerSchema = new mongoose.Schema(
   {
@@ -46,4 +47,6 @@ const gebruikerSchema = new mongoose.Schema(
     collection: "gebruikers",
   }
 );
+export type TGebruiker = HydratedDocumentFromSchema<typeof gebruikerSchema>;
+
 export const Gebruiker = mongoose.model("Gebruiker", gebruikerSchema);
