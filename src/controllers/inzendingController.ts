@@ -12,19 +12,21 @@ const { ValidationError } = MongooseError;
 // voeg taak toe in response van inzending
 const appendTaken = async (inzendingen: TInzending[]) => {
   if (!inzendingen) return inzendingen;
-  const response = inzendingen?.map(async (inzending) => {
-    const taak = await Taak.findOne({ inzendingen: inzending._id }).select(
-      "-inzendingen"
-    );
-    return { ...inzending, taak };
-  });
+  const response = await Promise.all(
+    inzendingen?.map(async (inzending) => {
+      const taak = await Taak.findOne({ inzendingen: inzending._id }).select(
+        "-inzendingen"
+      );
+      return { ...inzending.toJSON(), taak };
+    })
+  );
   return response;
 };
 
 export const getInzending = async (req: Request, res: Response) => {
   try {
     const { inzendingId: id } = req.params;
-    const inzending = await Inzending.findById(id);
+    const inzending = await Inzending.findById(id).populate("gradering");
     if (!inzending) throw new Error("Something went wrong");
     const response = (await appendTaken([inzending]))[0];
     res.status(200).json(response);
@@ -97,7 +99,12 @@ export const getInzendingenPerTaak = async (req: Request, res: Response) => {
   try {
     const { taakId } = req.params;
     const inzendingen =
-      (await Taak.findById(taakId).populate("inzendingen"))?.inzendingen || [];
+      (
+        await Taak.findById(taakId).populate({
+          path: "inzendingen",
+          populate: { path: "gradering" },
+        })
+      )?.inzendingen || [];
 
     res.status(200).json(inzendingen);
   } catch (error: unknown) {
@@ -115,7 +122,9 @@ export const getInzendingen = async (req: Request, res: Response) => {
   try {
     //@ts-ignore
     const gebruiker = req.gebruiker;
-    const inzendingen = await Inzending.find({ student: gebruiker._id });
+    const inzendingen = await Inzending.find({
+      student: gebruiker._id,
+    }).populate("gradering");
     const response = await appendTaken(inzendingen);
 
     res.status(200).json(response);

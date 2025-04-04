@@ -5,6 +5,7 @@ import {
   updateTaak,
   dupliceerTaak,
   deleteTaak,
+  getAverage,
 } from "../controllers/taakController";
 import { hasAccess, isAuth, isDocent } from "../middleware/authMiddleware";
 import {
@@ -120,6 +121,28 @@ const router = express.Router();
  *       '401':
  *         description: Geen herkende gebruiker / docent
  *
+ * "/taken/{taakId}/score":
+ *   get:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Vraag de gemiddelde score van een taak op
+ *     tags: [Taken]
+ *     parameters:
+ *       - name: taakId
+ *         in: path
+ *         description: ID van de op te vragen taak
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: number
+ *       '401':
+ *        description: Geen herkende gebruiker / docent
+ *
  * "/taken/{taakId}/dupliceer":
  *   post:
  *     security:
@@ -219,6 +242,7 @@ router
   .post("/:taakId/dupliceer", isAuth, isDocent, dupliceerTaak)
   .delete("/:taakId", isAuth, isDocent, deleteTaak)
   .get("/:taakId/inzendingen", isAuth, isDocent, getInzendingenPerTaak)
-  .post("/:taakId/inzendingen", isAuth, hasAccess, isUnique, addInzending);
+  .post("/:taakId/inzendingen", isAuth, hasAccess, isUnique, addInzending)
+  .get("/:taakId/score", isAuth, hasAccess, getAverage);
 
 export default router;

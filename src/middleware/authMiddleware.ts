@@ -101,13 +101,13 @@ export const hasAccess = async (
         return;
       }
     }
-    if(inzendingId){
+    if (inzendingId) {
       const inzending = await Inzending.findById(inzendingId);
-      if(!inzending){
-        res.status(400).json({message: "Geen inzending gevonden"});
-        return
+      if (!inzending) {
+        res.status(400).json({ message: "Geen inzending gevonden" });
+        return;
       }
-      if(!inzending.student == gebruiker.id){
+      if (inzending.student !== gebruiker.id) {
         res.status(400).json({ message: "Geen toegang tot deze inzending" });
         return;
       }

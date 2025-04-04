@@ -4,7 +4,8 @@ import {
   getInzendingen,
   updateInzending,
 } from "../controllers/inzendingController";
-import { hasAccess, isAuth } from "../middleware/authMiddleware";
+import { hasAccess, isAuth, isDocent } from "../middleware/authMiddleware";
+import { addGradering } from "../controllers/graderingController";
 
 const router = express.Router();
 /**
@@ -74,6 +75,7 @@ const router = express.Router();
 router
   .get("/", isAuth, getInzendingen)
   .get("/:inzendingId", isAuth, hasAccess, getInzending)
-  .patch("/:inzendingId", isAuth, hasAccess, updateInzending);
+  .patch("/:inzendingId", isAuth, hasAccess, updateInzending)
+  .post("/:inzendingId/gradering", isAuth, isDocent, addGradering);
 
 export default router;

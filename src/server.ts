@@ -14,6 +14,8 @@ import authRoutes from "./routes/authRoutes";
 import gebruikerRoutes from "./routes/gebruikerRoutes";
 import klasgroepRoutes from "./routes/klasgroepRoutes";
 import taakRoutes from "./routes/taakRoutes";
+import inzendingenRoutes from "./routes/inzendingRoutes";
+import graderingRoutes from "./routes/graderingRoutes";
 
 // Variables
 const app = express();
@@ -31,6 +33,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/profiel", gebruikerRoutes);
 app.use("/api/klassen", klasgroepRoutes);
 app.use("/api/taken", taakRoutes);
+app.use("/api/inzendingen", inzendingenRoutes);
+app.use("/api/graderingen", graderingRoutes);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.all("*", notFound);
 
