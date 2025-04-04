@@ -14,6 +14,8 @@ const router = express.Router();
  * @swagger
  * /profiel:
  *   get:
+ *     security:
+ *       - cookieAuth: []
  *     summary: Krijg de data van de huidig ingelogde gebruiker
  *     tags: [Profiel]
  *     responses:
@@ -65,6 +67,38 @@ const router = express.Router();
  *     responses:
  *       '200':
  *         description: Profielfoto succesvol aangepast
+ *       '401':
+ *         description: Gebruiker is niet ingelogd
+ *
+ * /profiel/{gebruikerId}:
+ *   get:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Vraag een gebruiker op
+ *     tags: [Profiel]
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Gebruiker'
+ *       '401':
+ *         description: Gebruiker is niet ingelogd
+ *
+ * /profiel/{gebruikerId}/inzendingen:
+ *   get:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Vraag alle inzendingen van een gebruiker op
+ *     tags: [Profiel, Inzendingen]
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Inzending'
  *       '401':
  *         description: Gebruiker is niet ingelogd
  */

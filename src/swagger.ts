@@ -187,7 +187,8 @@ const options = {
               uniqueItems: true,
             },
             inzending: {
-              type: "Date",
+              type: "string",
+              format: "date",
               default: Date.now,
             },
             gradering: {
@@ -360,6 +361,7 @@ const options = {
       },
       { name: "Klassen", description: "Klasgroepen endpoints" },
       { name: "Taken", description: "Taken endpoints" },
+      { name: "Inzendingen", description: "Inzendingen endpoints" },
     ],
   },
   apis: ["**/*.ts"],

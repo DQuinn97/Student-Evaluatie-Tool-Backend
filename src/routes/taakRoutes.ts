@@ -150,6 +150,67 @@ const router = express.Router();
  *               $ref: '#/components/schemas/Taak'
  *       '401':
  *         description: Geen herkende gebruiker / docent
+ * "/taken/{taakId}/inzendingen":
+ *   post:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Voeg een inzending toe aan de taak
+ *     tags: [Taken, Inzendingen]
+ *     parameters:
+ *       - name: taakId
+ *         in: path
+ *         description: ID van de te dupliceer taak
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               git:
+ *                 type: string
+ *               live:
+ *                 type: string
+ *               beschrijving:
+ *                 type: string
+ *               bijlagen:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Taak'
+ *       '401':
+ *         description: Geen herkende gebruiker / docent
+ *   get:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Vraag alle inzendingen van een taak op
+ *     tags: [Taken, Inzendingen]
+ *     parameters:
+ *       - name: taakId
+ *         in: path
+ *         description: ID van de taak
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Inzending'
+ *       '401':
+ *         description: Geen herkende gebruiker / docent
  */
 router
   .get("/", isAuth, isDocent, getAlleTaken)
