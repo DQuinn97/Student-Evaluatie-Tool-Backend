@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Stagedagboek } from "../models/StagedagboekModel";
 import { Stagedag } from "../models/StagedagModel";
 import { Stageverslag } from "../models/StageverslagModel";
-import { BadRequestError, ErrorHandler } from "../utils/helpers";
+import { ErrorHandler, NotFoundError } from "../utils/helpers";
 
 /*
  * STAGEDAGBOEK
@@ -14,7 +14,7 @@ export const getDagboek = async (req: Request, res: Response) => {
       .lean()
       .populate(["stageverslag", "stagedagen", "klasgroep"])
       .populate("student", "-wachtwoord");
-    if (!dagboek) throw new BadRequestError("Dagboek niet gevonden");
+    if (!dagboek) throw new NotFoundError("Dagboek niet gevonden");
     res.status(200).json(dagboek);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -28,7 +28,7 @@ export const getDag = async (req: Request, res: Response) => {
   try {
     const { dagId: id } = req.params;
     const dag = await Stagedag.findById(id);
-    if (!dag) throw new BadRequestError("Dag niet gevonden");
+    if (!dag) throw new NotFoundError("Dag niet gevonden");
     res.status(200).json(dag);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -68,6 +68,7 @@ export const updateDag = async (req: Request, res: Response) => {
       { datum, voormiddag, namiddag, tools, resultaat, bijlagen },
       { new: true }
     );
+    if (!dag) throw new NotFoundError("Dag niet gevonden");
     res.status(200).json(dag);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -79,6 +80,7 @@ export const deleteDag = async (req: Request, res: Response) => {
     // TODO delete files related to this
     const { dagId: id } = req.params;
     const dag = await Stagedag.findByIdAndDelete(id);
+    if (!dag) throw new NotFoundError("Dag niet gevonden");
     res.status(200).json(dag);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -92,6 +94,7 @@ export const getVerslag = async (req: Request, res: Response) => {
   try {
     const { verslagId: id } = req.params;
     const verslag = await Stageverslag.findById(id);
+    if (!verslag) throw new NotFoundError("Verslag niet gevonden");
     res.status(200).json(verslag);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -163,7 +166,7 @@ export const updateVerslag = async (req: Request, res: Response) => {
       },
       { new: true }
     );
-    if (!verslag) throw new BadRequestError("Verslag niet gevonden");
+    if (!verslag) throw new NotFoundError("Verslag niet gevonden");
     res.status(200).json(verslag);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -175,7 +178,7 @@ export const deleteVerslag = async (req: Request, res: Response) => {
     // TODO delete files related to this
     const { verslagId: id } = req.params;
     const verslag = await Stageverslag.findByIdAndDelete(id);
-    if (!verslag) throw new BadRequestError("Verslag niet gevonden");
+    if (!verslag) throw new NotFoundError("Verslag niet gevonden");
     res.status(200).json(verslag);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);

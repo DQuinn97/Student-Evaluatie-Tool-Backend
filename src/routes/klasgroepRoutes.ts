@@ -29,6 +29,8 @@ const router = express.Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Klasgroep'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
  *   post:
  *     security:
  *       - cookieAuth: []
@@ -55,8 +57,12 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Klasgroep'
+ *       '400': 
+ *         $ref: '#/components/responses/BadRequest_MissingField'
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized'
  *
  * /klassen/{klasgroepId}:
  *   get:
@@ -77,6 +83,12 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Klasgroep'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *
  * /klassen/{klasgroepId}/studenten:
  *   post:
@@ -106,8 +118,14 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Klasgroep'
+ *       '400': 
+ *         $ref: '#/components/responses/BadRequest_MissingField'
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *   patch:
  *     security:
  *       - cookieAuth: []
@@ -135,8 +153,14 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Klasgroep'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequest_MissingField'
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *
  * /klassen/{klasgroepId}/vakken:
  *   post:
@@ -166,8 +190,16 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Klasgroep'
+ *       '400': 
+ *         $ref: '#/components/responses/BadRequest_MissingField'
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
+ *       '409':
+ *         $ref: '#/components/responses/BadRequest_Duplicate'
  *   patch:
  *     security:
  *       - cookieAuth: []
@@ -195,8 +227,14 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Klasgroep'
+ *       '400': 
+ *         $ref: '#/components/responses/BadRequest_MissingField'
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *
  * /klassen/{klasgroepId}/taken:
  *   get:
@@ -220,7 +258,11 @@ const router = express.Router();
  *               items:
  *                 $ref: '#/components/schemas/Taak'
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *   post:
  *     security:
  *       - cookieAuth: []
@@ -240,8 +282,6 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               voormiddag:
- *                 type: string
  *               type:
  *                 type: string
  *               titel:
@@ -267,8 +307,14 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Taak'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequest_MissingField'
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *
  */
 router

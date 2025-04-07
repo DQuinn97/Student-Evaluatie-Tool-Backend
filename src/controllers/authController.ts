@@ -158,7 +158,7 @@ export const resetWachtwoord = async (req: Request, res: Response) => {
     }
 
     if (!wachtwoord || !resetToken) {
-      throw new BadRequestError("Ontbrekende reset data");
+      throw new BadRequestError("Wachtwoord en resetToken zijn verplicht");
     }
     const decodedToken = jwt.verify(
       resetToken,

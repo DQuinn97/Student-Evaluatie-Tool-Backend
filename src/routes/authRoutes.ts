@@ -26,6 +26,8 @@ const router = express.Router();
  *     responses:
  *       '200':
  *         description: Gebruiker succesvol geregistreerd, wachtwoord per mail verzonden
+ *       '400':
+ *         $ref: '#/components/responses/BadRequest_MissingField'
  *
  * /auth/login:
  *   post:
@@ -45,6 +47,8 @@ const router = express.Router();
  *     responses:
  *       '200':
  *         description: Gebruiker succesvol ingelogd
+ *       '400':
+ *         $ref: '#/components/responses/BadRequest_MissingField'
  *
  * /auth/logout:
  *   post:
@@ -53,6 +57,8 @@ const router = express.Router();
  *     responses:
  *       '200':
  *         description: Gebruiker succesvol uitgelogd
+ *       '400':
+ *         $ref: '#/components/responses/BadRequest_MissingField'
  *
  * /auth/reset/request:
  *   post:
@@ -71,7 +77,11 @@ const router = express.Router();
  *                 type: string
  *     responses:
  *       '200':
+ *         description: Geen herkende gebruiker
+ *       '201':
  *         description: Wachtwoord reset link per mail verzonden
+ *       '400':
+ *         $ref: '#/components/responses/BadRequest_MissingField'
  *
  * /auth/reset:
  *   post:
@@ -91,6 +101,10 @@ const router = express.Router();
  *     responses:
  *       '200':
  *         description: Wachtwoord succesvol gereset
+ *       '400':
+ *         $ref: '#/components/responses/BadRequest_MissingField'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
  */
 router
   .post("/register", register)

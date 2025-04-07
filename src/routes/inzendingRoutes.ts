@@ -24,6 +24,8 @@ const router = express.Router();
  *                 type: array
  *                 items:
  *                   $ref: '#/components/schemas/Inzending'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
  *
  * /inzendingen/{inzendingId}:
  *   get:
@@ -38,7 +40,11 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Inzending'
  *       '401':
- *         description: Gebruiker is niet ingelogd
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *   patch:
  *     security:
  *       - cookieAuth: []
@@ -69,8 +75,42 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Inzending'
  *       '401':
- *         description: Gebruiker is niet ingelogd
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *
+ * /inzendingen/{inzendingId}/gradering:
+ *   post:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Voeg een gradering toe aan een inzending
+ *     tags: [Inzendingen, Graderingen]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               score:
+ *                 type: number
+ *                 minimum: 0
+ *               feedback:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Gradering'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  */
 router
   .get("/", isAuth, getInzendingen)

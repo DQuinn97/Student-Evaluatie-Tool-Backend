@@ -69,10 +69,23 @@ export class BadRequestError extends Error {
   }
 }
 
+export class NotFoundError extends Error {
+  constructor(
+    message: string = "Page not found",
+    public statusCode: number = 404
+  ) {
+    super(message);
+    this.name = "NotFoundError";
+    this.statusCode = statusCode;
+  }
+}
+
 export const ErrorHandler = (error: unknown, req: Request, res: Response) => {
-  if (error instanceof BadRequestError) {
-    res.status(error.statusCode).json({ message: error.message });
-  } else if (error instanceof UnauthorizedError) {
+  if (
+    error instanceof BadRequestError ||
+    error instanceof UnauthorizedError ||
+    error instanceof NotFoundError
+  ) {
     res.status(error.statusCode).json({ message: error.message });
   } else if (error instanceof ValidationError) {
     res.status(400).json({ message: error.message });

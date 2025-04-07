@@ -32,7 +32,9 @@ const router = express.Router();
  *               items:
  *                 $ref: '#/components/schemas/Taak'
  *       '401':
- *        description: Geen herkende gebruiker / docent
+ *        $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *        $ref: '#/components/responses/Unauthorized'
  *
  * "/taken/{taakId}":
  *   get:
@@ -54,7 +56,11 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Taak'
  *       '401':
- *        description: Geen herkende gebruiker / docent
+ *        $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *        $ref: '#/components/responses/Unauthorized_Resource'
+ *       '404':
+ *        $ref: '#/components/responses/PageNotFound'
  *   patch:
  *     security:
  *       - cookieAuth: []
@@ -101,8 +107,14 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Taak'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequest_MissingField'
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *   delete:
  *     security:
  *       - cookieAuth: []
@@ -119,7 +131,11 @@ const router = express.Router();
  *       '200':
  *         description: Taak verwijderd
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *
  * "/taken/{taakId}/score":
  *   get:
@@ -141,7 +157,11 @@ const router = express.Router();
  *             schema:
  *               type: number
  *       '401':
- *        description: Geen herkende gebruiker / docent
+ *        $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *        $ref: '#/components/responses/Unauthorized_Resource'
+ *       '404':
+ *        $ref: '#/components/responses/PageNotFound'
  *
  * "/taken/{taakId}/dupliceer":
  *   post:
@@ -171,8 +191,15 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Taak'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequest_MissingField'
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
+ *
  * "/taken/{taakId}/inzendingen":
  *   post:
  *     security:
@@ -182,7 +209,7 @@ const router = express.Router();
  *     parameters:
  *       - name: taakId
  *         in: path
- *         description: ID van de te dupliceer taak
+ *         description: ID van de te dupliceren taak
  *         required: true
  *         schema:
  *           type: string
@@ -211,7 +238,13 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Taak'
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
+ *       '409':
+ *         $ref: '#/components/responses/BadRequest_Duplicate'
  *   get:
  *     security:
  *       - cookieAuth: []
@@ -233,7 +266,11 @@ const router = express.Router();
  *               items:
  *                 $ref: '#/components/schemas/Inzending'
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  */
 router
   .get("/", isAuth, isDocent, getAlleTaken)

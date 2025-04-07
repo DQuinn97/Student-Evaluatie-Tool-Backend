@@ -3,11 +3,7 @@ import { Klasgroep } from "../models/KlasgroepModel";
 import { Vak } from "../models/VakModel";
 import { Inzending } from "../models/InzendingModel";
 import { Taak } from "../models/TaakModel";
-import {
-  BadRequestError,
-  ErrorHandler,
-  UnauthorizedError,
-} from "../utils/helpers";
+import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/helpers";
 
 export const isUnique = async (
   req: Request,
@@ -24,7 +20,7 @@ export const isUnique = async (
       const klasgroep = await Klasgroep.findById(klasgroepId).populate(
         "vakken"
       );
-      if (!klasgroep) throw new BadRequestError("Klasgroep niet gevonden");
+      if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
 
       if (studentId && klasgroep.studenten.find((s) => s.id == studentId))
         throw new BadRequestError(
@@ -46,7 +42,7 @@ export const isUnique = async (
     }
     if (taakId) {
       const taak = await Taak.findById(taakId).populate("inzendingen");
-      if (!taak) throw new BadRequestError("Taak niet gevonden");
+      if (!taak) throw new NotFoundError("Taak niet gevonden");
 
       if (
         await Inzending.findOne({

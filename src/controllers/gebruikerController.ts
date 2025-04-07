@@ -1,13 +1,13 @@
 import "dotenv/config";
 import { Request, Response } from "express";
 import { Gebruiker } from "../models/GebruikerModel";
-import { BadRequestError, ErrorHandler } from "../utils/helpers";
+import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/helpers";
 
 export const getGebruikerById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const gebruiker = await Gebruiker.findById(id).select("-wachtwoord");
-    if (!gebruiker) throw new BadRequestError("Geen gebruiker gevonden", 404);
+    if (!gebruiker) throw new NotFoundError("Gebruiker niet gevonden");
     res.status(200).json(gebruiker);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);

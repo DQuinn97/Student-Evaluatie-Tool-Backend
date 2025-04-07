@@ -1,15 +1,11 @@
 import swaggerJsdoc from "swagger-jsdoc";
-import { Inzending } from "./models/InzendingModel";
-import { Gradering } from "./models/GraderingModel";
-import { Stagedagboek } from "./models/StagedagboekModel";
-import { Stageverslag } from "./models/StageverslagModel";
 const isProduction = process.env.NODE_ENV === "production";
 const options = {
   definition: {
     openapi: "3.0.0",
     info: {
       title: "Student Evaluatie Tool API",
-      version: "1.0.4",
+      version: "1.0.7",
       description: "API documentatie voor Student Evaluatie Tool",
     },
     servers: isProduction
@@ -345,6 +341,52 @@ const options = {
           },
         },
       },
+      responses: {
+        Unauthorized: {
+          description: "Geen toegang tot deze pagina",
+          schema: {
+            $ref: "#/definitions/Error",
+          },
+        },
+        Unauthorized_Resource: {
+          description: "Geen toegang tot deze {item}",
+          schema: {
+            $ref: "#/definitions/Error",
+          },
+        },
+        BadRequest_MissingField: {
+          description: "{veld} is verplicht",
+          schema: {
+            $ref: "#/definitions/Error",
+          },
+        },
+        BadRequest_Duplicate: {
+          description: "{item} bestaat al",
+          schema: {
+            $ref: "#/definitions/Error",
+          },
+        },
+        PageNotFound: {
+          description: "{item} niet gevonden",
+          schema: {
+            $ref: "#/definitions/Error",
+          },
+        },
+      },
+      definitions: {
+        Error: {
+          type: "object",
+          required: ["code", "message"],
+          properties: {
+            code: {
+              type: "string",
+            },
+            message: {
+              type: "string",
+            },
+          },
+        },
+      },
     },
     tags: [
       {
@@ -362,6 +404,7 @@ const options = {
       { name: "Klassen", description: "Klasgroepen endpoints" },
       { name: "Taken", description: "Taken endpoints" },
       { name: "Inzendingen", description: "Inzendingen endpoints" },
+      {name:"Graderingen", description:"Graderingen endpoints"},
     ],
   },
   apis: ["**/*.ts"],

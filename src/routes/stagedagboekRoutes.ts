@@ -35,7 +35,9 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Stagedagboek'
  *       '401':
- *        description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *
  * /dagboek/dag/{dagId}:
  *   get:
@@ -57,7 +59,9 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Stagedag'
  *       '401':
- *        description: Geen herkende gebruiker / docent
+ *        $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *   patch:
  *     security:
  *       - cookieAuth: []
@@ -97,7 +101,9 @@ const router = express.Router();
  *       '200':
  *         description: Stagedag succesvol geupdate
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *   delete:
  *     security:
  *       - cookieAuth: []
@@ -114,7 +120,9 @@ const router = express.Router();
  *       '200':
  *         description: Stagedag succesvol verwijderd
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *
  * /dagboek/verslag/{verslagId}:
  *   get:
@@ -135,6 +143,10 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Stageverslag'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *   patch:
  *     security:
  *       - cookieAuth: []
@@ -174,7 +186,9 @@ const router = express.Router();
  *       '200':
  *         description: Stageverslag succesvol geupdate
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *   delete:
  *     security:
  *       - cookieAuth: []
@@ -191,7 +205,9 @@ const router = express.Router();
  *       '200':
  *         description: Stageverslag succesvol verwijderd
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *
  * /dagboek/dag/nieuw:
  *   post:
@@ -226,7 +242,9 @@ const router = express.Router();
  *       '200':
  *         description: Stagedag succesvol aangemaakt
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *
  * /dagboek/verslag/nieuw:
  *   post:
@@ -267,7 +285,9 @@ const router = express.Router();
  *       '200':
  *         description: Stageverslag succesvol aangemaakt
  *       '401':
- *         description: Geen herkende gebruiker / docent
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *
  */
 router

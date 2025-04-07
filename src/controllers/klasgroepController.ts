@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
 import { Klasgroep } from "../models/KlasgroepModel";
 import { Vak } from "../models/VakModel";
-import {
-  BadRequestError,
-  ErrorHandler,
-} from "../utils/helpers";
+import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/helpers";
+import { Gebruiker } from "../models/GebruikerModel";
 
 export const getKlasgroepen = async (req: Request, res: Response) => {
   try {
@@ -23,7 +21,7 @@ export const getKlasgroep = async (req: Request, res: Response) => {
     const klasgroep = await Klasgroep.findById(klasgroepId)
       .populate("studenten", "-wachtwoord")
       .populate("vakken", "_id naam");
-    if (!klasgroep) throw new BadRequestError("Klasgroep niet gevonden");
+    if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
     res.status(200).json(klasgroep);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -49,9 +47,11 @@ export const pushStudentToKlasgroep = async (req: Request, res: Response) => {
     const { studentId } = req.body;
 
     const klasgroep = await Klasgroep.findById(klasgroepId);
+    const student = await Gebruiker.findById(studentId);
 
     if (!studentId) throw new BadRequestError("StudentId is verplicht");
-    if (!klasgroep) throw new BadRequestError("Klasgroep niet gevonden");
+    if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
+    if (!student) throw new NotFoundError("Student niet gevonden");
 
     klasgroep.studenten.push(studentId);
     await klasgroep.save();
@@ -84,11 +84,10 @@ export const removeStudentFromKlasgroep = async (
     );
 
     if (!studentId) throw new BadRequestError("studentId is verplicht");
-    if (!klasgroep) throw new BadRequestError("Klasgroep niet gevonden");
+    if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
 
-    if (!klasgroep.studenten.find((s) => s.id == studentId)) {
-      throw new Error("Student zit niet in deze klasgroep");
-    }
+    if (!klasgroep.studenten.find((s) => s.id == studentId))
+      throw new BadRequestError("Student zit niet in deze klasgroep");
 
     klasgroep.studenten = klasgroep.studenten.filter(
       (student) => student.id !== studentId
@@ -140,6 +139,8 @@ export const removeVakFromKlasgroep = async (req: Request, res: Response) => {
     const { vakId } = req.body;
 
     if (!vakId) throw new BadRequestError("vakId is verplicht");
+    const vak = await Vak.findById(vakId);
+    if (!vak) throw new NotFoundError("Vak niet gevonden");
 
     await Klasgroep.findByIdAndUpdate(klasgroepId, {
       $pull: { vakken: vakId },

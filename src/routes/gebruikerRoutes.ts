@@ -25,6 +25,8 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *                 $ref: '#/components/schemas/Gebruiker'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
  *
  * /profiel/data:
  *   post:
@@ -49,7 +51,7 @@ const router = express.Router();
  *       '200':
  *         description: Gebruiker succesvol aangepast
  *       '401':
- *         description: Gebruiker is niet ingelogd
+ *         $ref: '#/components/responses/Unauthorized'
  *
  * /profiel/foto:
  *   post:
@@ -68,7 +70,7 @@ const router = express.Router();
  *       '200':
  *         description: Profielfoto succesvol aangepast
  *       '401':
- *         description: Gebruiker is niet ingelogd
+ *         $ref: '#/components/responses/Unauthorized'
  *
  * /profiel/{gebruikerId}:
  *   get:
@@ -83,7 +85,11 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Gebruiker'
  *       '401':
- *         description: Gebruiker is niet ingelogd
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  *
  * /profiel/{gebruikerId}/inzendingen:
  *   get:
@@ -100,7 +106,11 @@ const router = express.Router();
  *               items:
  *                 $ref: '#/components/schemas/Inzending'
  *       '401':
- *         description: Gebruiker is niet ingelogd
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
  */
 router
   .get("/", isAuth, getAuthGebruiker)

@@ -3,7 +3,7 @@ import { Taak } from "../models/TaakModel";
 import { Klasgroep } from "../models/KlasgroepModel";
 import { TGradering } from "../models/GraderingModel";
 import { TInzending } from "../models/InzendingModel";
-import { BadRequestError, ErrorHandler } from "../utils/helpers";
+import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/helpers";
 
 export const getTaken = async (req: Request, res: Response) => {
   try {
@@ -83,7 +83,7 @@ export const addTaak = async (req: Request, res: Response) => {
 
     const klasgroep = await Klasgroep.findById(klasgroepId);
 
-    if (!klasgroep) throw new BadRequestError("Klasgroep niet gevonden");
+    if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
 
     if (vak && !klasgroep.vakken.includes(vak))
       throw new BadRequestError("Vak niet gevonden in klasgroep");
@@ -122,8 +122,8 @@ export const updateTaak = async (req: Request, res: Response) => {
     const check = await Taak.findById(taakId);
     const klasgroep = await Klasgroep.findById(check?.klasgroep);
 
-    if (!check) throw new BadRequestError("Taak niet gevonden");
-    if (!klasgroep) throw new BadRequestError("Klasgroep niet gevonden");
+    if (!check) throw new NotFoundError("Taak niet gevonden");
+    if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
     if (vak && klasgroep && !klasgroep.vakken.includes(vak))
       throw new BadRequestError("Vak niet gevonden in klasgroep");
 
@@ -152,13 +152,12 @@ export const dupliceerTaak = async (req: Request, res: Response) => {
     const { taakId } = req.params;
     const { klasgroepId } = req.body;
 
-    if (!taakId || !klasgroepId)
-      throw new BadRequestError("taakId en klasgroepId zijn verplicht");
+    if (!klasgroepId) throw new BadRequestError("klasgroepId zijn verplicht");
 
     const taak = await Taak.findById(taakId);
     const klasgroep = await Klasgroep.findById(klasgroepId);
-    if (!taak) throw new BadRequestError("Taak niet gevonden");
-    if (!klasgroep) throw new BadRequestError("Klasgroep niet gevonden");
+    if (!taak) throw new NotFoundError("Taak niet gevonden");
+    if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
 
     const middernacht = new Date().setUTCHours(24, 0, 0, 0);
     const nieuweTaak = await Taak.create({
@@ -182,7 +181,7 @@ export const deleteTaak = async (req: Request, res: Response) => {
   try {
     const { taakId } = req.params;
     const taak = await Taak.findByIdAndDelete(taakId);
-    if (!taak) throw new BadRequestError("Taak niet gevonden");
+    if (!taak) throw new NotFoundError("Taak niet gevonden");
     res.status(204).json({ message: "Taak verwijderd" });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -201,7 +200,7 @@ export const getAverage = async (req: Request, res: Response) => {
       populate: { path: "gradering" },
     });
 
-    if (!taak) throw new BadRequestError("Taak niet gevonden");
+    if (!taak) throw new NotFoundError("Taak niet gevonden");
 
     const graderingen = taak.inzendingen
       .map((inzending) => inzending.gradering)

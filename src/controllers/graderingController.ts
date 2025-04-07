@@ -1,16 +1,13 @@
 import { Request, Response } from "express";
 import { Gradering } from "../models/GraderingModel";
 import { Inzending } from "../models/InzendingModel";
-import {
-  BadRequestError,
-  ErrorHandler,
-} from "../utils/helpers";
+import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/helpers";
 
 export const getGradering = async (req: Request, res: Response) => {
   try {
     const { graderingId: id } = req.params;
     const gradering = await Gradering.findById(id);
-    if (!gradering) throw new BadRequestError("Gradering niet gevonden");
+    if (!gradering) throw new NotFoundError("Gradering niet gevonden");
     res.status(200).json(gradering);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -23,6 +20,9 @@ export const addGradering = async (req: Request, res: Response) => {
     const { score, feedback } = req.body;
     //@ts-ignore
     const gebruiker = req.gebruiker;
+
+    const inzending = await Inzending.findById(inzendingId);
+    if (!inzending) throw new NotFoundError("Inzending niet gevonden");
 
     const gradering = await Gradering.create({
       score,
@@ -49,6 +49,7 @@ export const updateGradering = async (req: Request, res: Response) => {
       { score, feedback },
       { new: true }
     );
+    if (!gradering) throw new NotFoundError("Gradering niet gevonden");
     res.status(200).json(gradering);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
