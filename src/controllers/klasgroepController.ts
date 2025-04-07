@@ -35,7 +35,7 @@ export const addKlasgroep = async (req: Request, res: Response) => {
       throw new BadRequestError("Naam, beginjaar en eindjaar zijn verplicht");
     }
     const klasgroep = await Klasgroep.create({ naam, beginjaar, eindjaar });
-    res.status(201).json(klasgroep);
+    res.status(201).json({message:"Klasgroep aangemaakt",klasgroep});
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -56,15 +56,17 @@ export const pushStudentToKlasgroep = async (req: Request, res: Response) => {
     klasgroep.studenten.push(studentId);
     await klasgroep.save();
 
-    res.status(200).json(
-      await Klasgroep.populate(klasgroep, [
-        {
-          path: "vakken",
-          select: "_id naam",
-        },
-        { path: "studenten", select: "-wachtwoord" },
-      ])
-    );
+    const response = await Klasgroep.populate(klasgroep, [
+      {
+        path: "vakken",
+        select: "_id naam",
+      },
+      { path: "studenten", select: "-wachtwoord" },
+    ]);
+
+    res
+      .status(200)
+      .json({ message: "Student toegevoegd", klasgroep: response });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -94,15 +96,17 @@ export const removeStudentFromKlasgroep = async (
     );
     await klasgroep.save();
 
-    res.status(200).json(
-      await Klasgroep.populate(klasgroep, [
-        {
-          path: "vakken",
-          select: "_id naam",
-        },
-        { path: "studenten", select: "-wachtwoord" },
-      ])
-    );
+    const response = await Klasgroep.populate(klasgroep, [
+      {
+        path: "vakken",
+        select: "_id naam",
+      },
+      { path: "studenten", select: "-wachtwoord" },
+    ]);
+
+    res
+      .status(200)
+      .json({ message: "Student verwijderd", klasgroep: response });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -122,12 +126,12 @@ export const pushVakToKlasgroep = async (req: Request, res: Response) => {
     klasgroep.vakken.push(vak._id);
     await klasgroep.save();
 
-    res.status(200).json(
-      await Klasgroep.populate(klasgroep, {
-        path: "vakken",
-        select: "_id naam",
-      })
-    );
+    const response = await Klasgroep.populate(klasgroep, {
+      path: "vakken",
+      select: "_id naam",
+    });
+
+    res.status(200).json({ message: "Vak toegevoegd", klasgroep: response });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -142,12 +146,16 @@ export const removeVakFromKlasgroep = async (req: Request, res: Response) => {
     const vak = await Vak.findById(vakId);
     if (!vak) throw new NotFoundError("Vak niet gevonden");
 
-    await Klasgroep.findByIdAndUpdate(klasgroepId, {
-      $pull: { vakken: vakId },
-    });
+    const klasgroep = await Klasgroep.findByIdAndUpdate(
+      klasgroepId,
+      {
+        $pull: { vakken: vakId },
+      },
+      { new: true }
+    ).populate("vakken", "_id naam");
     await Vak.findByIdAndDelete(vakId);
 
-    res.status(204).json({ message: "Vak verwijderd" });
+    res.status(204).json({ message: "Vak verwijderd", klasgroep });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }

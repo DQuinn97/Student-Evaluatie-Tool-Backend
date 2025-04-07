@@ -12,7 +12,8 @@ export const getDagboek = async (req: Request, res: Response) => {
     const { dagboekId: id } = req.params;
     const dagboek = await Stagedagboek.findById(id)
       .lean()
-      .populate(["stageverslag", "stagedagen", "klasgroep"])
+      .populate(["stageverslag", "stagedagen"])
+      .populate("klasgroep", "_id naam beginjaar eindjaar")
       .populate("student", "-wachtwoord");
     if (!dagboek) throw new NotFoundError("Dagboek niet gevonden");
     res.status(200).json(dagboek);
@@ -50,10 +51,14 @@ export const addDag = async (req: Request, res: Response) => {
     const gebruiker = req.gebruiker;
     const dagboek = await Stagedagboek.findOne({
       student: gebruiker._id,
-    });
+    })
+      .populate("stageverslag")
+      .populate("stagedagen")
+      .populate("klasgroep", "_id naam beginjaar eindjaar")
+      .populate("student", "-wachtwoord");
     dagboek?.stagedagen.push(dag._id);
     await dagboek?.save();
-    res.status(201).json(dag);
+    res.status(201).json({message:"Dag toegevoegd", dag, dagboek});
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -69,7 +74,16 @@ export const updateDag = async (req: Request, res: Response) => {
       { new: true }
     );
     if (!dag) throw new NotFoundError("Dag niet gevonden");
-    res.status(200).json(dag);
+
+    const dagboek = await Stagedagboek.findOne({
+      stagedagen: id,
+    })
+      .populate("stageverslag")
+      .populate("stagedagen")
+      .populate("klasgroep", "_id naam beginjaar eindjaar")
+      .populate("student", "-wachtwoord");
+
+    res.status(200).json({ message: "Dag bijgewerkt", dag, dagboek });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -81,7 +95,20 @@ export const deleteDag = async (req: Request, res: Response) => {
     const { dagId: id } = req.params;
     const dag = await Stagedag.findByIdAndDelete(id);
     if (!dag) throw new NotFoundError("Dag niet gevonden");
-    res.status(200).json(dag);
+
+    const dagboek = await Stagedagboek.findOneAndUpdate(
+      {
+        stagedagen: id,
+      },
+      { $pull: { stagedagen: id } },
+      { new: true }
+    )
+      .populate("stageverslag")
+      .populate("stagedagen")
+      .populate("klasgroep", "_id naam beginjaar eindjaar")
+      .populate("student", "-wachtwoord");
+
+    res.status(200).json({ message: "Dag verwijderd", dag, dagboek });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -128,10 +155,14 @@ export const addVerslag = async (req: Request, res: Response) => {
     const gebruiker = req.gebruiker;
     const dagboek = await Stagedagboek.findOne({
       student: gebruiker._id,
-    });
+    })
+      .populate("stageverslag")
+      .populate("stagedagen")
+      .populate("klasgroep", "_id naam beginjaar eindjaar")
+      .populate("student", "-wachtwoord");
     if (dagboek) dagboek.stageverslag = verslag._id;
     await dagboek?.save();
-    res.status(201).json(verslag);
+    res.status(201).json({ message: "Verslag toegevoegd", verslag, dagboek });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -166,8 +197,16 @@ export const updateVerslag = async (req: Request, res: Response) => {
       },
       { new: true }
     );
+
     if (!verslag) throw new NotFoundError("Verslag niet gevonden");
-    res.status(200).json(verslag);
+    const dagboek = await Stagedagboek.findOne({
+      stageverslag: id,
+    })
+      .populate("stageverslag")
+      .populate("stagedagen")
+      .populate("klasgroep", "_id naam beginjaar eindjaar")
+      .populate("student", "-wachtwoord");
+    res.status(200).json({ verslag, dagboek });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -177,9 +216,21 @@ export const deleteVerslag = async (req: Request, res: Response) => {
   try {
     // TODO delete files related to this
     const { verslagId: id } = req.params;
+
     const verslag = await Stageverslag.findByIdAndDelete(id);
     if (!verslag) throw new NotFoundError("Verslag niet gevonden");
-    res.status(200).json(verslag);
+    const dagboek = await Stagedagboek.findOneAndUpdate(
+      {
+        stageverslag: id,
+      },
+      { stageverslag: null },
+      { new: true }
+    )
+      .populate("stageverslag")
+      .populate("stagedagen")
+      .populate("klasgroep", "_id naam beginjaar eindjaar")
+      .populate("student", "-wachtwoord");
+    res.status(200).json({ message: "Verslag verwijderd", verslag, dagboek });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }

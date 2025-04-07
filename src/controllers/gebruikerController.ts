@@ -17,8 +17,9 @@ export const getAuthGebruiker = async (req: Request, res: Response) => {
   try {
     //@ts-ignore
     const gebruiker = req.gebruiker;
+    const response = { ...gebruiker.toJSON(), wachtwoord: undefined };
 
-    res.status(200).json(gebruiker);
+    res.status(200).json({ gebruiker: response });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -32,9 +33,14 @@ export const setGebruikerData = async (req: Request, res: Response) => {
     if (naam) gebruiker.naam = naam;
     if (achternaam) gebruiker.achternaam = achternaam;
     if (gsm) gebruiker.gsm = gsm;
+
     await gebruiker.save();
 
-    res.status(200).json({ message: "Gebruiker data aangepast" });
+    const response = { ...gebruiker.toJSON(), wachtwoord: undefined };
+
+    res
+      .status(200)
+      .json({ message: "Gebruiker data aangepast", gebruiker: response });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -55,7 +61,11 @@ export const setGebruikerFoto = async (req: Request, res: Response) => {
     gebruiker.foto = `${baseUrl}${transform}${imageUrl}`;
     await gebruiker.save();
 
-    res.status(201).json({ message: "Gebruiker foto aangepast" });
+    const response = { ...gebruiker.toJSON(), wachtwoord: undefined };
+
+    res
+      .status(201)
+      .json({ message: "Gebruiker foto aangepast", gebruiker: response });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }

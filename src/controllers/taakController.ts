@@ -3,17 +3,42 @@ import { Taak } from "../models/TaakModel";
 import { Klasgroep } from "../models/KlasgroepModel";
 import { TGradering } from "../models/GraderingModel";
 import { TInzending } from "../models/InzendingModel";
-import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/helpers";
+import {
+  BadRequestError,
+  ErrorHandler,
+  klasgroepPath,
+  NotFoundError,
+  vakPath,
+} from "../utils/helpers";
 
 export const getTaken = async (req: Request, res: Response) => {
   try {
     const { klasgroepId } = req.params;
     const filter = { klasgroep: klasgroepId };
+    //@ts-ignore
+    const gebruiker = req.gebruiker;
 
-    const taken = await Taak.find(filter)
-      .populate("klasgroep", "_id naam beginjaar eindjaar")
-      .populate("vak", "_id naam")
-      .populate("bijlagen");
+    const taken = await Taak.find(filter).populate([
+      {
+        path: "inzendingen",
+
+        populate: [
+          {
+            path: "gradering",
+            populate: { path: "docent", select: "-wachtwoord" },
+          },
+          {
+            path: "student",
+            select: "-wachtwoord",
+          },
+        ],
+        match: gebruiker.isDocent ? {} :{ student: gebruiker._id },
+      },
+      "bijlagen",
+      klasgroepPath,
+      vakPath,
+    ]);
+
     res.status(200).json(taken);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -22,10 +47,25 @@ export const getTaken = async (req: Request, res: Response) => {
 
 export const getAlleTaken = async (req: Request, res: Response) => {
   try {
-    const taken = await Taak.find()
-      .populate("klasgroep", "_id naam beginjaar eindjaar")
-      .populate("vak", "_id naam")
-      .populate("bijlagen");
+    const taken = await Taak.find().populate([
+      {
+        path: "inzendingen",
+
+        populate: [
+          {
+            path: "gradering",
+            populate: { path: "docent", select: "-wachtwoord" },
+          },
+          {
+            path: "student",
+            select: "-wachtwoord",
+          },
+        ],
+      },
+      "bijlagen",
+      klasgroepPath,
+      vakPath,
+    ]);
 
     res.status(200).json(taken);
   } catch (error: unknown) {
@@ -43,7 +83,10 @@ export const getTaak = async (req: Request, res: Response) => {
         path: "inzendingen",
 
         populate: [
-          { path: "gradering" },
+          {
+            path: "gradering",
+            populate: { path: "docent", select: "-wachtwoord" },
+          },
           {
             path: "student",
             select: "-wachtwoord",
@@ -52,8 +95,8 @@ export const getTaak = async (req: Request, res: Response) => {
         match: gebruiker.isDocent ? {} : { student: gebruiker._id },
       },
       "bijlagen",
-      { path: "klasgroep", select: "_id naam beginjaar eindjaar" },
-      { path: "vak", select: "_id naam" },
+      klasgroepPath,
+      vakPath,
     ]);
 
     res.status(200).json(taak);
@@ -99,7 +142,7 @@ export const addTaak = async (req: Request, res: Response) => {
       isGepubliceerd,
       bijlagen,
     });
-    res.status(201).json(taak);
+    res.status(201).json({ message: "Taak aangemaakt", taak });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -141,7 +184,7 @@ export const updateTaak = async (req: Request, res: Response) => {
       },
       { new: true }
     );
-    res.status(201).json(taak);
+    res.status(201).json({ message: "Taak gewijzigd", taak });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -171,7 +214,7 @@ export const dupliceerTaak = async (req: Request, res: Response) => {
       bijlagen: [...taak.bijlagen],
     });
 
-    res.status(201).json(nieuweTaak);
+    res.status(201).json({ message: "Taak gedupliceerd", taak: nieuweTaak });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -182,7 +225,7 @@ export const deleteTaak = async (req: Request, res: Response) => {
     const { taakId } = req.params;
     const taak = await Taak.findByIdAndDelete(taakId);
     if (!taak) throw new NotFoundError("Taak niet gevonden");
-    res.status(204).json({ message: "Taak verwijderd" });
+    res.status(204).json({ message: "Taak verwijderd", taak });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }

@@ -47,6 +47,12 @@ export const hashWachtwoord = async (wachtwoord: string) => {
   return hashedWachtwoord;
 };
 
+export const vakPath = { path: "vak", select: "_id naam" };
+export const klasgroepPath = {
+  path: "klasgroep",
+  select: "_id naam beginjaar eindjaar",
+};
+
 export class UnauthorizedError extends Error {
   constructor(
     message: string = "Unauthorized access",
