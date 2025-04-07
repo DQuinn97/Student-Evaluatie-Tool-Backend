@@ -5,6 +5,11 @@ import { Gebruiker } from "../models/GebruikerModel";
 import { Klasgroep } from "../models/KlasgroepModel";
 import { Taak } from "../models/TaakModel";
 import { Inzending } from "../models/InzendingModel";
+import {
+  BadRequestError,
+  ErrorHandler,
+  UnauthorizedError,
+} from "../utils/helpers";
 export const isAuth = async (
   req: Request,
   res: Response,
@@ -15,23 +20,17 @@ export const isAuth = async (
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string);
 
     if (typeof decodedToken === "string" || !("email" in decodedToken)) {
-      res.status(400).json({ message: "Foutieve token" });
-      return;
+      throw new UnauthorizedError("Geen toegang tot deze pagina");
     }
     const gebruiker = await Gebruiker.findOne({ email: decodedToken.email });
     if (!gebruiker) {
-      res.status(400).json({ message: "Geen herkende gebruiker" });
-      return;
+      throw new UnauthorizedError("Geen toegang tot deze pagina");
     }
     //@ts-ignore
     req.gebruiker = gebruiker;
     next();
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -43,22 +42,13 @@ export const isDocent = async (
   try {
     //@ts-ignore
     const gebruiker = req.gebruiker;
-    if (!gebruiker) {
-      res.status(400).json({ message: "Geen herkende gebruiker" });
-      return;
-    }
-    if (!gebruiker.isDocent) {
-      res.status(400).json({ message: "Geen herkende docent" });
-      return;
+    if (!gebruiker || !gebruiker.isDocent) {
+      throw new UnauthorizedError("Geen toegang tot deze pagina", 403);
     }
 
     next();
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -77,47 +67,37 @@ export const hasAccess = async (
       const taak = await Taak.findById(taakId).populate("klasgroep");
 
       if (!taak) {
-        res.status(400).json({ message: "Geen herkende taak" });
-        return;
+        throw new BadRequestError("Taak niet gevonden");
       }
       const klasgroep = await Klasgroep.findById(taak.klasgroep);
       if (
         !taak.isGepubliceerd ||
         (klasgroep && !klasgroep.studenten.includes(gebruiker.id))
       ) {
-        res.status(400).json({ message: "Geen toegang tot deze taak" });
-        return;
+        throw new UnauthorizedError("Geen toegang tot deze taak", 403);
       }
     }
     if (klasgroepId) {
       const klasgroep = await Klasgroep.findById(klasgroepId);
 
       if (!klasgroep) {
-        res.status(400).json({ message: "Geen herkende klasgroep" });
-        return;
+        throw new BadRequestError("Klasgroep niet gevonden");
       }
       if (!klasgroep.studenten.includes(gebruiker.id)) {
-        res.status(400).json({ message: "Geen toegang tot deze klasgroep" });
-        return;
+        throw new UnauthorizedError("Geen toegang tot deze klasgroep", 403);
       }
     }
     if (inzendingId) {
       const inzending = await Inzending.findById(inzendingId);
       if (!inzending) {
-        res.status(400).json({ message: "Geen inzending gevonden" });
-        return;
+        throw new BadRequestError("Inzending niet gevonden");
       }
       if (inzending.student !== gebruiker.id) {
-        res.status(400).json({ message: "Geen toegang tot deze inzending" });
-        return;
+        throw new UnauthorizedError("Geen toegang tot deze inzending", 403);
       }
     }
     next();
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };

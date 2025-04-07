@@ -5,21 +5,25 @@ import generator from "generate-password";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { Gebruiker } from "../models/GebruikerModel";
-import { hashWachtwoord, mailData } from "../utils/helpers";
+import {
+  BadRequestError,
+  ErrorHandler,
+  hashWachtwoord,
+  mailData,
+  UnauthorizedError,
+} from "../utils/helpers";
 
 export const register = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
 
     if (!email) {
-      res.status(400).json({ message: "Email verplicht" });
-      return;
+      throw new BadRequestError("Email verplicht");
     }
 
     const gebruiker = await Gebruiker.findOne({ email });
     if (gebruiker) {
-      res.status(400).json({ message: "Gebruiker bestaat al" });
-      return;
+      throw new BadRequestError("Email al geregistreerd", 200);
     }
 
     const wachtwoord = generator.generate({
@@ -42,15 +46,12 @@ export const register = async (req: Request, res: Response) => {
 
     await Gebruiker.create({ email, wachtwoord: hashedWachtwoord });
 
-    res
-      .status(200)
-      .json({ message: "Gebruiker succesvol geregistreerd, wachtwoord per mail verzonden" });
+    res.status(201).json({
+      message:
+        "Gebruiker succesvol geregistreerd, wachtwoord per mail verzonden",
+    });
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 export const login = async (req: Request, res: Response) => {
@@ -58,19 +59,16 @@ export const login = async (req: Request, res: Response) => {
     const { email, wachtwoord } = req.body;
 
     if (!email || !wachtwoord) {
-      res.status(400).json({ message: "Onvolledige gebruikers data" });
-      return;
+      throw new BadRequestError("Email en wachtwoord verplicht");
     }
 
     const gebruiker = await Gebruiker.findOne({ email });
     if (!gebruiker) {
-      res.status(400).json({ message: "Onbekende gebruiker" });
-      return;
+      throw new UnauthorizedError("Geen toegang tot deze pagina");
     }
     const juisteLogin = await bcrypt.compare(wachtwoord, gebruiker.wachtwoord);
     if (!juisteLogin) {
-      res.status(400).json({ message: "Ongeldige login" });
-      return;
+      throw new UnauthorizedError("Ongeldig wachtwoord");
     }
     if (!process.env.JWT_SECRET) {
       throw new Error("Internal server error");
@@ -91,11 +89,7 @@ export const login = async (req: Request, res: Response) => {
     });
     res.status(200).json({ message: "Gebruiker succesvol ingelogd" });
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 export const logout = async (req: Request, res: Response) => {
@@ -108,11 +102,7 @@ export const logout = async (req: Request, res: Response) => {
     });
     res.status(200).json({ message: "Gebruiker succesvol uitgelogd" });
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -126,8 +116,7 @@ export const resetWachtwoordRequest = async (req: Request, res: Response) => {
     }
 
     if (!gebruiker) {
-      res.status(400).json({ message: "Onbekende gebruiker" });
-      return;
+      throw new BadRequestError("Geen herkende gebruiker", 200);
     }
 
     const resetToken = jwt.sign(
@@ -154,13 +143,9 @@ export const resetWachtwoordRequest = async (req: Request, res: Response) => {
 
     await mailerSend.email.send(emailParams);
 
-    res.status(200).json({ message: "Wachtwoord reset aanvraag verstuurd" });
+    res.status(201).json({ message: "Wachtwoord reset aanvraag verstuurd" });
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -173,21 +158,18 @@ export const resetWachtwoord = async (req: Request, res: Response) => {
     }
 
     if (!wachtwoord || !resetToken) {
-      res.status(400).json({ message: "Ontbrekende reset data" });
-      return;
+      throw new BadRequestError("Ontbrekende reset data");
     }
     const decodedToken = jwt.verify(
       resetToken,
       process.env.JWT_SECRET as string
     );
     if (typeof decodedToken === "string" || !("email" in decodedToken)) {
-      res.status(400).json({ message: "Foutieve reset link." });
-      return;
+      throw new BadRequestError("Foutieve reset link.");
     }
     const gebruiker = await Gebruiker.findOne({ email: decodedToken.email });
     if (!gebruiker) {
-      res.status(400).json({ message: "Geen herkende gebruiker" });
-      return;
+      throw new UnauthorizedError("Geen toegang tot deze pagina");
     }
     const hashedWachtwoord = await hashWachtwoord(wachtwoord);
     gebruiker.wachtwoord = hashedWachtwoord;
@@ -195,10 +177,6 @@ export const resetWachtwoord = async (req: Request, res: Response) => {
     await gebruiker.save();
     res.status(200).json({ message: "Wachtwoord succesvol gereset" });
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };

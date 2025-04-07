@@ -1,6 +1,9 @@
 import "dotenv/config";
 import { EmailParams, MailerSend, Recipient, Sender } from "mailersend";
 import bcrypt from "bcrypt";
+import { NextFunction, Request, Response } from "express";
+import { Error as MongooseError } from "mongoose";
+const { ValidationError } = MongooseError;
 
 export const mailData = async (
   email: string,
@@ -42,4 +45,40 @@ export const hashWachtwoord = async (wachtwoord: string) => {
   const saltRounds = 10;
   const hashedWachtwoord = await bcrypt.hash(wachtwoord, saltRounds);
   return hashedWachtwoord;
+};
+
+export class UnauthorizedError extends Error {
+  constructor(
+    message: string = "Unauthorized access",
+    public statusCode: number = 401
+  ) {
+    super(message);
+    this.name = "UnauthorizedError";
+    this.statusCode = statusCode;
+  }
+}
+
+export class BadRequestError extends Error {
+  constructor(
+    message: string = "Bad request",
+    public statusCode: number = 400
+  ) {
+    super(message);
+    this.name = "BadRequestError";
+    this.statusCode = statusCode;
+  }
+}
+
+export const ErrorHandler = (error: unknown, req: Request, res: Response) => {
+  if (error instanceof BadRequestError) {
+    res.status(error.statusCode).json({ message: error.message });
+  } else if (error instanceof UnauthorizedError) {
+    res.status(error.statusCode).json({ message: error.message });
+  } else if (error instanceof ValidationError) {
+    res.status(400).json({ message: error.message });
+  } else if (error instanceof Error) {
+    res.status(500).json({ message: error.message });
+  } else {
+    res.status(500).json({ message: "Something went wrong" });
+  }
 };

@@ -2,32 +2,30 @@ import "dotenv/config";
 import { Request, Response } from "express";
 import { Error as MongooseError } from "mongoose";
 import { Gebruiker } from "../models/GebruikerModel";
+import {
+  BadRequestError,
+  ErrorHandler,
+  UnauthorizedError,
+} from "../utils/helpers";
 
 export const getGebruikerById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const gebruiker = await Gebruiker.findById(id).select("-wachtwoord");
+    if (!gebruiker) throw new BadRequestError("Geen gebruiker gevonden", 404);
     res.status(200).json(gebruiker);
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 export const getAuthGebruiker = async (req: Request, res: Response) => {
   try {
     //@ts-ignore
     const gebruiker = req.gebruiker;
-    
+
     res.status(200).json(gebruiker);
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 export const setGebruikerData = async (req: Request, res: Response) => {
@@ -43,18 +41,14 @@ export const setGebruikerData = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "Gebruiker data aangepast" });
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
 export const setGebruikerFoto = async (req: Request, res: Response) => {
   try {
     if (!req.file) {
-      throw new Error("No file uploaded");
+      throw new BadRequestError("No file uploaded", 415);
     }
     //@ts-ignore
     const gebruiker = req.gebruiker;
@@ -66,12 +60,8 @@ export const setGebruikerFoto = async (req: Request, res: Response) => {
     gebruiker.foto = `${baseUrl}${transform}${imageUrl}`;
     await gebruiker.save();
 
-    res.status(200).json({ message: "Gebruiker foto aangepast" });
+    res.status(201).json({ message: "Gebruiker foto aangepast" });
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };

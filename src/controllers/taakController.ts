@@ -5,6 +5,7 @@ import { Klasgroep } from "../models/KlasgroepModel";
 import { Gradering, TGradering } from "../models/GraderingModel";
 import { Inzending, TInzending } from "../models/InzendingModel";
 import { isDocent } from "../middleware/authMiddleware";
+import { BadRequestError, ErrorHandler } from "../utils/helpers";
 const { ValidationError } = MongooseError;
 
 export const getTaken = async (req: Request, res: Response) => {
@@ -16,14 +17,9 @@ export const getTaken = async (req: Request, res: Response) => {
       .populate("klasgroep", "_id naam beginjaar eindjaar")
       .populate("vak", "_id naam")
       .populate("bijlagen");
-    console.log(18, taken);
     res.status(200).json(taken);
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -36,11 +32,7 @@ export const getAlleTaken = async (req: Request, res: Response) => {
 
     res.status(200).json(taken);
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -66,14 +58,10 @@ export const getTaak = async (req: Request, res: Response) => {
       { path: "klasgroep", select: "_id naam beginjaar eindjaar" },
       { path: "vak", select: "_id naam" },
     ]);
-    
+
     res.status(200).json(taak);
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -91,22 +79,17 @@ export const addTaak = async (req: Request, res: Response) => {
       bijlagen,
     } = req.body;
 
-    if (!klasgroepId || !titel || !beschrijving || !deadline || !weging) {
-      res.status(400).json({ message: "Onvolledige taak data" });
-      return;
-    }
+    if (!klasgroepId || !titel || !beschrijving || !deadline || !weging)
+      throw new BadRequestError(
+        "KlasgroepId, titel, beschrijving, deadline en weging zijn verplicht"
+      );
 
     const klasgroep = await Klasgroep.findById(klasgroepId);
 
-    if (!klasgroep) {
-      res.status(400).json({ message: "Klasgroep niet gevonden" });
-      return;
-    }
+    if (!klasgroep) throw new BadRequestError("Klasgroep niet gevonden");
 
-    if (vak && !klasgroep.vakken.includes(vak)) {
-      res.status(400).json({ message: "Vak niet gevonden in deze klasgroep" });
-      return;
-    }
+    if (vak && !klasgroep.vakken.includes(vak))
+      throw new BadRequestError("Vak niet gevonden in klasgroep");
 
     const taak = await Taak.create({
       type,
@@ -121,13 +104,7 @@ export const addTaak = async (req: Request, res: Response) => {
     });
     res.status(201).json(taak);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -148,10 +125,10 @@ export const updateTaak = async (req: Request, res: Response) => {
     const check = await Taak.findById(taakId);
     const klasgroep = await Klasgroep.findById(check?.klasgroep);
 
-    if (vak && klasgroep && !klasgroep.vakken.includes(vak)) {
-      res.status(400).json({ message: "Vak niet gevonden in deze klasgroep" });
-      return;
-    }
+    if (!check) throw new BadRequestError("Taak niet gevonden");
+    if (!klasgroep) throw new BadRequestError("Klasgroep niet gevonden");
+    if (vak && klasgroep && !klasgroep.vakken.includes(vak))
+      throw new BadRequestError("Vak niet gevonden in klasgroep");
 
     const taak = await Taak.findByIdAndUpdate(
       taakId,
@@ -169,13 +146,7 @@ export const updateTaak = async (req: Request, res: Response) => {
     );
     res.status(201).json(taak);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -184,17 +155,13 @@ export const dupliceerTaak = async (req: Request, res: Response) => {
     const { taakId } = req.params;
     const { klasgroepId } = req.body;
 
-    if (!taakId || !klasgroepId) {
-      res.status(400).json({ message: "taakId en klasgroepId zijn verplicht" });
-      return;
-    }
+    if (!taakId || !klasgroepId)
+      throw new BadRequestError("taakId en klasgroepId zijn verplicht");
 
     const taak = await Taak.findById(taakId);
     const klasgroep = await Klasgroep.findById(klasgroepId);
-    if (!taak || !klasgroep) {
-      res.status(400).json({ message: "Taak of klasgroep niet gevonden" });
-      return;
-    }
+    if (!taak) throw new BadRequestError("Taak niet gevonden");
+    if (!klasgroep) throw new BadRequestError("Klasgroep niet gevonden");
 
     const middernacht = new Date().setUTCHours(24, 0, 0, 0);
     const nieuweTaak = await Taak.create({
@@ -210,13 +177,7 @@ export const dupliceerTaak = async (req: Request, res: Response) => {
 
     res.status(201).json(nieuweTaak);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -224,15 +185,10 @@ export const deleteTaak = async (req: Request, res: Response) => {
   try {
     const { taakId } = req.params;
     const taak = await Taak.findByIdAndDelete(taakId);
-    res.status(200).json({ message: "Taak verwijderd" });
+    if (!taak) throw new BadRequestError("Taak niet gevonden");
+    res.status(204).json({ message: "Taak verwijderd" });
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -248,9 +204,9 @@ export const getAverage = async (req: Request, res: Response) => {
       populate: { path: "gradering" },
     });
 
-    if (!taak) {
-      throw new Error("Taak niet gevonden");
-    }
+    if (!taak) 
+      throw new BadRequestError("Taak niet gevonden");
+    
 
     const graderingen = taak.inzendingen
       .map((inzending) => inzending.gradering)
@@ -261,12 +217,6 @@ export const getAverage = async (req: Request, res: Response) => {
 
     res.status(200).json(average);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };

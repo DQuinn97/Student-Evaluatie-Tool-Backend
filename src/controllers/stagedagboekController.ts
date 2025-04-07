@@ -3,6 +3,7 @@ import { Stagedagboek } from "../models/StagedagboekModel";
 import { Error as MongooseError } from "mongoose";
 import { Stagedag } from "../models/StagedagModel";
 import { Stageverslag } from "../models/StageverslagModel";
+import { BadRequestError, ErrorHandler } from "../utils/helpers";
 const { ValidationError } = MongooseError;
 
 /*
@@ -15,13 +16,10 @@ export const getDagboek = async (req: Request, res: Response) => {
       .lean()
       .populate(["stageverslag", "stagedagen", "klasgroep"])
       .populate("student", "-wachtwoord");
+    if (!dagboek) throw new BadRequestError("Dagboek niet gevonden");
     res.status(200).json(dagboek);
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -32,15 +30,10 @@ export const getDag = async (req: Request, res: Response) => {
   try {
     const { dagId: id } = req.params;
     const dag = await Stagedag.findById(id);
+    if (!dag) throw new BadRequestError("Dag niet gevonden");
     res.status(200).json(dag);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 export const addDag = async (req: Request, res: Response) => {
@@ -64,13 +57,7 @@ export const addDag = async (req: Request, res: Response) => {
     await dagboek?.save();
     res.status(201).json(dag);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 export const updateDag = async (req: Request, res: Response) => {
@@ -85,13 +72,7 @@ export const updateDag = async (req: Request, res: Response) => {
     );
     res.status(200).json(dag);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -102,13 +83,7 @@ export const deleteDag = async (req: Request, res: Response) => {
     const dag = await Stagedag.findByIdAndDelete(id);
     res.status(200).json(dag);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -121,13 +96,7 @@ export const getVerslag = async (req: Request, res: Response) => {
     const verslag = await Stageverslag.findById(id);
     res.status(200).json(verslag);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 export const addVerslag = async (req: Request, res: Response) => {
@@ -163,19 +132,13 @@ export const addVerslag = async (req: Request, res: Response) => {
     await dagboek?.save();
     res.status(201).json(verslag);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
 export const updateVerslag = async (req: Request, res: Response) => {
   try {
-    const { verslagId:id } = req.params;
+    const { verslagId: id } = req.params;
     const {
       datum,
       stagebedrijf,
@@ -202,31 +165,21 @@ export const updateVerslag = async (req: Request, res: Response) => {
       },
       { new: true }
     );
+    if (!verslag) throw new BadRequestError("Verslag niet gevonden");
     res.status(200).json(verslag);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
 export const deleteVerslag = async (req: Request, res: Response) => {
   try {
     // TODO delete files related to this
-    const { verslagId:id } = req.params;
+    const { verslagId: id } = req.params;
     const verslag = await Stageverslag.findByIdAndDelete(id);
+    if (!verslag) throw new BadRequestError("Verslag niet gevonden");
     res.status(200).json(verslag);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };

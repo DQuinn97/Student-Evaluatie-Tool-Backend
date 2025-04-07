@@ -7,6 +7,7 @@ import {
 } from "mongoose";
 import { Inzending, TInzending } from "../models/InzendingModel";
 import { Taak } from "../models/TaakModel";
+import { BadRequestError, ErrorHandler, UnauthorizedError } from "../utils/helpers";
 const { ValidationError } = MongooseError;
 
 // voeg taak toe in response van inzending
@@ -27,11 +28,16 @@ export const getInzending = async (req: Request, res: Response) => {
   try {
     const { inzendingId: id } = req.params;
     const inzending = await Inzending.findById(id).populate("gradering");
-    if (!inzending) throw new Error("Something went wrong");
+    if (!inzending) throw new BadRequestError("Inzending niet gevonden");
     const response = (await appendTaken([inzending]))[0];
     res.status(200).json(response);
   } catch (error: unknown) {
-    if (error instanceof Error) {
+    if (
+      error instanceof BadRequestError ||
+      error instanceof UnauthorizedError
+    ) {
+      res.status(error.statusCode).json({ message: error.message });
+    } else if (error instanceof Error) {
       res.status(500).json({ message: error.message });
     } else {
       res.status(500).json({ message: "Something went wrong" });
@@ -47,7 +53,7 @@ export const addInzending = async (req: Request, res: Response) => {
     const gebruiker = req.gebruiker;
     const taak = await Taak.findById(taakId).populate("inzendingen");
     if (!taak) {
-      throw new Error("Taak niet gevonden");
+      throw new BadRequestError("Taak niet gevonden");
     }
 
     const inzending = await Inzending.create({
@@ -62,7 +68,12 @@ export const addInzending = async (req: Request, res: Response) => {
 
     res.status(201).json(inzending);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
+    if (
+      error instanceof BadRequestError ||
+      error instanceof UnauthorizedError
+    ) {
+      res.status(error.statusCode).json({ message: error.message });
+    } else if (error instanceof ValidationError) {
       res.status(400).json({ message: error.message });
     } else if (error instanceof Error) {
       res.status(500).json({ message: error.message });
@@ -81,11 +92,16 @@ export const updateInzending = async (req: Request, res: Response) => {
       { git, live, beschrijving, inzending: Date.now() },
       { new: true }
     );
-    if (!inzending) throw new Error("inzending niet geupdate");
+    if (!inzending) throw new BadRequestError("Inzending niet gevonden");
     const response = (await appendTaken([inzending]))[0];
     res.status(200).json(response);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
+    if (
+      error instanceof BadRequestError ||
+      error instanceof UnauthorizedError
+    ) {
+      res.status(error.statusCode).json({ message: error.message });
+    } else if (error instanceof ValidationError) {
       res.status(400).json({ message: error.message });
     } else if (error instanceof Error) {
       res.status(500).json({ message: error.message });
@@ -108,13 +124,7 @@ export const getInzendingenPerTaak = async (req: Request, res: Response) => {
 
     res.status(200).json(inzendingen);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -129,13 +139,7 @@ export const getInzendingen = async (req: Request, res: Response) => {
 
     res.status(200).json(response);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -147,12 +151,6 @@ export const getInzendingenPerStudent = async (req: Request, res: Response) => {
 
     res.status(200).json(response);
   } catch (error: unknown) {
-    if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };

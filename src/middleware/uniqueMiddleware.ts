@@ -3,6 +3,11 @@ import { Klasgroep } from "../models/KlasgroepModel";
 import { Vak } from "../models/VakModel";
 import { Inzending } from "../models/InzendingModel";
 import { Taak } from "../models/TaakModel";
+import {
+  BadRequestError,
+  ErrorHandler,
+  UnauthorizedError,
+} from "../utils/helpers";
 
 export const isUnique = async (
   req: Request,
@@ -22,10 +27,13 @@ export const isUnique = async (
       );
       console.log(klasgroep);
       if (!klasgroep) {
-        throw new Error("Klasgroep niet gevonden");
+        throw new BadRequestError("Klasgroep niet gevonden");
       }
       if (studentId && klasgroep.studenten.find((s) => s.id == studentId)) {
-        throw new Error("Student is al toegevoegd aan deze klasgroep");
+        throw new BadRequestError(
+          "Student is al toegevoegd aan deze klasgroep",
+          409
+        );
       }
       if (
         vak &&
@@ -34,13 +42,16 @@ export const isUnique = async (
           _id: { $in: klasgroep.vakken },
         }))
       ) {
-        throw new Error("Vak met deze naam bestaat al in deze klasgroep");
+        throw new BadRequestError(
+          "Vak met deze naam bestaat al in deze klasgroep",
+          409
+        );
       }
     }
     if (taakId) {
       const taak = await Taak.findById(taakId).populate("inzendingen");
       if (!taak) {
-        throw new Error("Taak niet gevonden");
+        throw new BadRequestError("Taak niet gevonden");
       }
       if (
         await Inzending.findOne({
@@ -48,18 +59,15 @@ export const isUnique = async (
           _id: { $in: taak.inzendingen },
         })
       ) {
-        throw new Error(
-          "Student heeft al een inzending op deze taak verstuurd"
+        throw new BadRequestError(
+          "Student heeft al een inzending op deze taak verstuurd",
+          409
         );
       }
     }
 
     next();
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
