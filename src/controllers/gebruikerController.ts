@@ -20,7 +20,9 @@ export const getAuthGebruiker = async (req: Request, res: Response) => {
   try {
     //@ts-ignore
     const gebruiker = req.gebruiker;
-    
+
+    console.log(gebruiker);
+
     res.status(200).json(gebruiker);
   } catch (error: unknown) {
     if (error instanceof Error) {
