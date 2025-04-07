@@ -1,12 +1,9 @@
 import { Request, Response } from "express";
-import { Error as MongooseError } from "mongoose";
-import { Taak, TTaak } from "../models/TaakModel";
+import { Taak } from "../models/TaakModel";
 import { Klasgroep } from "../models/KlasgroepModel";
-import { Gradering, TGradering } from "../models/GraderingModel";
-import { Inzending, TInzending } from "../models/InzendingModel";
-import { isDocent } from "../middleware/authMiddleware";
+import { TGradering } from "../models/GraderingModel";
+import { TInzending } from "../models/InzendingModel";
 import { BadRequestError, ErrorHandler } from "../utils/helpers";
-const { ValidationError } = MongooseError;
 
 export const getTaken = async (req: Request, res: Response) => {
   try {
@@ -204,9 +201,7 @@ export const getAverage = async (req: Request, res: Response) => {
       populate: { path: "gradering" },
     });
 
-    if (!taak) 
-      throw new BadRequestError("Taak niet gevonden");
-    
+    if (!taak) throw new BadRequestError("Taak niet gevonden");
 
     const graderingen = taak.inzendingen
       .map((inzending) => inzending.gradering)

@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
 import { Stagedagboek } from "../models/StagedagboekModel";
-import { Error as MongooseError } from "mongoose";
 import { Stagedag } from "../models/StagedagModel";
 import { Stageverslag } from "../models/StageverslagModel";
 import { BadRequestError, ErrorHandler } from "../utils/helpers";
-const { ValidationError } = MongooseError;
 
 /*
  * STAGEDAGBOEK

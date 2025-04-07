@@ -1,6 +1,5 @@
 import "dotenv/config";
 import { Request, Response } from "express";
-import { Error as MongooseError } from "mongoose";
 import generator from "generate-password";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";

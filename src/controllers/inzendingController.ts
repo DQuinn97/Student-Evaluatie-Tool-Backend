@@ -1,14 +1,7 @@
 import { Request, Response } from "express";
-import { Todo } from "../models/exampleModel";
-import {
-  HydratedDocument,
-  HydratedDocumentFromSchema,
-  Error as MongooseError,
-} from "mongoose";
 import { Inzending, TInzending } from "../models/InzendingModel";
 import { Taak } from "../models/TaakModel";
-import { BadRequestError, ErrorHandler, UnauthorizedError } from "../utils/helpers";
-const { ValidationError } = MongooseError;
+import { BadRequestError, ErrorHandler } from "../utils/helpers";
 
 // voeg taak toe in response van inzending
 const appendTaken = async (inzendingen: TInzending[]) => {
@@ -32,16 +25,7 @@ export const getInzending = async (req: Request, res: Response) => {
     const response = (await appendTaken([inzending]))[0];
     res.status(200).json(response);
   } catch (error: unknown) {
-    if (
-      error instanceof BadRequestError ||
-      error instanceof UnauthorizedError
-    ) {
-      res.status(error.statusCode).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -52,9 +36,7 @@ export const addInzending = async (req: Request, res: Response) => {
     //@ts-ignore
     const gebruiker = req.gebruiker;
     const taak = await Taak.findById(taakId).populate("inzendingen");
-    if (!taak) {
-      throw new BadRequestError("Taak niet gevonden");
-    }
+    if (!taak) throw new BadRequestError("Taak niet gevonden");
 
     const inzending = await Inzending.create({
       git,
@@ -68,18 +50,7 @@ export const addInzending = async (req: Request, res: Response) => {
 
     res.status(201).json(inzending);
   } catch (error: unknown) {
-    if (
-      error instanceof BadRequestError ||
-      error instanceof UnauthorizedError
-    ) {
-      res.status(error.statusCode).json({ message: error.message });
-    } else if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 
@@ -96,18 +67,7 @@ export const updateInzending = async (req: Request, res: Response) => {
     const response = (await appendTaken([inzending]))[0];
     res.status(200).json(response);
   } catch (error: unknown) {
-    if (
-      error instanceof BadRequestError ||
-      error instanceof UnauthorizedError
-    ) {
-      res.status(error.statusCode).json({ message: error.message });
-    } else if (error instanceof ValidationError) {
-      res.status(400).json({ message: error.message });
-    } else if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: "Something went wrong" });
-    }
+    ErrorHandler(error, req, res);
   }
 };
 

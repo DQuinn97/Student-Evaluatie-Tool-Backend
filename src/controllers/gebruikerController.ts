@@ -1,12 +1,7 @@
 import "dotenv/config";
 import { Request, Response } from "express";
-import { Error as MongooseError } from "mongoose";
 import { Gebruiker } from "../models/GebruikerModel";
-import {
-  BadRequestError,
-  ErrorHandler,
-  UnauthorizedError,
-} from "../utils/helpers";
+import { BadRequestError, ErrorHandler } from "../utils/helpers";
 
 export const getGebruikerById = async (req: Request, res: Response) => {
   try {

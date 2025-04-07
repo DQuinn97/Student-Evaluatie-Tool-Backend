@@ -17,20 +17,19 @@ export const isAuth = async (
 ) => {
   try {
     const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      res.status(400).json({ message: "Foutieve token" });
-      return;
-    }
+    if (!token) 
+      throw new UnauthorizedError("Geen toegang tot deze pagina");
+    
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string);
 
-    if (typeof decodedToken === "string" || !("email" in decodedToken)) {
+    if (typeof decodedToken === "string" || !("email" in decodedToken)) 
       throw new UnauthorizedError("Geen toegang tot deze pagina");
-    }
+    
     const gebruiker = await Gebruiker.findOne({ email: decodedToken.email });
-    if (!gebruiker) {
+    if (!gebruiker) 
       throw new UnauthorizedError("Geen toegang tot deze pagina");
-    }
+    
     //@ts-ignore
     req.gebruiker = gebruiker;
     next();
@@ -47,9 +46,9 @@ export const isDocent = async (
   try {
     //@ts-ignore
     const gebruiker = req.gebruiker;
-    if (!gebruiker || !gebruiker.isDocent) {
+    if (!gebruiker || !gebruiker.isDocent) 
       throw new UnauthorizedError("Geen toegang tot deze pagina", 403);
-    }
+    
 
     next();
   } catch (error: unknown) {
@@ -71,35 +70,35 @@ export const hasAccess = async (
     if (taakId) {
       const taak = await Taak.findById(taakId).populate("klasgroep");
 
-      if (!taak) {
+      if (!taak) 
         throw new BadRequestError("Taak niet gevonden");
-      }
+      
       const klasgroep = await Klasgroep.findById(taak.klasgroep);
       if (
         !taak.isGepubliceerd ||
         (klasgroep && !klasgroep.studenten.includes(gebruiker.id))
-      ) {
+      ) 
         throw new UnauthorizedError("Geen toegang tot deze taak", 403);
-      }
+      
     }
     if (klasgroepId) {
       const klasgroep = await Klasgroep.findById(klasgroepId);
 
-      if (!klasgroep) {
+      if (!klasgroep) 
         throw new BadRequestError("Klasgroep niet gevonden");
-      }
-      if (!klasgroep.studenten.includes(gebruiker.id)) {
+      
+      if (!klasgroep.studenten.includes(gebruiker.id)) 
         throw new UnauthorizedError("Geen toegang tot deze klasgroep", 403);
-      }
+      
     }
     if (inzendingId) {
       const inzending = await Inzending.findById(inzendingId);
-      if (!inzending) {
+      if (!inzending) 
         throw new BadRequestError("Inzending niet gevonden");
-      }
-      if (inzending.student !== gebruiker.id) {
+      
+      if (inzending.student !== gebruiker.id) 
         throw new UnauthorizedError("Geen toegang tot deze inzending", 403);
-      }
+      
     }
     next();
   } catch (error: unknown) {

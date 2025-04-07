@@ -1,14 +1,10 @@
 import { Request, Response } from "express";
-import { Todo } from "../models/exampleModel";
-import { Error as MongooseError } from "mongoose";
 import { Gradering } from "../models/GraderingModel";
 import { Inzending } from "../models/InzendingModel";
 import {
   BadRequestError,
   ErrorHandler,
-  UnauthorizedError,
 } from "../utils/helpers";
-const { ValidationError } = MongooseError;
 
 export const getGradering = async (req: Request, res: Response) => {
   try {

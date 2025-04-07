@@ -1,13 +1,10 @@
 import { Request, Response } from "express";
-import { Error as MongooseError } from "mongoose";
 import { Klasgroep } from "../models/KlasgroepModel";
 import { Vak } from "../models/VakModel";
 import {
   BadRequestError,
   ErrorHandler,
-  UnauthorizedError,
 } from "../utils/helpers";
-const { ValidationError } = MongooseError;
 
 export const getKlasgroepen = async (req: Request, res: Response) => {
   try {
