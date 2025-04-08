@@ -12,6 +12,10 @@ const graderingSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    maxscore: {
+      type: Number,
+      required: true,
+    },
     docent: {
       type: Schema.Types.ObjectId,
       ref: Gebruiker,

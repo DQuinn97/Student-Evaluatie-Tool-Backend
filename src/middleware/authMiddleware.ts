@@ -60,9 +60,10 @@ export const hasAccess = async (
   try {
     //@ts-ignore
     const gebruiker = req.gebruiker;
-    const { klasgroepId, taakId, inzendingId } = req.params;
+    const { klasgroepId, taakId, inzendingId, studentId } = req.params;
     if (gebruiker.isDocent) return next();
 
+    
     if (taakId) {
       const taak = await Taak.findById(taakId).populate("klasgroep");
 
@@ -82,6 +83,11 @@ export const hasAccess = async (
 
       if (!klasgroep.studenten.includes(gebruiker.id))
         throw new UnauthorizedError("Geen toegang tot deze klasgroep", 403);
+
+      if(studentId){
+        if(studentId !== gebruiker.id)
+          throw new UnauthorizedError("Geen toegang tot deze gebruikerdata", 403);
+      }
     }
     if (inzendingId) {
       const inzending = await Inzending.findById(inzendingId);

@@ -33,7 +33,7 @@ export const getGradering = async (req: Request, res: Response) => {
 export const addGradering = async (req: Request, res: Response) => {
   try {
     const { inzendingId } = req.params;
-    const { score, feedback } = req.body;
+    const { score, maxscore, feedback } = req.body;
     //@ts-ignore
     const gebruiker = req.gebruiker;
 
@@ -42,6 +42,7 @@ export const addGradering = async (req: Request, res: Response) => {
 
     const gradering = await Gradering.create({
       score,
+      maxscore: maxscore || 100,
       feedback,
       docent: gebruiker._id,
     });
@@ -62,10 +63,10 @@ export const addGradering = async (req: Request, res: Response) => {
 export const updateGradering = async (req: Request, res: Response) => {
   try {
     const { graderingId: id } = req.params;
-    const { score, feedback } = req.body;
+    const { score, maxscore, feedback } = req.body;
     const gradering = await Gradering.findByIdAndUpdate(
       id,
-      { score, feedback },
+      { score, feedback, maxscore },
       { new: true }
     );
     if (!gradering) throw new NotFoundError("Gradering niet gevonden");

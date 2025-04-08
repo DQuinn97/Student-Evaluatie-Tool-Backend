@@ -209,6 +209,10 @@ const options = {
             score: {
               type: "number",
             },
+            maxscore: {
+              type: "number",
+              default: 100,
+            },
             docent: {
               $ref: "#/components/schemas/Gebruiker",
             },
@@ -404,7 +408,7 @@ const options = {
       { name: "Klassen", description: "Klasgroepen endpoints" },
       { name: "Taken", description: "Taken endpoints" },
       { name: "Inzendingen", description: "Inzendingen endpoints" },
-      {name:"Graderingen", description:"Graderingen endpoints"},
+      { name: "Graderingen", description: "Graderingen endpoints" },
     ],
   },
   apis: ["**/*.ts"],

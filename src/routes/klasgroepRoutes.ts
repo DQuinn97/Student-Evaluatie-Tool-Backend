@@ -11,6 +11,10 @@ import {
 import { hasAccess, isAuth, isDocent } from "../middleware/authMiddleware";
 import { getTaken, addTaak } from "../controllers/taakController";
 import { isUnique } from "../middleware/uniqueMiddleware";
+import {
+  getGebruikerById_fullPerKlasgroep,
+  getGebruikerDump,
+} from "../controllers/gebruikerController";
 
 const router = express.Router();
 /**
@@ -57,7 +61,7 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Klasgroep'
- *       '400': 
+ *       '400':
  *         $ref: '#/components/responses/BadRequest_MissingField'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
@@ -118,7 +122,7 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Klasgroep'
- *       '400': 
+ *       '400':
  *         $ref: '#/components/responses/BadRequest_MissingField'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
@@ -162,6 +166,38 @@ const router = express.Router();
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
  *
+ * /klassen/{klasgroepId}/studenten/{studentId}:
+ *   get:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: De totale data dump van een student in een klasgroep
+ *     tags: [Klassen, Profiel]
+ *     parameters:
+ *       - name: klasgroepId
+ *         in: path
+ *         description: ID van de op te vragen klasgroep
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - name: studentId
+ *         in: path
+ *         description: ID van de op te vragen student
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Gebruiker'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
+ *
  * /klassen/{klasgroepId}/vakken:
  *   post:
  *     security:
@@ -190,7 +226,7 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Klasgroep'
- *       '400': 
+ *       '400':
  *         $ref: '#/components/responses/BadRequest_MissingField'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
@@ -227,7 +263,7 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Klasgroep'
- *       '400': 
+ *       '400':
  *         $ref: '#/components/responses/BadRequest_MissingField'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
@@ -333,6 +369,12 @@ router
     isAuth,
     isDocent,
     removeStudentFromKlasgroep
+  )
+  .get(
+    "/:klasgroepId/studenten/:studentId",
+    isAuth,
+    hasAccess,
+    getGebruikerDump
   )
   .post("/:klasgroepId/vakken", isAuth, isDocent, isUnique, pushVakToKlasgroep)
   .patch("/:klasgroepId/vakken", isAuth, isDocent, removeVakFromKlasgroep)
