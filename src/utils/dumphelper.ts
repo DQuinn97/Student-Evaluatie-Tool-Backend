@@ -146,7 +146,6 @@ export const gebruikerDump = async (
     } as VakDumpPlus;
 
     // alle taken van dit vak uit takenDump halen
-    console.log(takenDump);
     const taken = takenDump.filter((taak) => taak.vak?._id == vak._id);
 
     // overige weging berekenen
