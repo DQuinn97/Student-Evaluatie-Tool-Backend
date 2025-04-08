@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Stagedagboek } from "../models/StagedagboekModel";
 import { Stagedag } from "../models/StagedagModel";
 import { Stageverslag } from "../models/StageverslagModel";
-import { ErrorHandler, NotFoundError } from "../utils/helpers";
+import { ErrorHandler, NotFoundError } from "../utils/errors";
 
 /*
  * STAGEDAGBOEK

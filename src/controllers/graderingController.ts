@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Gradering, TGradering } from "../models/GraderingModel";
 import { Inzending } from "../models/InzendingModel";
-import { ErrorHandler, NotFoundError } from "../utils/helpers";
+import { ErrorHandler, NotFoundError } from "../utils/errors";
 import { Taak } from "../models/TaakModel";
 
 const appendInzending = async (gradering: TGradering) => {

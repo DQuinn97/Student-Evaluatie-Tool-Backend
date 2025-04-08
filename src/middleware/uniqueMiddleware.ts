@@ -3,7 +3,7 @@ import { Klasgroep } from "../models/KlasgroepModel";
 import { Vak } from "../models/VakModel";
 import { Inzending } from "../models/InzendingModel";
 import { Taak } from "../models/TaakModel";
-import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/helpers";
+import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/errors";
 
 export const isUnique = async (
   req: Request,

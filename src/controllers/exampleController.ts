@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Todo } from "../models/exampleModel";
-import { ErrorHandler } from "../utils/helpers";
+import { ErrorHandler } from "../utils/errors";
 
 export const getHelloWorld = (req: Request, res: Response) => {
   res.status(200).json({ message: "Hello World!" });

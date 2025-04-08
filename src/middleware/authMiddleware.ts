@@ -6,11 +6,10 @@ import { Klasgroep } from "../models/KlasgroepModel";
 import { Taak } from "../models/TaakModel";
 import { Inzending } from "../models/InzendingModel";
 import {
-  BadRequestError,
   ErrorHandler,
   NotFoundError,
   UnauthorizedError,
-} from "../utils/helpers";
+} from "../utils/errors";
 export const isAuth = async (
   req: Request,
   res: Response,

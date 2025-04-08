@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Inzending, TInzending } from "../models/InzendingModel";
 import { Taak } from "../models/TaakModel";
-import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/helpers";
+import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/errors";
 import { Gebruiker } from "../models/GebruikerModel";
 
 // voeg taak toe in response van inzending

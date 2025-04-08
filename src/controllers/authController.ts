@@ -7,10 +7,9 @@ import { Gebruiker } from "../models/GebruikerModel";
 import {
   BadRequestError,
   ErrorHandler,
-  hashWachtwoord,
-  mailData,
   UnauthorizedError,
-} from "../utils/helpers";
+} from "../utils/errors";
+import { hashWachtwoord, mailData } from "../utils/helpers";
 
 export const register = async (req: Request, res: Response) => {
   try {

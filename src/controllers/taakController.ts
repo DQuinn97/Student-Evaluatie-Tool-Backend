@@ -3,13 +3,8 @@ import { Taak } from "../models/TaakModel";
 import { Klasgroep } from "../models/KlasgroepModel";
 import { TGradering } from "../models/GraderingModel";
 import { TInzending } from "../models/InzendingModel";
-import {
-  BadRequestError,
-  ErrorHandler,
-  klasgroepPath,
-  NotFoundError,
-  vakPath,
-} from "../utils/helpers";
+import { klasgroepPath, vakPath } from "../utils/helpers";
+import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/errors";
 
 export const getTaken = async (req: Request, res: Response) => {
   try {
@@ -32,7 +27,7 @@ export const getTaken = async (req: Request, res: Response) => {
             select: "-wachtwoord",
           },
         ],
-        match: gebruiker.isDocent ? {} :{ student: gebruiker._id },
+        match: gebruiker.isDocent ? {} : { student: gebruiker._id },
       },
       "bijlagen",
       klasgroepPath,
