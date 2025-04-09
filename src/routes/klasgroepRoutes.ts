@@ -112,7 +112,7 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Klasgroep'
+ *               $ref: '#/components/schemas/KlasgroepDump'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       '403':

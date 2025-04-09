@@ -349,6 +349,17 @@ const options = {
             _id: {
               type: "string",
             },
+            naam: {
+              type: "string",
+            },
+            beginjaar: {
+              type: "number",
+              example: 2024,
+            },
+            eindjaar: {
+              type: "number",
+              example: 2025,
+            },
             studenten: {
               type: "array",
               items: {
