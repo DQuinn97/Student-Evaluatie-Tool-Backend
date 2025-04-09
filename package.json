@@ -31,7 +31,8 @@
     "multer-storage-cloudinary": "^4.0.0",
     "sanitize-filename": "^1.6.3",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "pkgroll": "^2.6.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -40,7 +41,6 @@
     "@types/multer": "^1.4.12",
     "@types/node": "^22.10.7",
     "jsonwebtoken": "^9.0.2",
-    "pkgroll": "^2.6.1",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   }
