@@ -43,3 +43,7 @@ export const foto_upload = multer({
   storage: foto_storage,
   limits: { fileSize: 3000000 },
 });
+export const file_upload = multer({
+  storage: file_storage,
+  limits: { fileSize: 3000000 },
+});
