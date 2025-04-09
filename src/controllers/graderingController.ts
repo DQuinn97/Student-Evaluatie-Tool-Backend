@@ -52,9 +52,7 @@ export const addGradering = async (req: Request, res: Response) => {
     });
 
     const response = await appendInzending(gradering);
-    res
-      .status(201)
-      .json({ message: "Gradering toegevoegd", gradering: response });
+    res.status(201).json(response);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -73,9 +71,7 @@ export const updateGradering = async (req: Request, res: Response) => {
 
     const response = await appendInzending(gradering);
 
-    res
-      .status(200)
-      .json({ message: "Gradering bijgewerkt", gradering: response });
+    res.status(200).json(response);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }

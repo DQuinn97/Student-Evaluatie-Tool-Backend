@@ -70,6 +70,7 @@ const router = express.Router();
  *                   format: binary
  *     responses:
  *       '200':
+ *         description: Inzending bijgewerkt
  *         content:
  *           application/json:
  *             schema:
@@ -105,6 +106,7 @@ const router = express.Router();
  *                 type: string
  *     responses:
  *       '200':
+ *         description: Gradering toegevoegd
  *         content:
  *           application/json:
  *             schema:

@@ -20,7 +20,6 @@ const router = express.Router();
  *     tags: [Profiel]
  *     responses:
  *       '200':
- *         description: JSON data van de ingelogde gebruiker
  *         content:
  *           application/json:
  *             schema:
@@ -49,7 +48,11 @@ const router = express.Router();
  *                 type: string
  *     responses:
  *       '200':
- *         description: Gebruiker succesvol aangepast
+ *         description: Gebruiker aangepast
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Gebruiker'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *
@@ -68,7 +71,11 @@ const router = express.Router();
  *                 format: binary
  *     responses:
  *       '200':
- *         description: Profielfoto succesvol aangepast
+ *         description: Profielfoto aangepast
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Gebruiker'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *

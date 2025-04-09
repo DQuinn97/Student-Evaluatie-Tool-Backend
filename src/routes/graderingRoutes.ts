@@ -51,6 +51,7 @@ const router = express.Router();
  *                 type: string
  *     responses:
  *       '200':
+ *         description: Gradering bijgewerkt
  *         content:
  *           application/json:
  *             schema:

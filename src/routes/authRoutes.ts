@@ -26,6 +26,14 @@ const router = express.Router();
  *     responses:
  *       '200':
  *         description: Gebruiker succesvol geregistreerd, wachtwoord per mail verzonden
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Gebruiker succesvol geregistreerd, wachtwoord per mail verzonden
  *       '400':
  *         $ref: '#/components/responses/BadRequest_MissingField'
  *
@@ -47,6 +55,14 @@ const router = express.Router();
  *     responses:
  *       '200':
  *         description: Gebruiker succesvol ingelogd
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Wachtwoord succesvol ingelogd
  *       '400':
  *         $ref: '#/components/responses/BadRequest_MissingField'
  *
@@ -57,6 +73,14 @@ const router = express.Router();
  *     responses:
  *       '200':
  *         description: Gebruiker succesvol uitgelogd
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Wachtwoord succesvol uitgelogd
  *       '400':
  *         $ref: '#/components/responses/BadRequest_MissingField'
  *
@@ -80,6 +104,14 @@ const router = express.Router();
  *         description: Geen herkende gebruiker
  *       '201':
  *         description: Wachtwoord reset link per mail verzonden
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Wachtwoord reset link per mail verzonden
  *       '400':
  *         $ref: '#/components/responses/BadRequest_MissingField'
  *
@@ -101,6 +133,14 @@ const router = express.Router();
  *     responses:
  *       '200':
  *         description: Wachtwoord succesvol gereset
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Wachtwoord succesvol gereset
  *       '400':
  *         $ref: '#/components/responses/BadRequest_MissingField'
  *       '401':

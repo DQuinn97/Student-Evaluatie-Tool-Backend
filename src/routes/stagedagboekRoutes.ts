@@ -55,13 +55,11 @@ const router = express.Router();
  *         schema:
  *           type: string
  *     responses:
- *       '200':
- *         message: 'Stagedagboek verwijderd'
+ *       '204':
+ *         description: 'Stagedagboek verwijderd'
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *
  *               $ref: '#/components/schemas/Stagedagboek'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
@@ -133,6 +131,10 @@ const router = express.Router();
  *     responses:
  *       '200':
  *         description: Stagedag bijgewerkt
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Stagedag'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       '403':
@@ -152,8 +154,12 @@ const router = express.Router();
  *         schema:
  *           type: string
  *     responses:
- *       '200':
+ *       '204':
  *         description: Stagedag verwijderd
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Stagedag'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       '403':
@@ -224,6 +230,10 @@ const router = express.Router();
  *     responses:
  *       '200':
  *         description: Stageverslag bijgewerkt
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Stageverslag'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       '403':
@@ -243,20 +253,12 @@ const router = express.Router();
  *         schema:
  *           type: string
  *     responses:
- *       '200':
+ *       '204':
  *         description: Stageverslag verwijderd
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Stageverslag verwijderd
- *                 verslag:
- *                   $ref: '#/components/schemas/Stageverslag'
- *                 dagboek:
- *                   $ref: '#/components/schemas/Stagedagboek'
+ *               $ref: '#/components/schemas/Stageverslag'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       '403':
@@ -301,20 +303,12 @@ const router = express.Router();
  *                   type: string
  *                   format: binary
  *     responses:
- *       '200':
+ *       '201':
  *         description: Stagedag aangemaakt
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Stagedag aangemaakt
- *                 dag:
- *                   $ref: '#/components/schemas/Stagedag'
- *                 dagboek:
- *                   $ref: '#/components/schemas/Stagedagboek'
+ *               $ref: '#/components/schemas/Stagedag'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       '404':
@@ -363,20 +357,12 @@ const router = express.Router();
  *                   type: string
  *                   format: binary
  *     responses:
- *       '200':
+ *       '201':
  *         description: Stageverslag aangemaakt
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Stageverslag aangemaakt
- *                 verslag:
- *                   $ref: '#/components/schemas/Stageverslag'
- *                 dagboek:
- *                   $ref: '#/components/schemas/Stagedagboek'
+ *               $ref: '#/components/schemas/Stageverslag'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       '403':

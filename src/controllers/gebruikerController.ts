@@ -39,9 +39,7 @@ export const setGebruikerData = async (req: Request, res: Response) => {
 
     const response = { ...gebruiker.toJSON(), wachtwoord: undefined };
 
-    res
-      .status(200)
-      .json({ message: "Gebruiker data aangepast", gebruiker: response });
+    res.status(200).json(response);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -64,9 +62,7 @@ export const setGebruikerFoto = async (req: Request, res: Response) => {
 
     const response = { ...gebruiker.toJSON(), wachtwoord: undefined };
 
-    res
-      .status(201)
-      .json({ message: "Gebruiker foto aangepast", gebruiker: response });
+    res.status(201).json(response);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }

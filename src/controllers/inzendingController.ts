@@ -50,7 +50,7 @@ export const addInzending = async (req: Request, res: Response) => {
     await taak.save();
 
     const response = (await appendTaken([inzending]))[0];
-    res.status(201).json({message: "Inzending toegevoegd", inzending: response});
+    res.status(201).json(response);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -67,7 +67,7 @@ export const updateInzending = async (req: Request, res: Response) => {
     );
     if (!inzending) throw new NotFoundError("Inzending niet gevonden");
     const response = (await appendTaken([inzending]))[0];
-    res.status(200).json({message: "Inzending bijgewerkt", inzending: response});
+    res.status(200).json( response);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }

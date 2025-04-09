@@ -39,6 +39,8 @@ const router = express.Router();
  *                 $ref: '#/components/schemas/Klasgroep'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized'
  *   post:
  *     security:
  *       - cookieAuth: []
@@ -60,7 +62,8 @@ const router = express.Router();
  *                 type: number
  *                 example: 2025
  *     responses:
- *       '200':
+ *       '201':
+ *         description: Klasgroep aangemaakt
  *         content:
  *           application/json:
  *             schema:
@@ -182,7 +185,7 @@ const router = express.Router();
  *               studentId:
  *                 type: string
  *     responses:
- *       '200':
+ *       '204':
  *         content:
  *           application/json:
  *             schema:
@@ -288,7 +291,7 @@ const router = express.Router();
  *               vakId:
  *                 type: string
  *     responses:
- *       '200':
+ *       '204':
  *         content:
  *           application/json:
  *             schema:
@@ -381,6 +384,63 @@ const router = express.Router();
  *         $ref: '#/components/responses/Unauthorized_Resource'
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
+ *
+ * /klasgroepen/{klasgroepId}/dagboek:
+ *   get:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Vraag het stagedagboek van de ingelogde gebruiker op voor deze klasgroep
+ *     tags: [Klassen, Dagboek]
+ *     parameters:
+ *       - name: klasgroepId
+ *         in: path
+ *         description: ID van de klasgroep waarin het stagedagboek zit
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Stagedagboek'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
+ *   post:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Maak een stagedagboek aan voor de ingelogde gebruiker op deze klasgroep
+ *     tags: [Klassen, Dagboek]
+ *     parameters:
+ *       - name: klasgroepId
+ *         in: path
+ *         description: ID van de klasgroep waarin het stagedagboek moet worden aangemaakt
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Stagedagboek aangemaakt
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: Stagedagboek aangemaakt
+ *                 dagboek:
+ *                   $ref: '#/components/schemas/Stagedagboek'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
+ *       '409':
+ *         $ref: '#/components/responses/BadRequest_Duplicate'
  *
  */
 router

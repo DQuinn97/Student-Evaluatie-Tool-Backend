@@ -65,7 +65,7 @@ export const addKlasgroep = async (req: Request, res: Response) => {
       throw new BadRequestError("Naam, beginjaar en eindjaar zijn verplicht");
     }
     const klasgroep = await Klasgroep.create({ naam, beginjaar, eindjaar });
-    res.status(201).json({ message: "Klasgroep aangemaakt", klasgroep });
+    res.status(201).json(klasgroep);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -93,7 +93,7 @@ export const pushStudentToKlasgroep = async (req: Request, res: Response) => {
 
     res
       .status(200)
-      .json({ message: "Student toegevoegd", klasgroep: response });
+      .json( response );
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -129,8 +129,8 @@ export const removeStudentFromKlasgroep = async (
     ]);
 
     res
-      .status(200)
-      .json({ message: "Student verwijderd", klasgroep: response });
+      .status(204)
+      .json( response );
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -155,7 +155,7 @@ export const pushVakToKlasgroep = async (req: Request, res: Response) => {
       select: "_id naam",
     });
 
-    res.status(200).json({ message: "Vak toegevoegd", klasgroep: response });
+    res.status(200).json( response );
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -179,7 +179,7 @@ export const removeVakFromKlasgroep = async (req: Request, res: Response) => {
     ).populate(vakPath);
     await Vak.findByIdAndDelete(vakId);
 
-    res.status(204).json({ message: "Vak verwijderd", klasgroep });
+    res.status(204).json(klasgroep );
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }

@@ -128,8 +128,12 @@ const router = express.Router();
  *         schema:
  *           type: string
  *     responses:
- *       '200':
+ *       '204':
  *         description: Taak verwijderd
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Taak'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       '403':

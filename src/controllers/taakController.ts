@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { Taak } from "../models/TaakModel";
 import { Klasgroep } from "../models/KlasgroepModel";
-import { TGradering } from "../models/GraderingModel";
-import { TInzending } from "../models/InzendingModel";
+import { Gradering, TGradering } from "../models/GraderingModel";
+import { Inzending, TInzending } from "../models/InzendingModel";
 import { klasgroepPath, vakPath } from "../utils/helpers";
 import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/errors";
 
@@ -137,7 +137,7 @@ export const addTaak = async (req: Request, res: Response) => {
       isGepubliceerd,
       bijlagen,
     });
-    res.status(201).json({ message: "Taak aangemaakt", taak });
+    res.status(201).json(taak);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -179,7 +179,7 @@ export const updateTaak = async (req: Request, res: Response) => {
       },
       { new: true }
     );
-    res.status(201).json({ message: "Taak gewijzigd", taak });
+    res.status(201).json(taak);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -209,7 +209,7 @@ export const dupliceerTaak = async (req: Request, res: Response) => {
       bijlagen: [...taak.bijlagen],
     });
 
-    res.status(201).json({ message: "Taak gedupliceerd", taak: nieuweTaak });
+    res.status(201).json(nieuweTaak);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -220,7 +220,16 @@ export const deleteTaak = async (req: Request, res: Response) => {
     const { taakId } = req.params;
     const taak = await Taak.findByIdAndDelete(taakId);
     if (!taak) throw new NotFoundError("Taak niet gevonden");
-    res.status(204).json({ message: "Taak verwijderd", taak });
+
+    for (let inzending of taak.inzendingen) {
+      let deleted = await Inzending.findByIdAndDelete(inzending);
+      if (deleted)
+        for (let gradering of deleted.gradering) {
+          await Gradering.findByIdAndDelete(gradering);
+        }
+    }
+
+    res.status(204).json(taak);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
