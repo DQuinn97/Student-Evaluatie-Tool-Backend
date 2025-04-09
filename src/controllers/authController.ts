@@ -110,7 +110,7 @@ export const resetWachtwoordRequest = async (req: Request, res: Response) => {
     const { email, reset_link } = req.body;
     const gebruiker = await Gebruiker.findOne({ email });
 
-    if (!process.env.JWT_SECRET) {
+    if (!process.env.JWT_RESET) {
       throw new Error("Internal server error");
     }
 
@@ -123,7 +123,7 @@ export const resetWachtwoordRequest = async (req: Request, res: Response) => {
         id: gebruiker._id,
         email: gebruiker.email,
       },
-      process.env.JWT_SECRET,
+      process.env.JWT_RESET,
       { expiresIn: "1d" }
     );
 
@@ -152,7 +152,7 @@ export const resetWachtwoord = async (req: Request, res: Response) => {
   try {
     const { wachtwoord, resetToken } = req.body;
 
-    if (!process.env.JWT_SECRET) {
+    if (!process.env.JWT_RESET) {
       throw new Error("Internal server error");
     }
 
@@ -161,7 +161,7 @@ export const resetWachtwoord = async (req: Request, res: Response) => {
     }
     const decodedToken = jwt.verify(
       resetToken,
-      process.env.JWT_SECRET as string
+      process.env.JWT_RESET as string
     );
     if (typeof decodedToken === "string" || !("email" in decodedToken)) {
       throw new BadRequestError("Foutieve reset link.");
