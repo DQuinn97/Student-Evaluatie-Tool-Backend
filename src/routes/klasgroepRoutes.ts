@@ -190,7 +190,7 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Gebruiker'
+ *               $ref: '#/components/schemas/GebruikerDump'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       '403':

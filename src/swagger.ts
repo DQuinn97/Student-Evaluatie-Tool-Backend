@@ -1,4 +1,5 @@
 import swaggerJsdoc from "swagger-jsdoc";
+import { Inzending } from "./models/InzendingModel";
 const isProduction = process.env.NODE_ENV === "production";
 const options = {
   definition: {
@@ -47,9 +48,6 @@ const options = {
               type: "string",
             },
             gsm: {
-              type: "string",
-            },
-            wachtwoord: {
               type: "string",
             },
             isDocent: {
@@ -128,7 +126,8 @@ const options = {
               type: "string",
             },
             deadline: {
-              type: "date",
+              type: "string",
+              format: "date",
             },
             weging: {
               type: "number",
@@ -344,6 +343,219 @@ const options = {
             },
           },
         },
+        GebruikerDump: {
+          type: "object",
+          properties: {
+            _id: {
+              type: "string",
+            },
+            naam: {
+              type: "string",
+            },
+            achternaam: {
+              type: "string",
+            },
+            email: {
+              type: "string",
+            },
+            foto: {
+              type: "string",
+            },
+            isDocent: {
+              type: "boolean",
+            },
+            vakken: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/VakDump",
+              },
+            },
+            taken: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/TaakDump",
+              },
+            },
+            dagboek: {
+              $ref: "#/components/schemas/DagboekDump",
+            },
+          },
+        },
+        VakDump: {
+          type: "object",
+          properties: {
+            _id: {
+              type: "string",
+            },
+            naam: {
+              type: "string",
+            },
+            gemiddelde: {
+              type: "number",
+            },
+            klasgemiddelde: {
+              type: "number",
+            },
+          },
+        },
+        TaakDump: {
+          type: "object",
+          properties: {
+            _id: {
+              type: "string",
+            },
+            type: {
+              type: "string",
+              enum: ["taak", "test"],
+              example: "taak",
+            },
+            titel: {
+              type: "string",
+            },
+            beschrijving: {
+              type: "string",
+            },
+            deadline: {
+              type: "string",
+              format: "date",
+            },
+            weging: {
+              type: "number",
+            },
+            isGepubliceerd: {
+              type: "boolean",
+              example: true,
+            },
+            klasgroep: {
+              type: "string",
+            },
+            score: {
+              type: "number",
+            },
+            klasgemiddelde: {
+              type: "number",
+            },
+            volledigGegradeerd: {
+              type: "boolean",
+              example: false,
+            },
+            vak: {
+              type: "object",
+              properties: {
+                _id: {
+                  type: "string",
+                },
+                naam: {
+                  type: "string",
+                },
+              },
+            },
+            bijlagen: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/Bijlage",
+              },
+            },
+            inzendingen: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/InzendingDump",
+              },
+            },
+          },
+        },
+        InzendingDump: {
+          type: "object",
+          properties: {
+            _id: {
+              type: "string",
+            },
+            git: {
+              type: "string",
+            },
+            live: {
+              type: "string",
+            },
+            beschrijving: {
+              type: "string",
+            },
+            student: {
+              type: "string",
+            },
+            score: {
+              type: "number",
+            },
+            bijlagen: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/Bijlage",
+              },
+            },
+            gradering: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/GraderingDump",
+              },
+            },
+          },
+        },
+        GraderingDump: {
+          type: "object",
+          properties: {
+            _id: {
+              type: "string",
+            },
+            docent: {
+              $ref: "#/components/schemas/DocentDump",
+            },
+            score: {
+              type: "number",
+            },
+            maxscore: {
+              type: "number",
+            },
+            feedback: {
+              type: "string",
+            },
+          },
+        },
+        DocentDump: {
+          type: "object",
+          properties: {
+            _id: {
+              type: "string",
+            },
+            naam: {
+              type: "string",
+            },
+            achternaam: {
+              type: "string",
+            },
+            email: {
+              type: "string",
+            },
+            foto: {
+              type: "string",
+            },
+          },
+        },
+        DagboekDump: {
+          type: "object",
+          properties: {
+            _id: {
+              type: "string",
+            },
+            dagen: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/Stagedag",
+              },
+            },
+            verslag: {
+              $ref: "#/components/schemas/Stageverslag",
+            },
+          },
+        },
       },
       responses: {
         Unauthorized: {
@@ -377,21 +589,22 @@ const options = {
           },
         },
       },
-      definitions: {
-        Error: {
-          type: "object",
-          required: ["code", "message"],
-          properties: {
-            code: {
-              type: "string",
-            },
-            message: {
-              type: "string",
-            },
+    },
+    definitions: {
+      Error: {
+        type: "object",
+        required: ["code", "message"],
+        properties: {
+          code: {
+            type: "string",
+          },
+          message: {
+            type: "string",
           },
         },
       },
     },
+
     tags: [
       {
         name: "Profiel",

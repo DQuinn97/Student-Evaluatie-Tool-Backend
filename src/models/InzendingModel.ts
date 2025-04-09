@@ -40,6 +40,11 @@ const inzendingSchema = new mongoose.Schema(
         ref: Gradering,
       },
     ],
+    inzending: {
+      type: Date,
+      required: true,
+      default: Date.now(),
+    },
   },
   {
     timestamps: true,

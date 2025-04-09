@@ -10,12 +10,9 @@ import { TTaak } from "../models/TaakModel";
 import { TVak } from "../models/VakModel";
 
 export type GraderingDump = Omit<TGradering, "docent"> & {
-  _id: string;
   docent: TGebruiker;
 };
 export type InzendingDump = Omit<TInzending, "gradering" | "bijlagen"> & {
-  _id: string;
-  // student: TGebruiker;
   gradering: GraderingDump[];
   bijlagen: TBijlage[];
 };
@@ -37,7 +34,7 @@ export type TaakDumpPlus = Omit<TaakDump, "inzendingen"> & {
   volledigGegradeerd: boolean;
 };
 
-export type VakDump = TVak & { _id: string };
+export type VakDump = TVak & {};
 
 export type VakDumpPlus = VakDump & {
   gemiddelde: number | undefined | null;
