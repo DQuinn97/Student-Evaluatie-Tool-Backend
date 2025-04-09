@@ -343,6 +343,32 @@ const options = {
             },
           },
         },
+        KlasgroepDump: {
+          type: "object",
+          properties: {
+            _id: {
+              type: "string",
+            },
+            studenten: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/GebruikerDump",
+              },
+            },
+            vakken: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/VakDump",
+              },
+            },
+            taken: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/TaakDump",
+              },
+            },
+          },
+        },
         GebruikerDump: {
           type: "object",
           properties: {

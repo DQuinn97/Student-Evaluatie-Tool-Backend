@@ -2,52 +2,10 @@ import "dotenv/config";
 import { Request, Response } from "express";
 import { Gebruiker } from "../models/GebruikerModel";
 import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/errors";
-import { gebruikerDump } from "../utils/dumphelper";
-
-/**
- * Gebruiker - klasgroep:
- * * Vakken
- * * Taken: -> isGepubliceerd
- * * * Inzendingen: -> Gebruiker
- * * * * Gradering
- * * Dagboek
- *
- *
- * Klasgroep:
- * * GebruikerDump[]
- */
 
 export const getGebruikerById = async (req: Request, res: Response) => {
   try {
     // /gebruikers/id
-    const { id } = req.params;
-    const gebruiker = await Gebruiker.findById(id).select("-wachtwoord");
-    if (!gebruiker) throw new NotFoundError("Gebruiker niet gevonden");
-    res.status(200).json(gebruiker);
-  } catch (error: unknown) {
-    ErrorHandler(error, req, res);
-  }
-};
-
-export const getGebruikerDump = async (req: Request, res: Response) => {
-  try {
-    // /gebruikers/id/dump
-    const { klasgroepId, studentId } = req.params;
-    const gebruiker = await gebruikerDump(studentId, klasgroepId);
-    if (!gebruiker) throw new NotFoundError("Gebruiker niet gevonden");
-
-    res.status(200).json(gebruiker);
-  } catch (error: unknown) {
-    ErrorHandler(error, req, res);
-  }
-};
-
-export const getGebruikerById_fullPerKlasgroep = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    // /klasgroepen/id/gebruikers/id/dump
     const { id } = req.params;
     const gebruiker = await Gebruiker.findById(id).select("-wachtwoord");
     if (!gebruiker) throw new NotFoundError("Gebruiker niet gevonden");

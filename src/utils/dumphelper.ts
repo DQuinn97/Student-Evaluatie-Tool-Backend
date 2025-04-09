@@ -16,37 +16,19 @@ import {
   VakDumpPlus,
 } from "../utils/types";
 
-// komplete dump voor alle scores van een student in een klasgroep
-export const gebruikerDump = async (
-  studentId: string,
-  klasgroepId: string
-): Promise<GebruikerDump> => {
-  // check of gebruiker bestaat
-  const student = await Gebruiker.findById(studentId).select(
-    "-wachtwoord -createdAt -updatedAt -__v"
-  );
-
-  if (!student) throw new NotFoundError("Gebruiker niet gevonden");
-
-  // check of klasgroep bestaat
-  const klasgroep = (await Klasgroep.findOne(
-    {
-      _id: klasgroepId,
-      studenten: studentId,
-    },
-    { select: "-studenten -createdAt -updatedAt -__v" }
-  ).populate([
-    { path: "vakken", select: "-createdAt -updatedAt -__v" },
-  ])) as KlasgroepDump;
-  if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
-
-  const vakken = klasgroep.vakken as VakDump[];
-
-  // zoek alle gepubliceerde taken in een klasgroep en populate
-  const taken = (await Taak.find({
+// dump voor alle taken
+const taakDump = async (
+  klasgroepId: string,
+  isGepubliceerd: boolean | null | undefined = undefined
+): Promise<TaakDump[]> => {
+  // zoek alle taken in een klasgroep en populate
+  let filter = {
     klasgroep: klasgroepId,
-    isGepubliceerd: true,
-  })
+  } as { klasgroep: string; isGepubliceerd: boolean | undefined };
+  if (typeof isGepubliceerd === "boolean")
+    filter.isGepubliceerd = isGepubliceerd;
+
+  const taken = (await Taak.find(filter)
     .populate([
       { path: "bijlagen" },
       {
@@ -67,6 +49,39 @@ export const gebruikerDump = async (
       { path: "vak", select: "_id naam" },
     ])
     .select("-createdAt -updatedAt -__v")) as unknown as TaakDump[];
+
+  return taken;
+};
+
+// komplete dump voor alle scores van een student in een klasgroep
+export const gebruikerDump = async (
+  klasgroepId: string,
+  studentId: string
+): Promise<GebruikerDump> => {
+  // check of gebruiker bestaat
+  const student = await Gebruiker.findById(studentId).select(
+    "-wachtwoord -createdAt -updatedAt -__v"
+  );
+
+  if (!student) throw new NotFoundError("Gebruiker niet gevonden");
+
+  // check of klasgroep bestaat en populate
+  const klasgroep = (await Klasgroep.findOne(
+    {
+      _id: klasgroepId,
+      studenten: studentId,
+    },
+    { select: "-studenten -createdAt -updatedAt -__v" }
+  ).populate([
+    { path: "vakken", select: "-createdAt -updatedAt -__v" },
+  ])) as KlasgroepDump;
+  if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
+
+  // kopieer vakken uit klasgroep
+  const vakken = klasgroep.vakken as VakDump[];
+
+  // zoek alle gepubliceerde taken in de klasgroep
+  const taken = await taakDump(klasgroepId, true);
 
   // zoek het stagedagboek van de student in de klasgroep en populate
   const dagboek = (await Stagedagboek.findOne(
@@ -204,4 +219,46 @@ export const gebruikerDump = async (
   } as GebruikerDump;
 
   return gebruikerDump;
+};
+
+export const klasgroepDump = async (klasgroepId: string) => {
+  // check of klasgroep bestaat
+  const klasgroep = await Klasgroep.findById(klasgroepId).select(
+    "-createdAt -updatedAt -__v"
+  );
+  if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
+
+  // dump voorbereiden
+  const klasgroepDump = {
+    ...klasgroep.toObject(),
+    studenten: [] as GebruikerDump[],
+    vakken: [] as VakDumpPlus[],
+    taken: [] as TaakDumpPlus[],
+  };
+
+  // maak de dump van alle studenten
+  for (let student of klasgroep.studenten) {
+    const studentDump = await gebruikerDump(klasgroepId, student.toString());
+    klasgroepDump.studenten.push(studentDump);
+  }
+
+  if (klasgroepDump.studenten.length) {
+    // maak de dump van alle vakken
+    klasgroepDump.vakken = klasgroepDump.studenten[0].vakken.map((vak) => {
+      return {
+        ...vak,
+        score: undefined,
+      } as unknown as VakDumpPlus;
+    });
+
+    // maak de dump van alle taken
+    klasgroepDump.taken = (await taakDump(klasgroepId)).map((taak) => {
+      return {
+        ...taak.toObject(),
+        score: undefined,
+      } as unknown as TaakDumpPlus;
+    });
+  }
+
+  return klasgroepDump;
 };

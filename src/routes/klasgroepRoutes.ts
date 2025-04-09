@@ -12,9 +12,9 @@ import { hasAccess, isAuth, isDocent } from "../middleware/authMiddleware";
 import { getTaken, addTaak } from "../controllers/taakController";
 import { isUnique } from "../middleware/uniqueMiddleware";
 import {
-  getGebruikerById_fullPerKlasgroep,
+  getKlasgroepDump,
   getGebruikerDump,
-} from "../controllers/gebruikerController";
+} from "../controllers/dumpController";
 
 const router = express.Router();
 /**
@@ -91,6 +91,32 @@ const router = express.Router();
  *         $ref: '#/components/responses/Unauthorized'
  *       '403':
  *         $ref: '#/components/responses/Unauthorized_Resource'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
+ *
+ * /klassen/{klasgroepId}/dump:
+ *   get:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: De totale data dump van een klasgroep
+ *     tags: [Klassen]
+ *     parameters:
+ *       - name: klasgroepId
+ *         in: path
+ *         description: ID van de op te vragen klasgroep
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Klasgroep'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized'
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
  *
@@ -357,6 +383,7 @@ router
   .get("/", isAuth, getKlasgroepen)
   .post("/", isAuth, isDocent, addKlasgroep)
   .get("/:klasgroepId", isAuth, hasAccess, getKlasgroep)
+  .get("/:klasgroepId/dump", isAuth, isDocent, getKlasgroepDump)
   .post(
     "/:klasgroepId/studenten",
     isAuth,
@@ -371,7 +398,7 @@ router
     removeStudentFromKlasgroep
   )
   .get(
-    "/:klasgroepId/studenten/:studentId",
+    "/:klasgroepId/studenten/:studentId/dump",
     isAuth,
     hasAccess,
     getGebruikerDump
