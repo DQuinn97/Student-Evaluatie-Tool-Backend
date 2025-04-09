@@ -110,13 +110,10 @@ export const resetWachtwoordRequest = async (req: Request, res: Response) => {
     const { email, reset_link } = req.body;
     const gebruiker = await Gebruiker.findOne({ email });
 
-    if (!process.env.JWT_RESET) {
-      throw new Error("Internal server error");
-    }
+    if (!process.env.JWT_RESET) throw new Error("Internal server error");
 
-    if (!gebruiker) {
-      throw new BadRequestError("Geen herkende gebruiker", 200);
-    }
+    if (!gebruiker) throw new BadRequestError("Geen herkende gebruiker", 200);
+    if (!reset_link) throw new BadRequestError("Reset link verplicht");
 
     const resetToken = jwt.sign(
       {
@@ -167,9 +164,10 @@ export const resetWachtwoord = async (req: Request, res: Response) => {
       throw new BadRequestError("Foutieve reset link.");
     }
     const gebruiker = await Gebruiker.findOne({ email: decodedToken.email });
-    if (!gebruiker) {
+    if (!gebruiker) throw new UnauthorizedError("Geen toegang tot deze pagina");
+    if (gebruiker.resetToken !== resetToken)
       throw new UnauthorizedError("Geen toegang tot deze pagina");
-    }
+
     const hashedWachtwoord = await hashWachtwoord(wachtwoord);
     gebruiker.wachtwoord = hashedWachtwoord;
     gebruiker.resetToken = null;
