@@ -659,6 +659,10 @@ const options = {
       { name: "Taken", description: "Taken endpoints" },
       { name: "Inzendingen", description: "Inzendingen endpoints" },
       { name: "Graderingen", description: "Graderingen endpoints" },
+      {
+        name: "Dump",
+        description: '"Dump" endpoints - alle mogelijke data in één object',
+      },
     ],
   },
   apis: ["**/*.ts"],

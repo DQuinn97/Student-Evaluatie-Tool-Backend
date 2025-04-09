@@ -106,7 +106,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: De totale data dump van een klasgroep
- *     tags: [Klassen]
+ *     tags: [Klassen, Dump]
  *     parameters:
  *       - name: klasgroepId
  *         in: path
@@ -204,7 +204,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: De totale data dump van een student in een klasgroep
- *     tags: [Klassen, Profiel]
+ *     tags: [Klassen, Profiel, Dump]
  *     parameters:
  *       - name: klasgroepId
  *         in: path
