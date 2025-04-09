@@ -96,7 +96,7 @@ export const logout = async (req: Request, res: Response) => {
     res.cookie("token", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : true,
       maxAge: 10,
     });
     res.status(200).json({ message: "Gebruiker succesvol uitgelogd" });

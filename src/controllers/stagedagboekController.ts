@@ -107,7 +107,7 @@ export const addDag = async (req: Request, res: Response) => {
       .populate("student", "-wachtwoord");
     dagboek?.stagedagen.push(dag._id);
     await dagboek?.save();
-    res.status(201).json({ message: "Dag toegevoegd", dag, dagboek });
+    res.status(201).json({ message: "Dag aangemaakt", dag, dagboek });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -132,7 +132,7 @@ export const updateDag = async (req: Request, res: Response) => {
       .populate("klasgroep", "_id naam beginjaar eindjaar")
       .populate("student", "-wachtwoord");
 
-    res.status(200).json({ message: "Dag bijgewerkt", dag, dagboek });
+    res.status(200).json({ message: "Stagedag bijgewerkt", dag, dagboek });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -157,7 +157,7 @@ export const deleteDag = async (req: Request, res: Response) => {
       .populate("klasgroep", "_id naam beginjaar eindjaar")
       .populate("student", "-wachtwoord");
 
-    res.status(200).json({ message: "Dag verwijderd", dag, dagboek });
+    res.status(200).json({ message: "Stagedag verwijderd", dag, dagboek });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -212,7 +212,7 @@ export const addVerslag = async (req: Request, res: Response) => {
       .populate("student", "-wachtwoord");
     if (dagboek) dagboek.stageverslag = verslag._id;
     await dagboek?.save();
-    res.status(201).json({ message: "Verslag toegevoegd", verslag, dagboek });
+    res.status(201).json({ message: "Verslag aangemaakt", verslag, dagboek });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -256,7 +256,9 @@ export const updateVerslag = async (req: Request, res: Response) => {
       .populate("stagedagen")
       .populate("klasgroep", "_id naam beginjaar eindjaar")
       .populate("student", "-wachtwoord");
-    res.status(200).json({ verslag, dagboek });
+    res
+      .status(200)
+      .json({ message: "Stageverslag bijgewerkt", verslag, dagboek });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -280,7 +282,11 @@ export const deleteVerslag = async (req: Request, res: Response) => {
       .populate("stagedagen")
       .populate("klasgroep", "_id naam beginjaar eindjaar")
       .populate("student", "-wachtwoord");
-    res.status(200).json({ message: "Verslag verwijderd", verslag, dagboek });
+    res.status(200).json({
+      message: "Stageverslag verwijderd",
+      verslag,
+      dagboek,
+    });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
