@@ -199,7 +199,7 @@ const router = express.Router();
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
  *
- * /klassen/{klasgroepId}/studenten/{studentId}:
+ * /klassen/{klasgroepId}/studenten/{studentId}/dump:
  *   get:
  *     security:
  *       - cookieAuth: []
