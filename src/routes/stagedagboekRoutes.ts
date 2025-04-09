@@ -12,6 +12,7 @@ import {
   updateVerslag,
 } from "../controllers/stagedagboekController";
 import { hasAccess, isAuth, isDocent } from "../middleware/authMiddleware";
+import { isUnique } from "../middleware/uniqueMiddleware";
 
 const router = express.Router();
 /**
@@ -248,12 +249,19 @@ const router = express.Router();
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
  *
- * /dagboek/dag/nieuw:
+ * /dagboek/{dagboekId}/dag:
  *   post:
  *     security:
  *       - cookieAuth: []
  *     summary: Maak een nieuwe stagedag
  *     tags: [Dagboek]
+ *     parameters:
+ *       - name: verslagId
+ *         in: path
+ *         description: ID van het te updaten stageverslag
+ *         required: true
+ *         schema:
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -285,12 +293,19 @@ const router = express.Router();
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
  *
- * /dagboek/verslag/nieuw:
+ * /dagboek/{dagboekId}/verslag:
  *   post:
  *     security:
  *       - cookieAuth: []
  *     summary: Maak een nieuw stageverslag
  *     tags: [Dagboek]
+ *     parameters:
+ *       - name: verslagId
+ *         in: path
+ *         description: ID van het te updaten stageverslag
+ *         required: true
+ *         schema:
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -338,7 +353,7 @@ router
   .delete("/verslag/:verslagId", isAuth, hasAccess, deleteVerslag)
   .get("/:dagboekId", isAuth, hasAccess, getDagboek)
   .delete("/:dagboekId", isAuth, hasAccess, deleteDagboek)
-  .post("/:dagboekId/verslag", isAuth, hasAccess, addVerslag)
+  .post("/:dagboekId/verslag", isAuth, hasAccess, isUnique, addVerslag)
   .post("/:dagboekId/dag", isAuth, hasAccess, addDag);
 
 export default router;

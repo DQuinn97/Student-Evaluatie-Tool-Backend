@@ -12,7 +12,7 @@ export const isUnique = async (
   next: NextFunction
 ) => {
   try {
-    const { taakId, klasgroepId } = req.params;
+    const { taakId, klasgroepId, dagboekId } = req.params;
     const { naam: vak, studentId } = req.body;
     //@ts-ignore
     const gebruiker = req.gebruiker;
@@ -51,6 +51,12 @@ export const isUnique = async (
             409
           );
       }
+    }
+    if (dagboekId) {
+      const dagboek = await Stagedagboek.findById(dagboekId);
+      if (!dagboek) throw new NotFoundError("Dagboek niet gevonden");
+      if (dagboek.stageverslag)
+        throw new BadRequestError("Dagboek heeft al een verslag", 409);
     }
     if (taakId) {
       const taak = await Taak.findById(taakId).populate("inzendingen");

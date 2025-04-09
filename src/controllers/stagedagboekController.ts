@@ -88,7 +88,7 @@ export const addDag = async (req: Request, res: Response) => {
     const { datum, voormiddag, namiddag, tools, resultaat, bijlagen } =
       req.body;
     const dag = await Stagedag.create({
-      datum,
+      datum: datum || Date.now(),
       voormiddag,
       namiddag,
       tools,
@@ -97,6 +97,7 @@ export const addDag = async (req: Request, res: Response) => {
     });
     //@ts-ignore
     const gebruiker = req.gebruiker;
+
     const dagboek = await Stagedagboek.findOne({
       student: gebruiker._id,
     })
@@ -188,8 +189,9 @@ export const addVerslag = async (req: Request, res: Response) => {
       reflectie,
       bijlagen,
     } = req.body;
+
     const verslag = await Stageverslag.create({
-      datum,
+      datum: datum || Date.now(),
       stagebedrijf,
       uitvoering,
       ervaring,
