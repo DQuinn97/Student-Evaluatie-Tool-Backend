@@ -4,6 +4,7 @@ import { Vak } from "../models/VakModel";
 import { Inzending } from "../models/InzendingModel";
 import { Taak } from "../models/TaakModel";
 import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/errors";
+import { Stagedagboek } from "../models/StagedagboekModel";
 
 export const isUnique = async (
   req: Request,
@@ -39,6 +40,17 @@ export const isUnique = async (
           "Vak met deze naam bestaat al in deze klasgroep",
           409
         );
+      if (!vak && !studentId) {
+        const dagboek = await Stagedagboek.findOne({
+          klasgroep: klasgroepId,
+          student: gebruiker.id,
+        });
+        if (dagboek)
+          throw new BadRequestError(
+            "Stagedagboek bestaat al op deze klasgroep voor deze gebruiker",
+            409
+          );
+      }
     }
     if (taakId) {
       const taak = await Taak.findById(taakId).populate("inzendingen");

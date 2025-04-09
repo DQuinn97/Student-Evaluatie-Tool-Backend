@@ -15,6 +15,10 @@ import {
   getKlasgroepDump,
   getGebruikerDump,
 } from "../controllers/dumpController";
+import {
+  createAuthDagboek,
+  getAuthDagboek,
+} from "../controllers/stagedagboekController";
 
 const router = express.Router();
 /**
@@ -406,6 +410,14 @@ router
   .post("/:klasgroepId/vakken", isAuth, isDocent, isUnique, pushVakToKlasgroep)
   .patch("/:klasgroepId/vakken", isAuth, isDocent, removeVakFromKlasgroep)
   .get("/:klasgroepId/taken", isAuth, hasAccess, getTaken)
-  .post("/:klasgroepId/taken", isAuth, isDocent, addTaak);
+  .post("/:klasgroepId/taken", isAuth, isDocent, addTaak)
+  .get("/:klasgroepId/dagboek", isAuth, hasAccess, getAuthDagboek)
+  .post(
+    "/:klasgroepId/dagboek",
+    isAuth,
+    hasAccess,
+    isUnique,
+    createAuthDagboek
+  );
 
 export default router;

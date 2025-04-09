@@ -3,6 +3,7 @@ import {
   addDag,
   addVerslag,
   deleteDag,
+  deleteDagboek,
   deleteVerslag,
   getDag,
   getDagboek,
@@ -10,7 +11,7 @@ import {
   updateDag,
   updateVerslag,
 } from "../controllers/stagedagboekController";
-import { isAuth } from "../middleware/authMiddleware";
+import { hasAccess, isAuth, isDocent } from "../middleware/authMiddleware";
 
 const router = express.Router();
 /**
@@ -36,6 +37,32 @@ const router = express.Router();
  *               $ref: '#/components/schemas/Stagedagboek'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
+ *   delete:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Vraag een stagedagboek op
+ *     tags: [Dagboek]
+ *     parameters:
+ *       - name: dagboekId
+ *         in: path
+ *         description: ID van het te verwijderen stagedagboek
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Stagedagboek'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
  *
@@ -60,6 +87,8 @@ const router = express.Router();
  *               $ref: '#/components/schemas/Stagedag'
  *       '401':
  *        $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *        $ref: '#/components/responses/Unauthorized_Resource'
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
  *   patch:
@@ -102,6 +131,8 @@ const router = express.Router();
  *         description: Stagedag succesvol geupdate
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
  *   delete:
@@ -121,6 +152,8 @@ const router = express.Router();
  *         description: Stagedag succesvol verwijderd
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
  *
@@ -145,6 +178,8 @@ const router = express.Router();
  *               $ref: '#/components/schemas/Stageverslag'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
  *   patch:
@@ -187,6 +222,8 @@ const router = express.Router();
  *         description: Stageverslag succesvol geupdate
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
  *   delete:
@@ -206,6 +243,8 @@ const router = express.Router();
  *         description: Stageverslag succesvol verwijderd
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
  *
@@ -291,14 +330,15 @@ const router = express.Router();
  *
  */
 router
-  .get("/:dagboekId", isAuth, getDagboek)
-  .get("/dag/:dagId", isAuth, getDag)
-  .get("/verslag/:verslagId", isAuth, getVerslag)
-  .post("/verslag/nieuw", isAuth, addVerslag)
-  .post("/dag/nieuw", isAuth, addDag)
-  .patch("/verslag/:verslagId", isAuth, updateVerslag)
-  .patch("/dag/:dagId", isAuth, updateDag)
-  .delete("/dag/:dagId", isAuth, deleteDag)
-  .delete("/verslag/:verslagId", isAuth, deleteVerslag);
+  .get("/dag/:dagId", isAuth, hasAccess, getDag)
+  .get("/verslag/:verslagId", isAuth, hasAccess, getVerslag)
+  .patch("/verslag/:verslagId", isAuth, hasAccess, updateVerslag)
+  .patch("/dag/:dagId", isAuth, hasAccess, updateDag)
+  .delete("/dag/:dagId", isAuth, hasAccess, deleteDag)
+  .delete("/verslag/:verslagId", isAuth, hasAccess, deleteVerslag)
+  .get("/:dagboekId", isAuth, hasAccess, getDagboek)
+  .delete("/:dagboekId", isAuth, hasAccess, deleteDagboek)
+  .post("/:dagboekId/verslag", isAuth, hasAccess, addVerslag)
+  .post("/:dagboekId/dag", isAuth, hasAccess, addDag);
 
 export default router;

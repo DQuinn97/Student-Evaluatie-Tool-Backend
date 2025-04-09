@@ -10,6 +10,7 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "../utils/errors";
+import { Stagedagboek } from "../models/StagedagboekModel";
 export const isAuth = async (
   req: Request,
   res: Response,
@@ -60,10 +61,17 @@ export const hasAccess = async (
   try {
     //@ts-ignore
     const gebruiker = req.gebruiker;
-    const { klasgroepId, taakId, inzendingId, studentId } = req.params;
+    const {
+      klasgroepId,
+      taakId,
+      inzendingId,
+      studentId,
+      dagboekId,
+      dagId,
+      verslagId,
+    } = req.params;
     if (gebruiker.isDocent) return next();
 
-    
     if (taakId) {
       const taak = await Taak.findById(taakId).populate("klasgroep");
 
@@ -84,9 +92,12 @@ export const hasAccess = async (
       if (!klasgroep.studenten.includes(gebruiker.id))
         throw new UnauthorizedError("Geen toegang tot deze klasgroep", 403);
 
-      if(studentId){
-        if(studentId !== gebruiker.id)
-          throw new UnauthorizedError("Geen toegang tot deze gebruikerdata", 403);
+      if (studentId) {
+        if (studentId !== gebruiker.id)
+          throw new UnauthorizedError(
+            "Geen toegang tot deze gebruikerdata",
+            403
+          );
       }
     }
     if (inzendingId) {
@@ -95,6 +106,30 @@ export const hasAccess = async (
 
       if (inzending.student !== gebruiker.id)
         throw new UnauthorizedError("Geen toegang tot deze inzending", 403);
+    }
+    if (dagboekId) {
+      const dagboek = await Stagedagboek.findOne({
+        _id: dagboekId,
+        student: gebruiker.id,
+      });
+      if (!dagboek)
+        throw new UnauthorizedError("Geen toegang tot dit stagedagboek", 403);
+    }
+    if (verslagId) {
+      const verslag = await Stagedagboek.findOne({
+        verslag: verslagId,
+        student: gebruiker.id,
+      });
+      if (!verslag)
+        throw new UnauthorizedError("Geen toegang tot dit stageverslag", 403);
+    }
+    if (dagId) {
+      const dag = await Stagedagboek.findOne({
+        dagen: dagId,
+        student: gebruiker.id,
+      });
+      if (!dag)
+        throw new UnauthorizedError("Geen toegang tot deze stagedag", 403);
     }
     next();
   } catch (error: unknown) {

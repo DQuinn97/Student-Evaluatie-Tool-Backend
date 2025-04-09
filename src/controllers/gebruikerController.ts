@@ -20,7 +20,7 @@ export const getAuthGebruiker = async (req: Request, res: Response) => {
     const gebruiker = req.gebruiker;
     const response = { ...gebruiker.toJSON(), wachtwoord: undefined };
 
-    res.status(200).json({ gebruiker: response });
+    res.status(200).json(response);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }

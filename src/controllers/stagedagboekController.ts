@@ -22,6 +22,54 @@ export const getDagboek = async (req: Request, res: Response) => {
   }
 };
 
+export const getAuthDagboek = async (req: Request, res: Response) => {
+  try {
+    const { klasgroepId } = req.params;
+    //@ts-ignore
+    const gebruiker = req.gebruiker;
+    const dagboek = await Stagedagboek.findOne({
+      klasgroep: klasgroepId,
+      student: gebruiker.id,
+    })
+      .lean()
+      .populate(["stageverslag", "stagedagen"])
+      .populate("klasgroep", "_id naam beginjaar eindjaar")
+      .populate("student", "-wachtwoord");
+
+    if (!dagboek) throw new NotFoundError("Dagboek niet gevonden");
+    res.status(200).json(dagboek);
+  } catch (error: unknown) {
+    ErrorHandler(error, req, res);
+  }
+};
+
+export const createAuthDagboek = async (req: Request, res: Response) => {
+  const { klasgroepId } = req.params;
+  //@ts-ignore
+  const gebruiker = req.gebruiker;
+  const dagboek = await Stagedagboek.create({
+    klasgroep: klasgroepId,
+    student: gebruiker.id,
+    stageverslag: null,
+    stagedagen: [],
+  });
+  res.status(201).json({ message: "Dagboek aangemaakt", dagboek });
+};
+
+export const deleteDagboek = async (req: Request, res: Response) => {
+  const { dagboekId } = req.params;
+  const dagboek = await Stagedagboek.findByIdAndDelete(dagboekId);
+  if (!dagboek) throw new NotFoundError("Verslag niet gevonden");
+  const verslag = await Stageverslag.findByIdAndDelete(
+    dagboek.stageverslag?.toString()
+  );
+  for (let dag of dagboek.stagedagen) {
+    await Stagedag.findByIdAndDelete(dag?.toString());
+  }
+
+  res.status(200).json({ message: "Dagboek verwijderd", dagboek });
+};
+
 /*
  * STAGEDAGEN
  */
@@ -58,7 +106,7 @@ export const addDag = async (req: Request, res: Response) => {
       .populate("student", "-wachtwoord");
     dagboek?.stagedagen.push(dag._id);
     await dagboek?.save();
-    res.status(201).json({message:"Dag toegevoegd", dag, dagboek});
+    res.status(201).json({ message: "Dag toegevoegd", dag, dagboek });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
