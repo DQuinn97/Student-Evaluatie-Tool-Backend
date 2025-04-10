@@ -1,8 +1,14 @@
+import { NextFunction, Request, Response } from "express";
 import multer from "multer";
-import { v2 as cloudinary } from "cloudinary";
-import { CloudinaryStorage, type Options } from "multer-storage-cloudinary";
-import path from "path";
+import {
+  v2 as cloudinary,
+  UploadApiOptions,
+  UploadApiResponse,
+} from "cloudinary";
+import fs from "fs";
+import path, { extname } from "path";
 import sanitize from "sanitize-filename";
+import { BadRequestError, ErrorHandler } from "../utils/errors";
 
 // Multer - Cloudinary
 cloudinary.config({
@@ -10,40 +16,54 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-const foto_storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "profielen",
-    allowedFormats: ["jpg", "png", "jpeg", "webp", "gif"],
-    public_id: (req, file) => {
+
+const storage = multer.memoryStorage();
+
+export const memory = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
+
+const handleUpload = async (
+  file: string,
+  folder: string,
+  filename: string
+): Promise<UploadApiResponse> => {
+  const res = await cloudinary.uploader.upload(file, {
+    //@ts-ignore
+    public_id: filename,
+    resource_type: "auto",
+    unique_filename: false,
+    overwrite: true,
+    folder,
+  } as UploadApiOptions);
+  return res;
+};
+
+const processUpload = async (file: Express.Multer.File): Promise<string> => {
+  const b64 = Buffer.from(file.buffer).toString("base64");
+  let dataURI = `data:${file.mimetype};base64,${b64}`;
+  return dataURI;
+};
+export const foto_upload = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    req.body.foto_upload = null;
+    if (!req.file) throw new BadRequestError("Geen foto meegegeven", 415);
+    const dataURI = await processUpload(req.file);
+
+    const cldRes = await handleUpload(
+      dataURI,
+      "profielen",
       //@ts-ignore
-      return `profiel-${req.gebruiker._id}`;
-    },
-  } as Options["params"],
-});
-
-const file_storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "inzendingen",
-    public_id: (req, file) => {
-      const uniqueSuffix = "bijlage-" + Date.now() + "-";
-
-      return (
-        uniqueSuffix +
-        path.parse(
-          sanitize(file.originalname.replace(/[\s-]/g, "_").replace(/_+/g, "_"))
-        ).name
-      );
-    },
-  } as Options["params"],
-});
-
-export const foto_upload = multer({
-  storage: foto_storage,
-  limits: { fileSize: 3000000 },
-});
-export const file_upload = multer({
-  storage: file_storage,
-  limits: { fileSize: 3000000 },
-});
+      `profiel-${req.gebruiker._id}`
+    );
+    req.body.foto_upload = cldRes;
+    next();
+  } catch (error) {
+    ErrorHandler(error, req, res);
+  }
+};

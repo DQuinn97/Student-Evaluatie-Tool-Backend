@@ -2,6 +2,7 @@ import "dotenv/config";
 import { Request, Response } from "express";
 import { Gebruiker } from "../models/GebruikerModel";
 import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/errors";
+import { UploadApiResponse } from "cloudinary";
 
 export const getGebruikerById = async (req: Request, res: Response) => {
   try {
@@ -47,15 +48,16 @@ export const setGebruikerData = async (req: Request, res: Response) => {
 
 export const setGebruikerFoto = async (req: Request, res: Response) => {
   try {
-    if (!req.file) {
-      throw new BadRequestError("No file uploaded", 415);
+    const { foto_upload }: { foto_upload: UploadApiResponse } = req.body;
+    if (!foto_upload) {
+      throw new BadRequestError("Geen foto geupload", 415);
     }
     //@ts-ignore
     const gebruiker = req.gebruiker;
 
     const baseUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/`;
     const transform = "c_thumb,g_center,h_200,w_200/r_max/f_auto/";
-    const imageUrl = req.file.filename;
+    const imageUrl = foto_upload.public_id;
 
     gebruiker.foto = `${baseUrl}${transform}${imageUrl}`;
     await gebruiker.save();

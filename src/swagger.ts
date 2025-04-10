@@ -607,6 +607,12 @@ const options = {
             $ref: "#/definitions/Error",
           },
         },
+        BadRequest_FileUpload: {
+          description: "Geen/verkeerde file geupload",
+          schema: {
+            $ref: "#/definitions/Error",
+          },
+        },
         BadRequest_MissingField: {
           description: "{veld} is verplicht",
           schema: {
