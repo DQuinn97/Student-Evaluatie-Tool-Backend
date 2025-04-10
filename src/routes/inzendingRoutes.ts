@@ -6,6 +6,7 @@ import {
 } from "../controllers/inzendingController";
 import { hasAccess, isAuth, isDocent } from "../middleware/authMiddleware";
 import { addGradering } from "../controllers/graderingController";
+import { file, file_uploads_student } from "../middleware/multerMiddleware";
 
 const router = express.Router();
 /**
@@ -33,6 +34,13 @@ const router = express.Router();
  *       - cookieAuth: []
  *     summary: Vraag een inzending op
  *     tags: [Inzendingen]
+ *     parameters:
+ *       - name: inzendingId
+ *         in: path
+ *         description: ID van de op te vragen inzending
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       '200':
  *         content:
@@ -50,6 +58,13 @@ const router = express.Router();
  *       - cookieAuth: []
  *     summary: Update een inzending
  *     tags: [Inzendingen]
+ *     parameters:
+ *       - name: inzendingId
+ *         in: path
+ *         description: ID van de te wijzigen inzending
+ *         required: true
+ *         schema:
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -64,6 +79,10 @@ const router = express.Router();
  *               beschrijving:
  *                 type: string
  *               bijlagen:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               nieuweBijlagen:
  *                 type: array
  *                 items:
  *                   type: string
@@ -88,6 +107,13 @@ const router = express.Router();
  *       - cookieAuth: []
  *     summary: Voeg een gradering toe aan een inzending
  *     tags: [Inzendingen, Graderingen]
+ *     parameters:
+ *       - name: inzendingId
+ *         in: path
+ *         description: ID van de inzending waarop de gradering moet worden toegevoegd
+ *         required: true
+ *         schema:
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -121,7 +147,14 @@ const router = express.Router();
 router
   .get("/", isAuth, getInzendingen)
   .get("/:inzendingId", isAuth, hasAccess, getInzending)
-  .patch("/:inzendingId", isAuth, hasAccess, updateInzending)
+  .patch(
+    "/:inzendingId",
+    isAuth,
+    hasAccess,
+    file.any(),
+    file_uploads_student,
+    updateInzending
+  )
   .post("/:inzendingId/gradering", isAuth, isDocent, addGradering);
 
 export default router;

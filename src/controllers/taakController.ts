@@ -183,8 +183,6 @@ export const updateTaak = async (req: Request, res: Response) => {
     if (vak && klasgroep && !klasgroep.vakken.includes(vak))
       throw new BadRequestError("Vak niet gevonden in klasgroep");
 
-    await cleanupBijlagen(await checkCleanupBijlagen(taak.bijlagen, bijlagen));
-
     if (file_uploads && file_uploads.length > 0) {
       const nieuweBijlagen = await uploadBijlagen(file_uploads, gebruiker);
       bijlagen.push(...nieuweBijlagen);
@@ -204,6 +202,11 @@ export const updateTaak = async (req: Request, res: Response) => {
       },
       { new: true }
     );
+    if (!updated) throw new NotFoundError("Taak niet gevonden");
+    await cleanupBijlagen(
+      await checkCleanupBijlagen(taak.bijlagen, updated.bijlagen)
+    );
+
     res.status(201).json(updated);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);

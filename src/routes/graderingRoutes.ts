@@ -14,6 +14,13 @@ const router = express.Router();
  *       - cookieAuth: []
  *     summary: Vraag een gradering op
  *     tags: [Graderingen]
+ *     parameters:
+ *       - name: graderingId
+ *         in: path
+ *         description: ID van de op te vragen gradering
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       '200':
  *         content:
@@ -33,6 +40,13 @@ const router = express.Router();
  *       - cookieAuth: []
  *     summary: Update een gradering
  *     tags: [Graderingen]
+ *     parameters:
+ *       - name: graderingId
+ *         in: path
+ *         description: ID van de te wijzigen gradering
+ *         required: true
+ *         schema:
+ *           type: string
  *     requestBody:
  *       required: true
  *       content:

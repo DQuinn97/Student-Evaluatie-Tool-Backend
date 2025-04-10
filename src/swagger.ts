@@ -224,7 +224,13 @@ const options = {
             _id: {
               type: "string",
             },
-            url: {
+            URL: {
+              type: "string",
+            },
+            gebruiker: {
+              $ref: "#/components/schemas/Gebruiker",
+            },
+            publicId: {
               type: "string",
             },
           },

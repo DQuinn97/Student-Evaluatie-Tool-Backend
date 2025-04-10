@@ -50,7 +50,7 @@ export const uploadBijlagen = async (
       gebruiker: gebruiker.id,
       publicId: file.public_id,
     });
-    bijlagen.push(bijlage);
+    bijlagen.push(bijlage.id);
   }
 
   return bijlagen;

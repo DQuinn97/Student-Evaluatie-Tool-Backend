@@ -87,6 +87,13 @@ const router = express.Router();
  *       - cookieAuth: []
  *     summary: Vraag een gebruiker op
  *     tags: [Profiel]
+ *     parameters:
+ *       - name: gebruikerId
+ *         in: path
+ *         description: ID van de op te vragen gebruiker
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       '200':
  *         content:
@@ -106,6 +113,13 @@ const router = express.Router();
  *       - cookieAuth: []
  *     summary: Vraag alle inzendingen van een gebruiker op
  *     tags: [Profiel, Inzendingen]
+ *     parameters:
+ *       - name: gebruikerId
+ *         in: path
+ *         description: ID van de op te vragen gebruiker
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       '200':
  *         content:

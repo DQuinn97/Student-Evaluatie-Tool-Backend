@@ -78,10 +78,6 @@ export const updateInzending = async (req: Request, res: Response) => {
     const inzending = await Inzending.findById(id);
     if (!inzending) throw new NotFoundError("Inzending niet gevonden");
 
-    await cleanupBijlagen(
-      await checkCleanupBijlagen(inzending.bijlagen, bijlagen)
-    );
-
     if (inzending.bijlagen.sort())
       if (file_uploads && file_uploads.length > 0) {
         const nieuweBijlagen = await uploadBijlagen(file_uploads, gebruiker);
@@ -94,6 +90,11 @@ export const updateInzending = async (req: Request, res: Response) => {
       { new: true }
     );
     if (!updated) throw new NotFoundError("Inzending niet gevonden");
+
+    await cleanupBijlagen(
+      await checkCleanupBijlagen(inzending.bijlagen, updated.bijlagen)
+    );
+
     const response = (await appendTaken([updated]))[0];
     res.status(200).json(response);
   } catch (error: unknown) {
