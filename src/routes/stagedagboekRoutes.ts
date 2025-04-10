@@ -13,6 +13,7 @@ import {
 } from "../controllers/stagedagboekController";
 import { hasAccess, isAuth, isDocent } from "../middleware/authMiddleware";
 import { isUnique } from "../middleware/uniqueMiddleware";
+import { file, file_uploads_student } from "../middleware/multerMiddleware";
 
 const router = express.Router();
 /**
@@ -127,6 +128,10 @@ const router = express.Router();
  *                 type: array
  *                 items:
  *                   type: string
+ *               nieuweBijlagen:
+ *                 type: array
+ *                 items:
+ *                   type: string
  *                   format: binary
  *     responses:
  *       '200':
@@ -226,6 +231,10 @@ const router = express.Router();
  *                 type: array
  *                 items:
  *                   type: string
+ *               nieuweBijlagen:
+ *                 type: array
+ *                 items:
+ *                   type: string
  *                   format: binary
  *     responses:
  *       '200':
@@ -301,6 +310,10 @@ const router = express.Router();
  *                 type: array
  *                 items:
  *                   type: string
+ *               nieuweBijlagen:
+ *                 type: array
+ *                 items:
+ *                   type: string
  *                   format: binary
  *     responses:
  *       '201':
@@ -355,6 +368,10 @@ const router = express.Router();
  *                 type: array
  *                 items:
  *                   type: string
+ *               nieuweBijlagen:
+ *                 type: array
+ *                 items:
+ *                   type: string
  *                   format: binary
  *     responses:
  *       '201':
@@ -376,13 +393,42 @@ const router = express.Router();
 router
   .get("/dag/:dagId", isAuth, hasAccess, getDag)
   .get("/verslag/:verslagId", isAuth, hasAccess, getVerslag)
-  .patch("/verslag/:verslagId", isAuth, hasAccess, updateVerslag)
-  .patch("/dag/:dagId", isAuth, hasAccess, updateDag)
+  .patch(
+    "/verslag/:verslagId",
+    isAuth,
+    hasAccess,
+    file.any(),
+    file_uploads_student,
+    updateVerslag
+  )
+  .patch(
+    "/dag/:dagId",
+    isAuth,
+    hasAccess,
+    file.any(),
+    file_uploads_student,
+    updateDag
+  )
   .delete("/dag/:dagId", isAuth, hasAccess, deleteDag)
   .delete("/verslag/:verslagId", isAuth, hasAccess, deleteVerslag)
   .get("/:dagboekId", isAuth, hasAccess, getDagboek)
   .delete("/:dagboekId", isAuth, hasAccess, deleteDagboek)
-  .post("/:dagboekId/verslag", isAuth, hasAccess, isUnique, addVerslag)
-  .post("/:dagboekId/dag", isAuth, hasAccess, addDag);
+  .post(
+    "/:dagboekId/verslag",
+    isAuth,
+    hasAccess,
+    isUnique,
+    file.any(),
+    file_uploads_student,
+    addVerslag
+  )
+  .post(
+    "/:dagboekId/dag",
+    isAuth,
+    hasAccess,
+    file.any(),
+    file_uploads_student,
+    addDag
+  );
 
 export default router;

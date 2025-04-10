@@ -6,7 +6,7 @@ import {
   getGebruikerById,
 } from "../controllers/gebruikerController";
 import { isAuth, isDocent } from "../middleware/authMiddleware";
-import { upload } from "../middleware/multerMiddleware";
+import { foto, foto_upload } from "../middleware/multerMiddleware";
 import { getInzendingenPerStudent } from "../controllers/inzendingController";
 
 const router = express.Router();
@@ -78,6 +78,8 @@ const router = express.Router();
  *               $ref: '#/components/schemas/Gebruiker'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
+ *       '415':
+ *         $ref: '#/components/responses/BadRequest_FileUpload'
  *
  * /profiel/{gebruikerId}:
  *   get:
@@ -85,6 +87,13 @@ const router = express.Router();
  *       - cookieAuth: []
  *     summary: Vraag een gebruiker op
  *     tags: [Profiel]
+ *     parameters:
+ *       - name: gebruikerId
+ *         in: path
+ *         description: ID van de op te vragen gebruiker
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       '200':
  *         content:
@@ -104,6 +113,13 @@ const router = express.Router();
  *       - cookieAuth: []
  *     summary: Vraag alle inzendingen van een gebruiker op
  *     tags: [Profiel, Inzendingen]
+ *     parameters:
+ *       - name: gebruikerId
+ *         in: path
+ *         description: ID van de op te vragen gebruiker
+ *         required: true
+ *         schema:
+ *           type: string
  *     responses:
  *       '200':
  *         content:
@@ -122,7 +138,7 @@ const router = express.Router();
 router
   .get("/", isAuth, getAuthGebruiker)
   .post("/data", isAuth, setGebruikerData)
-  .post("/foto", isAuth, upload.single("foto"), setGebruikerFoto)
+  .post("/foto", isAuth, foto.single("foto"), foto_upload, setGebruikerFoto)
   .get("/:gebruikerId", isAuth, isDocent, getGebruikerById)
   .get("/:gebruikedId/inzendingen", isAuth, isDocent, getInzendingenPerStudent);
 

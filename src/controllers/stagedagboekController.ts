@@ -3,6 +3,11 @@ import { Stagedagboek } from "../models/StagedagboekModel";
 import { Stagedag } from "../models/StagedagModel";
 import { Stageverslag } from "../models/StageverslagModel";
 import { ErrorHandler, NotFoundError } from "../utils/errors";
+import {
+  checkCleanupBijlagen,
+  cleanupBijlagen,
+  uploadBijlagen,
+} from "./bijlageController";
 
 /*
  * STAGEDAGBOEK
@@ -60,9 +65,7 @@ export const deleteDagboek = async (req: Request, res: Response) => {
   const { dagboekId } = req.params;
   const dagboek = await Stagedagboek.findByIdAndDelete(dagboekId);
   if (!dagboek) throw new NotFoundError("Verslag niet gevonden");
-  const verslag = await Stageverslag.findByIdAndDelete(
-    dagboek.stageverslag?.toString()
-  );
+  await Stageverslag.findByIdAndDelete(dagboek.stageverslag?.toString());
   for (let dag of dagboek.stagedagen) {
     await Stagedag.findByIdAndDelete(dag?.toString());
   }
@@ -85,8 +88,24 @@ export const getDag = async (req: Request, res: Response) => {
 };
 export const addDag = async (req: Request, res: Response) => {
   try {
-    const { datum, voormiddag, namiddag, tools, resultaat, bijlagen } =
-      req.body;
+    const {
+      datum,
+      voormiddag,
+      namiddag,
+      tools,
+      resultaat,
+      bijlagen,
+      file_uploads,
+    } = req.body;
+
+    //@ts-ignore
+    const gebruiker = req.gebruiker;
+
+    if (file_uploads && file_uploads.length > 0) {
+      const nieuweBijlagen = await uploadBijlagen(file_uploads, gebruiker);
+      bijlagen.push(...nieuweBijlagen);
+    }
+
     const dag = await Stagedag.create({
       datum: datum || Date.now(),
       voormiddag,
@@ -95,8 +114,6 @@ export const addDag = async (req: Request, res: Response) => {
       resultaat,
       bijlagen,
     });
-    //@ts-ignore
-    const gebruiker = req.gebruiker;
 
     const dagboek = await Stagedagboek.findOne({
       student: gebruiker._id,
@@ -115,24 +132,37 @@ export const addDag = async (req: Request, res: Response) => {
 export const updateDag = async (req: Request, res: Response) => {
   try {
     const { dagId: id } = req.params;
-    const { datum, voormiddag, namiddag, tools, resultaat, bijlagen } =
-      req.body;
-    const dag = await Stagedag.findByIdAndUpdate(
+    const {
+      datum,
+      voormiddag,
+      namiddag,
+      tools,
+      resultaat,
+      bijlagen,
+      file_uploads,
+    } = req.body;
+
+    //@ts-ignore
+    const gebruiker = req.gebruiker;
+
+    const dag = await Stagedag.findById(id);
+    if (!dag) throw new NotFoundError("Dag niet gevonden");
+
+    if (file_uploads && file_uploads.length > 0) {
+      const nieuweBijlagen = await uploadBijlagen(file_uploads, gebruiker);
+      bijlagen.push(...nieuweBijlagen);
+    }
+
+    const updated = await Stagedag.findByIdAndUpdate(
       id,
       { datum, voormiddag, namiddag, tools, resultaat, bijlagen },
       { new: true }
     );
-    if (!dag) throw new NotFoundError("Dag niet gevonden");
+    if (!updated) throw new NotFoundError("Dag niet gevonden");
 
-    const dagboek = await Stagedagboek.findOne({
-      stagedagen: id,
-    })
-      .populate("stageverslag")
-      .populate("stagedagen")
-      .populate("klasgroep", "_id naam beginjaar eindjaar")
-      .populate("student", "-wachtwoord");
+    await cleanupBijlagen(await checkCleanupBijlagen(dag.bijlagen, updated.bijlagen));
 
-    res.status(200).json(dag);
+    res.status(200).json(updated);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -188,7 +218,15 @@ export const addVerslag = async (req: Request, res: Response) => {
       score,
       reflectie,
       bijlagen,
+      file_uploads,
     } = req.body;
+    //@ts-ignore
+    const gebruiker = req.gebruiker;
+
+    if (file_uploads && file_uploads.length > 0) {
+      const nieuweBijlagen = await uploadBijlagen(file_uploads, gebruiker);
+      bijlagen.push(...nieuweBijlagen);
+    }
 
     const verslag = await Stageverslag.create({
       datum: datum || Date.now(),
@@ -201,15 +239,10 @@ export const addVerslag = async (req: Request, res: Response) => {
       reflectie,
       bijlagen,
     });
-    //@ts-ignore
-    const gebruiker = req.gebruiker;
+
     const dagboek = await Stagedagboek.findOne({
       student: gebruiker._id,
-    })
-      .populate("stageverslag")
-      .populate("stagedagen")
-      .populate("klasgroep", "_id naam beginjaar eindjaar")
-      .populate("student", "-wachtwoord");
+    });
     if (dagboek) dagboek.stageverslag = verslag._id;
     await dagboek?.save();
     res.status(201).json(verslag);
@@ -231,8 +264,19 @@ export const updateVerslag = async (req: Request, res: Response) => {
       score,
       reflectie,
       bijlagen,
+      file_uploads,
     } = req.body;
-    const verslag = await Stagedag.findByIdAndUpdate(
+    //@ts-ignore
+    const gebruiker = req.gebruiker;
+    const verslag = await Stageverslag.findById(id);
+    if (!verslag) throw new NotFoundError("Verslag niet gevonden");
+
+    if (file_uploads && file_uploads.length > 0) {
+      const nieuweBijlagen = await uploadBijlagen(file_uploads, gebruiker);
+      bijlagen.push(...nieuweBijlagen);
+    }
+
+    const updated = await Stageverslag.findByIdAndUpdate(
       id,
       {
         datum,
@@ -248,15 +292,11 @@ export const updateVerslag = async (req: Request, res: Response) => {
       { new: true }
     );
 
-    if (!verslag) throw new NotFoundError("Verslag niet gevonden");
-    const dagboek = await Stagedagboek.findOne({
-      stageverslag: id,
-    })
-      .populate("stageverslag")
-      .populate("stagedagen")
-      .populate("klasgroep", "_id naam beginjaar eindjaar")
-      .populate("student", "-wachtwoord");
-    res.status(200).json(verslag);
+    if (!updated) throw new NotFoundError("Verslag niet gevonden");
+
+    await cleanupBijlagen(await checkCleanupBijlagen(verslag.bijlagen, updated.bijlagen));
+
+    res.status(200).json(updated);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }

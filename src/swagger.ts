@@ -224,7 +224,13 @@ const options = {
             _id: {
               type: "string",
             },
-            url: {
+            URL: {
+              type: "string",
+            },
+            gebruiker: {
+              $ref: "#/components/schemas/Gebruiker",
+            },
+            publicId: {
               type: "string",
             },
           },
@@ -607,6 +613,12 @@ const options = {
             $ref: "#/definitions/Error",
           },
         },
+        BadRequest_FileUpload: {
+          description: "Geen/verkeerde file geupload",
+          schema: {
+            $ref: "#/definitions/Error",
+          },
+        },
         BadRequest_MissingField: {
           description: "{veld} is verplicht",
           schema: {
@@ -644,6 +656,10 @@ const options = {
 
     tags: [
       {
+        name: "Dump",
+        description: '"Dump" endpoints - alle mogelijke data in één object',
+      },
+      {
         name: "Profiel",
         description: "Gebruiker endpoints",
       },
@@ -659,10 +675,7 @@ const options = {
       { name: "Taken", description: "Taken endpoints" },
       { name: "Inzendingen", description: "Inzendingen endpoints" },
       { name: "Graderingen", description: "Graderingen endpoints" },
-      {
-        name: "Dump",
-        description: '"Dump" endpoints - alle mogelijke data in één object',
-      },
+      { name: "Bijlagen", description: "Bijlagen endpoints" },
     ],
   },
   apis: ["**/*.ts"],
