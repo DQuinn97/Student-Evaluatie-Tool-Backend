@@ -6,9 +6,8 @@ import {
   getGebruikerById,
 } from "../controllers/gebruikerController";
 import { isAuth, isDocent } from "../middleware/authMiddleware";
-import { foto_upload, memory } from "../middleware/multerMiddleware";
+import { foto, foto_upload } from "../middleware/multerMiddleware";
 import { getInzendingenPerStudent } from "../controllers/inzendingController";
-import { logger } from "../middleware/loggerMiddleware";
 
 const router = express.Router();
 /**
@@ -125,7 +124,7 @@ const router = express.Router();
 router
   .get("/", isAuth, getAuthGebruiker)
   .post("/data", isAuth, setGebruikerData)
-  .post("/foto", isAuth, memory.single("foto"), foto_upload, setGebruikerFoto)
+  .post("/foto", isAuth, foto.single("foto"), foto_upload, setGebruikerFoto)
   .get("/:gebruikerId", isAuth, isDocent, getGebruikerById)
   .get("/:gebruikedId/inzendingen", isAuth, isDocent, getInzendingenPerStudent);
 

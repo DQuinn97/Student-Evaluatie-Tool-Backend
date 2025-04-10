@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Error as MongooseError } from "mongoose";
+import multer from "multer";
 const { ValidationError } = MongooseError;
 export class UnauthorizedError extends Error {
   constructor(
@@ -41,6 +42,8 @@ export const ErrorHandler = (error: unknown, req: Request, res: Response) => {
     error instanceof NotFoundError
   ) {
     res.status(error.statusCode).json({ message: error.message });
+  } else if (error instanceof multer.MulterError) {
+    res.status(415).json({ message: "Foutieve file upload" });
   } else if (error instanceof ValidationError) {
     res.status(400).json({ message: error.message });
   } else if (error instanceof Error) {

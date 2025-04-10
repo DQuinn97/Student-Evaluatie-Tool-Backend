@@ -1,4 +1,5 @@
-import mongoose, { HydratedDocumentFromSchema } from "mongoose";
+import mongoose, { HydratedDocumentFromSchema, Schema } from "mongoose";
+import { Gebruiker } from "./GebruikerModel";
 
 const bijlageSchema = new mongoose.Schema(
   {
@@ -6,6 +7,15 @@ const bijlageSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+    },
+    publicId: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    gebruiker: {
+      type: Schema.Types.ObjectId,
+      ref: Gebruiker,
     },
   },
   {

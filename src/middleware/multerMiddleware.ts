@@ -1,29 +1,47 @@
 import { NextFunction, Request, Response } from "express";
 import multer from "multer";
-import {
-  v2 as cloudinary,
+import cloudinary, {
   UploadApiOptions,
   UploadApiResponse,
-} from "cloudinary";
-import fs from "fs";
-import path, { extname } from "path";
+} from "../utils/cloudinary";
 import sanitize from "sanitize-filename";
 import { BadRequestError, ErrorHandler } from "../utils/errors";
 
-// Multer - Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
+// Multer config
 const storage = multer.memoryStorage();
-
-export const memory = multer({
+export const foto = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (
+      ![
+        "image/png",
+        "image/jpg",
+        "image/jpeg",
+        "image/gif",
+        "image/webp",
+      ].includes(file.mimetype as string)
+    ) {
+      cb(null, false);
+      cb(new BadRequestError("Verkeerd filetype", 415));
+    } else {
+      cb(null, true);
+    }
+  },
+});
+export const file = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 },
 });
 
+// file -> base64
+const processUpload = async (file: Express.Multer.File): Promise<string> => {
+  const b64 = Buffer.from(file.buffer).toString("base64");
+  let dataURI = `data:${file.mimetype};base64,${b64}`;
+  return dataURI;
+};
+
+// base64 file -> cloudinary
 const handleUpload = async (
   file: string,
   folder: string,
@@ -35,16 +53,13 @@ const handleUpload = async (
     resource_type: "auto",
     unique_filename: false,
     overwrite: true,
+    invalidate: true,
     folder,
   } as UploadApiOptions);
   return res;
 };
 
-const processUpload = async (file: Express.Multer.File): Promise<string> => {
-  const b64 = Buffer.from(file.buffer).toString("base64");
-  let dataURI = `data:${file.mimetype};base64,${b64}`;
-  return dataURI;
-};
+// profiel foto uploader
 export const foto_upload = async (
   req: Request,
   res: Response,
@@ -52,7 +67,10 @@ export const foto_upload = async (
 ) => {
   try {
     req.body.foto_upload = null;
-    if (!req.file) throw new BadRequestError("Geen foto meegegeven", 415);
+    if (!req.file) {
+      next();
+      return;
+    }
     const dataURI = await processUpload(req.file);
 
     const cldRes = await handleUpload(
@@ -62,6 +80,88 @@ export const foto_upload = async (
       `profiel-${req.gebruiker._id}`
     );
     req.body.foto_upload = cldRes;
+    next();
+  } catch (error) {
+    ErrorHandler(error, req, res);
+  }
+};
+
+// bijlage uploader docenten
+export const file_uploads_docent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    req.body.file_uploads = [];
+
+    const files = req.files as Express.Multer.File[];
+
+    if (!files || files.length == 0)
+      throw new BadRequestError("Geen files meegegeven", 415);
+
+    for (let file of files) {
+      const dataURI = await processUpload(file);
+
+      const filename =
+        file.fieldname +
+        "-" +
+        Date.now() +
+        "-" +
+        sanitize(file.originalname.replace(/[\s-]/g, "_").replace(/_+/g, "_"));
+
+      const cldRes = await handleUpload(
+        dataURI,
+        "bijlagen",
+        //@ts-ignore
+        filename
+      );
+
+      req.body.file_uploads.push(cldRes);
+    }
+    next();
+  } catch (error) {
+    ErrorHandler(error, req, res);
+  }
+};
+
+// bijlage uploader docenten
+export const file_uploads_student = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    req.body.file_uploads = [];
+    //@ts-ignore
+    const gebruiker = req.gebruiker;
+
+    const files = req.files as Express.Multer.File[];
+
+    if (!files || files.length == 0) {
+      next();
+      return;
+    }
+
+    for (let file of files) {
+      const dataURI = await processUpload(file);
+
+      const filename =
+        file.fieldname +
+        "-" +
+        Date.now() +
+        "-" +
+        sanitize(file.originalname.replace(/[\s-]/g, "_").replace(/_+/g, "_"));
+
+      const cldRes = await handleUpload(
+        dataURI,
+        `bijlagen_${gebruiker.id}`,
+        //@ts-ignore
+        filename
+      );
+
+      req.body.file_uploads.push(cldRes);
+    }
     next();
   } catch (error) {
     ErrorHandler(error, req, res);

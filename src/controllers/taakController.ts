@@ -5,6 +5,11 @@ import { Gradering, TGradering } from "../models/GraderingModel";
 import { Inzending, TInzending } from "../models/InzendingModel";
 import { klasgroepPath, vakPath } from "../utils/helpers";
 import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/errors";
+import {
+  checkCleanupBijlagen,
+  cleanupBijlagen,
+  uploadBijlagen,
+} from "./bijlageController";
 
 export const getTaken = async (req: Request, res: Response) => {
   try {
@@ -103,6 +108,9 @@ export const getTaak = async (req: Request, res: Response) => {
 export const addTaak = async (req: Request, res: Response) => {
   try {
     const { klasgroepId } = req.params;
+    //@ts-ignore
+    const gebruiker = req.gebruiker;
+
     const {
       type,
       titel,
@@ -112,6 +120,7 @@ export const addTaak = async (req: Request, res: Response) => {
       vak,
       isGepubliceerd,
       bijlagen,
+      file_uploads,
     } = req.body;
 
     if (!klasgroepId || !titel || !beschrijving || !deadline || !weging)
@@ -125,6 +134,11 @@ export const addTaak = async (req: Request, res: Response) => {
 
     if (vak && !klasgroep.vakken.includes(vak))
       throw new BadRequestError("Vak niet gevonden in klasgroep");
+
+    if (file_uploads && file_uploads.length > 0) {
+      const nieuweBijlagen = await uploadBijlagen(file_uploads, gebruiker);
+      bijlagen.push(...nieuweBijlagen);
+    }
 
     const taak = await Taak.create({
       type,
@@ -145,7 +159,9 @@ export const addTaak = async (req: Request, res: Response) => {
 
 export const updateTaak = async (req: Request, res: Response) => {
   try {
-    const { taakId } = req.params;
+    const { taakId: id } = req.params;
+    //@ts-ignore
+    const gebruiker = req.gebruiker;
     const {
       type,
       titel,
@@ -155,31 +171,40 @@ export const updateTaak = async (req: Request, res: Response) => {
       vak,
       isGepubliceerd,
       bijlagen,
+      file_uploads,
     } = req.body;
 
-    const check = await Taak.findById(taakId);
-    const klasgroep = await Klasgroep.findById(check?.klasgroep);
+    const taak = await Taak.findById(id);
+    if (!taak) throw new NotFoundError("Taak niet gevonden");
 
-    if (!check) throw new NotFoundError("Taak niet gevonden");
+    const klasgroep = await Klasgroep.findById(taak.klasgroep);
     if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
+
     if (vak && klasgroep && !klasgroep.vakken.includes(vak))
       throw new BadRequestError("Vak niet gevonden in klasgroep");
 
-    const taak = await Taak.findByIdAndUpdate(
-      taakId,
+    await cleanupBijlagen(await checkCleanupBijlagen(taak.bijlagen, bijlagen));
+
+    if (file_uploads && file_uploads.length > 0) {
+      const nieuweBijlagen = await uploadBijlagen(file_uploads, gebruiker);
+      bijlagen.push(...nieuweBijlagen);
+    }
+
+    const updated = await Taak.findByIdAndUpdate(
+      id,
       {
-        type: type ? type : check?.type,
-        titel: titel ? titel : check?.titel,
-        beschrijving: beschrijving ? beschrijving : check?.beschrijving,
-        deadline: deadline ? deadline : check?.deadline,
-        weging: weging ? weging : check?.weging,
-        vak: vak ? vak : check?.vak,
-        isGepubliceerd: isGepubliceerd ? isGepubliceerd : check?.isGepubliceerd,
+        type: type ? type : taak?.type,
+        titel: titel ? titel : taak?.titel,
+        beschrijving: beschrijving ? beschrijving : taak?.beschrijving,
+        deadline: deadline ? deadline : taak?.deadline,
+        weging: weging ? weging : taak?.weging,
+        vak: vak ? vak : taak?.vak,
+        isGepubliceerd: isGepubliceerd ? isGepubliceerd : taak?.isGepubliceerd,
         bijlagen,
       },
       { new: true }
     );
-    res.status(201).json(taak);
+    res.status(201).json(updated);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -223,11 +248,14 @@ export const deleteTaak = async (req: Request, res: Response) => {
 
     for (let inzending of taak.inzendingen) {
       let deleted = await Inzending.findByIdAndDelete(inzending);
-      if (deleted)
+      if (deleted) {
+        await cleanupBijlagen(deleted.bijlagen);
         for (let gradering of deleted.gradering) {
           await Gradering.findByIdAndDelete(gradering);
         }
+      }
     }
+    await cleanupBijlagen(taak.bijlagen);
 
     res.status(204).json(taak);
   } catch (error: unknown) {

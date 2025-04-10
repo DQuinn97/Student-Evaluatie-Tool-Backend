@@ -11,6 +11,7 @@ import {
   UnauthorizedError,
 } from "../utils/errors";
 import { Stagedagboek } from "../models/StagedagboekModel";
+import { Bijlage } from "../models/BijlageModel";
 export const isAuth = async (
   req: Request,
   res: Response,
@@ -69,9 +70,17 @@ export const hasAccess = async (
       dagboekId,
       dagId,
       verslagId,
+      bijlageId,
     } = req.params;
     if (gebruiker.isDocent) return next();
 
+    if (bijlageId) {
+      const bijlage = await Bijlage.findById(bijlageId);
+      if (!bijlage) throw new NotFoundError("Bijlage niet gevonden");
+
+      if (bijlage.gebruiker !== gebruiker.id)
+        throw new UnauthorizedError("Geen toegang tot deze bijlage", 403);
+    }
     if (taakId) {
       const taak = await Taak.findById(taakId).populate("klasgroep");
 

@@ -650,6 +650,10 @@ const options = {
 
     tags: [
       {
+        name: "Dump",
+        description: '"Dump" endpoints - alle mogelijke data in één object',
+      },
+      {
         name: "Profiel",
         description: "Gebruiker endpoints",
       },
@@ -665,10 +669,7 @@ const options = {
       { name: "Taken", description: "Taken endpoints" },
       { name: "Inzendingen", description: "Inzendingen endpoints" },
       { name: "Graderingen", description: "Graderingen endpoints" },
-      {
-        name: "Dump",
-        description: '"Dump" endpoints - alle mogelijke data in één object',
-      },
+      { name: "Bijlagen", description: "Bijlagen endpoints" },
     ],
   },
   apis: ["**/*.ts"],
