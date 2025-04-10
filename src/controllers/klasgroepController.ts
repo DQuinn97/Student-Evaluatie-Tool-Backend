@@ -1,12 +1,8 @@
 import { Request, Response } from "express";
 import { Klasgroep } from "../models/KlasgroepModel";
 import { Vak } from "../models/VakModel";
-import {
-  BadRequestError,
-  ErrorHandler,
-  NotFoundError,
-} from "../utils/errors";
-import {vakPath} from "../utils/helpers";
+import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/errors";
+import { vakPath2 as vakPath } from "../utils/helpers";
 import { Gebruiker } from "../models/GebruikerModel";
 
 export const getKlasgroepen = async (req: Request, res: Response) => {
@@ -14,7 +10,7 @@ export const getKlasgroepen = async (req: Request, res: Response) => {
     //@ts-ignore
     const gebruiker = req.gebruiker;
 
-    const klasgroepen = gebruiker.isDocent
+    const klasgroepen = !gebruiker.isDocent
       ? await Klasgroep.find({
           studenten: gebruiker.id,
         })
@@ -91,9 +87,7 @@ export const pushStudentToKlasgroep = async (req: Request, res: Response) => {
       { path: "studenten", select: "-wachtwoord" },
     ]);
 
-    res
-      .status(200)
-      .json( response );
+    res.status(200).json(response);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -128,9 +122,7 @@ export const removeStudentFromKlasgroep = async (
       { path: "studenten", select: "-wachtwoord" },
     ]);
 
-    res
-      .status(204)
-      .json( response );
+    res.status(204).json(response);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -155,7 +147,7 @@ export const pushVakToKlasgroep = async (req: Request, res: Response) => {
       select: "_id naam",
     });
 
-    res.status(200).json( response );
+    res.status(200).json(response);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -179,7 +171,7 @@ export const removeVakFromKlasgroep = async (req: Request, res: Response) => {
     ).populate(vakPath);
     await Vak.findByIdAndDelete(vakId);
 
-    res.status(204).json(klasgroep );
+    res.status(204).json(klasgroep);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }

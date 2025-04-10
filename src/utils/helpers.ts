@@ -45,6 +45,7 @@ export const hashWachtwoord = async (wachtwoord: string) => {
 };
 
 export const vakPath = { path: "vak", select: "_id naam" };
+export const vakPath2 = { path: "vakken", select: "_id naam" };
 export const klasgroepPath = {
   path: "klasgroep",
   select: "_id naam beginjaar eindjaar",
