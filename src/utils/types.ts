@@ -8,6 +8,11 @@ import { TStagedag } from "../models/StagedagModel";
 import { TStageverslag } from "../models/StageverslagModel";
 import { TTaak } from "../models/TaakModel";
 import { TVak } from "../models/VakModel";
+import { Request as Req, Response as Res, NextFunction as Next } from "express";
+
+export type Request = Req & { gebruiker?: any };
+export type Response = Res;
+export type NextFunction = Next;
 
 export type GraderingDump = Omit<TGradering, "docent"> & {
   docent: TGebruiker;

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from "../utils/types";
 import { Todo } from "../models/exampleModel";
 import { ErrorHandler } from "../utils/errors";
 

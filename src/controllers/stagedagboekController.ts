@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from "../utils/types";
 import { Stagedagboek } from "../models/StagedagboekModel";
 import { Stagedag } from "../models/StagedagModel";
 import { Stageverslag } from "../models/StageverslagModel";
@@ -30,7 +30,7 @@ export const getDagboek = async (req: Request, res: Response) => {
 export const getAuthDagboek = async (req: Request, res: Response) => {
   try {
     const { klasgroepId } = req.params;
-    //@ts-ignore
+
     const gebruiker = req.gebruiker;
     const dagboek = await Stagedagboek.findOne({
       klasgroep: klasgroepId,
@@ -50,7 +50,7 @@ export const getAuthDagboek = async (req: Request, res: Response) => {
 
 export const createAuthDagboek = async (req: Request, res: Response) => {
   const { klasgroepId } = req.params;
-  //@ts-ignore
+
   const gebruiker = req.gebruiker;
   const dagboek = await Stagedagboek.create({
     klasgroep: klasgroepId,
@@ -98,7 +98,6 @@ export const addDag = async (req: Request, res: Response) => {
       file_uploads,
     } = req.body;
 
-    //@ts-ignore
     const gebruiker = req.gebruiker;
 
     if (file_uploads && file_uploads.length > 0) {
@@ -142,7 +141,6 @@ export const updateDag = async (req: Request, res: Response) => {
       file_uploads,
     } = req.body;
 
-    //@ts-ignore
     const gebruiker = req.gebruiker;
 
     const dag = await Stagedag.findById(id);
@@ -160,7 +158,9 @@ export const updateDag = async (req: Request, res: Response) => {
     );
     if (!updated) throw new NotFoundError("Dag niet gevonden");
 
-    await cleanupBijlagen(await checkCleanupBijlagen(dag.bijlagen, updated.bijlagen));
+    await cleanupBijlagen(
+      await checkCleanupBijlagen(dag.bijlagen, updated.bijlagen)
+    );
 
     res.status(200).json(updated);
   } catch (error: unknown) {
@@ -170,7 +170,6 @@ export const updateDag = async (req: Request, res: Response) => {
 
 export const deleteDag = async (req: Request, res: Response) => {
   try {
-    // TODO delete files related to this
     const { dagId: id } = req.params;
     const dag = await Stagedag.findByIdAndDelete(id);
     if (!dag) throw new NotFoundError("Dag niet gevonden");
@@ -220,7 +219,7 @@ export const addVerslag = async (req: Request, res: Response) => {
       bijlagen,
       file_uploads,
     } = req.body;
-    //@ts-ignore
+
     const gebruiker = req.gebruiker;
 
     if (file_uploads && file_uploads.length > 0) {
@@ -266,7 +265,7 @@ export const updateVerslag = async (req: Request, res: Response) => {
       bijlagen,
       file_uploads,
     } = req.body;
-    //@ts-ignore
+
     const gebruiker = req.gebruiker;
     const verslag = await Stageverslag.findById(id);
     if (!verslag) throw new NotFoundError("Verslag niet gevonden");
@@ -294,7 +293,9 @@ export const updateVerslag = async (req: Request, res: Response) => {
 
     if (!updated) throw new NotFoundError("Verslag niet gevonden");
 
-    await cleanupBijlagen(await checkCleanupBijlagen(verslag.bijlagen, updated.bijlagen));
+    await cleanupBijlagen(
+      await checkCleanupBijlagen(verslag.bijlagen, updated.bijlagen)
+    );
 
     res.status(200).json(updated);
   } catch (error: unknown) {
@@ -304,7 +305,6 @@ export const updateVerslag = async (req: Request, res: Response) => {
 
 export const deleteVerslag = async (req: Request, res: Response) => {
   try {
-    // TODO delete files related to this
     const { verslagId: id } = req.params;
 
     const verslag = await Stageverslag.findByIdAndDelete(id);

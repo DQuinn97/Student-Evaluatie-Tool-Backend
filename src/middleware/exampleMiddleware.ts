@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "../utils/types";
 
 export const helloMiddleware = (
   req: Request,

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from "../utils/types";
 import { Gradering, TGradering } from "../models/GraderingModel";
 import { Inzending } from "../models/InzendingModel";
 import { ErrorHandler, NotFoundError } from "../utils/errors";
@@ -34,7 +34,7 @@ export const addGradering = async (req: Request, res: Response) => {
   try {
     const { inzendingId } = req.params;
     const { score, maxscore, feedback } = req.body;
-    //@ts-ignore
+
     const gebruiker = req.gebruiker;
 
     const inzending = await Inzending.findById(inzendingId);

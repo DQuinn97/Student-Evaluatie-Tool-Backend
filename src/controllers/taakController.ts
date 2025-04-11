@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from "../utils/types";
 import { Taak } from "../models/TaakModel";
 import { Klasgroep } from "../models/KlasgroepModel";
 import { Gradering, TGradering } from "../models/GraderingModel";
@@ -15,7 +15,7 @@ export const getTaken = async (req: Request, res: Response) => {
   try {
     const { klasgroepId } = req.params;
     const filter = { klasgroep: klasgroepId };
-    //@ts-ignore
+
     const gebruiker = req.gebruiker;
 
     const taken = await Taak.find(filter).populate([
@@ -76,7 +76,7 @@ export const getAlleTaken = async (req: Request, res: Response) => {
 export const getTaak = async (req: Request, res: Response) => {
   try {
     const { taakId } = req.params;
-    //@ts-ignore
+
     const gebruiker = req.gebruiker;
     const taak = await Taak.findById(taakId).populate([
       {
@@ -108,7 +108,7 @@ export const getTaak = async (req: Request, res: Response) => {
 export const addTaak = async (req: Request, res: Response) => {
   try {
     const { klasgroepId } = req.params;
-    //@ts-ignore
+
     const gebruiker = req.gebruiker;
 
     const {
@@ -160,7 +160,7 @@ export const addTaak = async (req: Request, res: Response) => {
 export const updateTaak = async (req: Request, res: Response) => {
   try {
     const { taakId: id } = req.params;
-    //@ts-ignore
+
     const gebruiker = req.gebruiker;
     const {
       type,

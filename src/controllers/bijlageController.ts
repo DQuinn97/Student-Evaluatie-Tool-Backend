@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from "../utils/types";
 import { ErrorHandler, NotFoundError } from "../utils/errors";
 import { Bijlage } from "../models/BijlageModel";
 import cloudinary, { UploadApiResponse } from "../utils/cloudinary";
@@ -64,7 +64,6 @@ export const uploadBijlagen = async (
 
 export const getBijlagen = async (req: Request, res: Response) => {
   try {
-    //@ts-ignore
     const gebruiker = req.gebruiker;
     if (gebruiker.isDocent) {
       // Als gebruiker een docent is -> geef alle bijlagen
@@ -88,7 +87,6 @@ export const getBijlagen = async (req: Request, res: Response) => {
 export const addBijlagen = async (req: Request, res: Response) => {
   try {
     const { file_uploads } = req.body;
-    //@ts-ignore
     const gebruiker = req.gebruiker;
 
     // Voeg bijlagen toe in db

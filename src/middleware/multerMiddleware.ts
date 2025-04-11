@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "../utils/types";
 import multer from "multer";
 import cloudinary, {
   UploadApiOptions,
@@ -48,7 +48,6 @@ const handleUpload = async (
   filename: string
 ): Promise<UploadApiResponse> => {
   const res = await cloudinary.uploader.upload(file, {
-    //@ts-ignore
     public_id: filename,
     resource_type: "auto",
     unique_filename: false,
@@ -76,7 +75,6 @@ export const foto_upload = async (
     const cldRes = await handleUpload(
       dataURI,
       "profielen",
-      //@ts-ignore
       `profiel-${req.gebruiker._id}`
     );
     req.body.foto_upload = cldRes;
@@ -110,12 +108,7 @@ export const file_uploads_docent = async (
         "-" +
         sanitize(file.originalname.replace(/[\s-]/g, "_").replace(/_+/g, "_"));
 
-      const cldRes = await handleUpload(
-        dataURI,
-        "bijlagen",
-        //@ts-ignore
-        filename
-      );
+      const cldRes = await handleUpload(dataURI, "bijlagen", filename);
 
       req.body.file_uploads.push(cldRes);
     }
@@ -133,7 +126,7 @@ export const file_uploads_student = async (
 ) => {
   try {
     req.body.file_uploads = [];
-    //@ts-ignore
+
     const gebruiker = req.gebruiker;
 
     const files = req.files as Express.Multer.File[];
@@ -156,7 +149,6 @@ export const file_uploads_student = async (
       const cldRes = await handleUpload(
         dataURI,
         `bijlagen_${gebruiker.id}`,
-        //@ts-ignore
         filename
       );
 

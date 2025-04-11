@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "../utils/types";
 import { Klasgroep } from "../models/KlasgroepModel";
 import { Vak } from "../models/VakModel";
 import { Inzending } from "../models/InzendingModel";
@@ -14,7 +14,7 @@ export const isUnique = async (
   try {
     const { taakId, klasgroepId, dagboekId } = req.params;
     const { naam: vak, studentId } = req.body;
-    //@ts-ignore
+
     const gebruiker = req.gebruiker;
 
     if (klasgroepId) {

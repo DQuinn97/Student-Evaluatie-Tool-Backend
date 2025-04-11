@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { Request, Response } from "express";
+import { Request, Response } from "../utils/types";
 import { ErrorHandler, NotFoundError } from "../utils/errors";
 import { gebruikerDump, klasgroepDump } from "../utils/dumphelper";
 export const getGebruikerDump = async (req: Request, res: Response) => {

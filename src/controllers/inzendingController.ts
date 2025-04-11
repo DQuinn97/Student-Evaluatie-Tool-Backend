@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from "../utils/types";
 import { Inzending, TInzending } from "../models/InzendingModel";
 import { Taak } from "../models/TaakModel";
 import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/errors";
@@ -39,7 +39,7 @@ export const addInzending = async (req: Request, res: Response) => {
   try {
     const { taakId } = req.params;
     const { git, live, beschrijving, bijlagen, file_uploads } = req.body;
-    //@ts-ignore
+
     const gebruiker = req.gebruiker;
 
     if (file_uploads && file_uploads.length > 0) {
@@ -72,7 +72,7 @@ export const updateInzending = async (req: Request, res: Response) => {
   try {
     const { inzendingId: id } = req.params;
     const { git, live, beschrijving, bijlagen, file_uploads } = req.body;
-    //@ts-ignore
+
     const gebruiker = req.gebruiker;
 
     const inzending = await Inzending.findById(id);
@@ -123,7 +123,6 @@ export const getInzendingenPerTaak = async (req: Request, res: Response) => {
 
 export const getInzendingen = async (req: Request, res: Response) => {
   try {
-    //@ts-ignore
     const gebruiker = req.gebruiker;
     const inzendingen = await Inzending.find({
       student: gebruiker._id,

@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "../utils/types";
 import jwt from "jsonwebtoken";
 import { Gebruiker } from "../models/GebruikerModel";
 import { Klasgroep } from "../models/KlasgroepModel";
@@ -29,7 +29,7 @@ export const isAuth = async (
     const gebruiker = await Gebruiker.findOne({ email: decodedToken.email });
     if (!gebruiker) throw new UnauthorizedError("Geen toegang tot deze pagina");
 
-    //@ts-ignore
+    
     req.gebruiker = gebruiker;
     next();
   } catch (error: unknown) {

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from "../utils/types";
 import { Klasgroep } from "../models/KlasgroepModel";
 import { Vak } from "../models/VakModel";
 import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/errors";
@@ -7,7 +7,6 @@ import { Gebruiker } from "../models/GebruikerModel";
 
 export const getKlasgroepen = async (req: Request, res: Response) => {
   try {
-    //@ts-ignore
     const gebruiker = req.gebruiker;
 
     const klasgroepen = !gebruiker.isDocent
@@ -26,22 +25,10 @@ export const getKlasgroepen = async (req: Request, res: Response) => {
   }
 };
 
-// export const getAlleKlasgroepen = async (req: Request, res: Response) => {
-//   try {
-//     const klasgroepen = await Klasgroep.find().populate([
-//       { path: "studenten", select: "-wachtwoord" },
-//       vakPath,
-//     ]);
-//     res.status(200).json(klasgroepen);
-//   } catch (error: unknown) {
-//     ErrorHandler(error, req, res);
-//   }
-// };
-
 export const getKlasgroep = async (req: Request, res: Response) => {
   try {
     const { klasgroepId } = req.params;
-    //@ts-ignore
+
     const gebruiker = req.gebruiker;
     const klasgroep = await Klasgroep.findById(klasgroepId)
       .populate([{ path: "studenten", select: "-wachtwoord" }, vakPath])

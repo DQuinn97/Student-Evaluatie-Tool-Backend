@@ -1,15 +1,17 @@
 import "dotenv/config";
-import { Request, Response } from "express";
+import { Request, Response } from "../utils/types";
 import { Gebruiker } from "../models/GebruikerModel";
 import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/errors";
 import { UploadApiResponse } from "cloudinary";
 
 export const getGebruikerById = async (req: Request, res: Response) => {
   try {
-    // /gebruikers/id
+    // Check of gebruiker bestaat
     const { id } = req.params;
     const gebruiker = await Gebruiker.findById(id).select("-wachtwoord");
     if (!gebruiker) throw new NotFoundError("Gebruiker niet gevonden");
+
+    // Success response met gebruiker; 200 - OK
     res.status(200).json(gebruiker);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -17,7 +19,6 @@ export const getGebruikerById = async (req: Request, res: Response) => {
 };
 export const getAuthGebruiker = async (req: Request, res: Response) => {
   try {
-    //@ts-ignore
     const gebruiker = req.gebruiker;
     const response = { ...gebruiker.toJSON(), wachtwoord: undefined };
 
@@ -29,7 +30,7 @@ export const getAuthGebruiker = async (req: Request, res: Response) => {
 export const setGebruikerData = async (req: Request, res: Response) => {
   try {
     const { naam, achternaam, gsm } = req.body;
-    //@ts-ignore
+
     const gebruiker = req.gebruiker;
 
     if (naam) gebruiker.naam = naam;
@@ -52,7 +53,7 @@ export const setGebruikerFoto = async (req: Request, res: Response) => {
     if (!foto_upload) {
       throw new BadRequestError("Geen foto geupload", 415);
     }
-    //@ts-ignore
+
     const gebruiker = req.gebruiker;
 
     const baseUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/`;

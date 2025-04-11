@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { Request, Response } from "express";
+import { Request, Response } from "../utils/types";
 import generator from "generate-password";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -165,7 +165,6 @@ export const resetWachtwoordRequest = async (req: Request, res: Response) => {
     ErrorHandler(error, req, res);
   }
 };
-
 
 export const resetWachtwoord = async (req: Request, res: Response) => {
   try {
