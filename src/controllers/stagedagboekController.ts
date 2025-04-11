@@ -65,9 +65,13 @@ export const deleteDagboek = async (req: Request, res: Response) => {
   const { dagboekId } = req.params;
   const dagboek = await Stagedagboek.findByIdAndDelete(dagboekId);
   if (!dagboek) throw new NotFoundError("Verslag niet gevonden");
-  await Stageverslag.findByIdAndDelete(dagboek.stageverslag?.toString());
+  let verslag = await Stageverslag.findByIdAndDelete(
+    dagboek.stageverslag?.toString()
+  );
+  if (verslag) await cleanupBijlagen(verslag.bijlagen);
   for (let dag of dagboek.stagedagen) {
-    await Stagedag.findByIdAndDelete(dag?.toString());
+    let dag_ = await Stagedag.findByIdAndDelete(dag?.toString());
+    if (dag_) await cleanupBijlagen(dag_.bijlagen);
   }
 
   res.status(204).json(dagboek);
@@ -185,6 +189,8 @@ export const deleteDag = async (req: Request, res: Response) => {
       .populate("stagedagen")
       .populate("klasgroep", "_id naam beginjaar eindjaar")
       .populate("student", "-wachtwoord");
+
+    await cleanupBijlagen(dag.bijlagen);
 
     res.status(204).json(dag);
   } catch (error: unknown) {
@@ -320,6 +326,9 @@ export const deleteVerslag = async (req: Request, res: Response) => {
       .populate("stagedagen")
       .populate("klasgroep", "_id naam beginjaar eindjaar")
       .populate("student", "-wachtwoord");
+
+    await cleanupBijlagen(verslag.bijlagen);
+
     res.status(204).json(verslag);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
