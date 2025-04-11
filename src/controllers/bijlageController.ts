@@ -77,7 +77,7 @@ export const getBijlagen = async (req: Request, res: Response) => {
       // Als gebruiker geen docent is -> geef alle eigen bijlagen
       const bijlagen = await Bijlage.find({ gebruiker: gebruiker.id });
 
-      // Success response; 200 - OK
+      // Success response met bijlagen; 200 - OK
       res.status(200).json(bijlagen);
     }
   } catch (error: unknown) {
@@ -94,7 +94,7 @@ export const addBijlagen = async (req: Request, res: Response) => {
     // Voeg bijlagen toe in db
     const bijlagen = await uploadBijlagen(file_uploads, gebruiker);
 
-    // Success response; 201 - Created
+    // Success response met nieuwe bijlagen; 201 - Created
     res.status(201).json(bijlagen);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -120,7 +120,7 @@ export const deleteBijlage = async (req: Request, res: Response) => {
     // Verwijder de bijlage uit de cloud
     await cloudinary.uploader.destroy(bijlage.publicId, { invalidate: true });
 
-    // Success response; 204 - No content
+    // Success response met verwijderde bijlage; 204 - No content
     res.status(204).json(bijlage);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
