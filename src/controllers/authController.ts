@@ -171,7 +171,7 @@ export const resetWachtwoord = async (req: Request, res: Response) => {
     // Check of wachtwoord en resetToken zijn meegegeven in req.body
     const { wachtwoord, resetToken } = req.body;
     if (!wachtwoord || !resetToken)
-      throw new BadRequestError("Wachtwoord en resetToken zijn verplicht");
+      throw new BadRequestError("'wachtwoord' en 'resetToken' zijn verplicht");
 
     // Check of JWT_RESET is geconfigureerd
     if (!process.env.JWT_RESET) throw new Error("Internal server error");

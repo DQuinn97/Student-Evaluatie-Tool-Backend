@@ -14,11 +14,14 @@ import {
 export const getTaken = async (req: Request, res: Response) => {
   try {
     const { klasgroepId } = req.params;
-    const filter = { klasgroep: klasgroepId };
-
     const gebruiker = req.gebruiker;
 
-    const taken = await Taak.find(filter).populate([
+    // Check of klasgroep bestaat
+    const klasgroep = await Klasgroep.findById(klasgroepId);
+    if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
+
+    // Zoek alle taken uit een klasgroep op die zichtbaar zijn voor de ingelogde gebruiker
+    const taken = await Taak.find({ klasgroep: klasgroepId }).populate([
       {
         path: "inzendingen",
 
@@ -39,6 +42,7 @@ export const getTaken = async (req: Request, res: Response) => {
       vakPath,
     ]);
 
+    // Success response met taken; 200 - OK
     res.status(200).json(taken);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -47,6 +51,7 @@ export const getTaken = async (req: Request, res: Response) => {
 
 export const getAlleTaken = async (req: Request, res: Response) => {
   try {
+    // Zoek alle bestaande taken op
     const taken = await Taak.find().populate([
       {
         path: "inzendingen",
@@ -67,6 +72,7 @@ export const getAlleTaken = async (req: Request, res: Response) => {
       vakPath,
     ]);
 
+    // Success response met taken; 200 - OK
     res.status(200).json(taken);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -76,8 +82,9 @@ export const getAlleTaken = async (req: Request, res: Response) => {
 export const getTaak = async (req: Request, res: Response) => {
   try {
     const { taakId } = req.params;
-
     const gebruiker = req.gebruiker;
+
+    // Check of taak bestaat
     const taak = await Taak.findById(taakId).populate([
       {
         path: "inzendingen",
@@ -98,7 +105,9 @@ export const getTaak = async (req: Request, res: Response) => {
       klasgroepPath,
       vakPath,
     ]);
+    if (!taak) throw new NotFoundError("Taak niet gevonden");
 
+    // Success response met taak; 200 - OK
     res.status(200).json(taak);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -108,9 +117,7 @@ export const getTaak = async (req: Request, res: Response) => {
 export const addTaak = async (req: Request, res: Response) => {
   try {
     const { klasgroepId } = req.params;
-
     const gebruiker = req.gebruiker;
-
     const {
       type,
       titel,
@@ -123,23 +130,27 @@ export const addTaak = async (req: Request, res: Response) => {
       file_uploads,
     } = req.body;
 
-    if (!klasgroepId || !titel || !beschrijving || !deadline || !weging)
-      throw new BadRequestError(
-        "KlasgroepId, titel, beschrijving, deadline en weging zijn verplicht"
-      );
-
+    // Check of klasgroep bestaat
     const klasgroep = await Klasgroep.findById(klasgroepId);
-
     if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
 
+    // Check of titel, beschrijving, deadline en weging in req.body zijn meegegeven
+    if (!titel || !beschrijving || !deadline || !weging)
+      throw new BadRequestError(
+        "'titel', 'beschrijving', 'deadline' en 'weging' zijn verplicht"
+      );
+
+    // Check of vak in klasgroep zit
     if (vak && !klasgroep.vakken.includes(vak))
       throw new BadRequestError("Vak niet gevonden in klasgroep");
 
+    // Voeg bijlagen toe in db
     if (file_uploads && file_uploads.length > 0) {
       const nieuweBijlagen = await uploadBijlagen(file_uploads, gebruiker);
       bijlagen.push(...nieuweBijlagen);
     }
 
+    // Maak nieuwe taak aan
     const taak = await Taak.create({
       type,
       titel,
@@ -151,6 +162,8 @@ export const addTaak = async (req: Request, res: Response) => {
       isGepubliceerd,
       bijlagen,
     });
+
+    // Success response met taak; 201 - Created
     res.status(201).json(taak);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -174,20 +187,25 @@ export const updateTaak = async (req: Request, res: Response) => {
       file_uploads,
     } = req.body;
 
+    // Check of taak bestaat
     const taak = await Taak.findById(id);
     if (!taak) throw new NotFoundError("Taak niet gevonden");
 
+    // Check of klasgroep van taak bestaat
     const klasgroep = await Klasgroep.findById(taak.klasgroep);
     if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
 
+    // Check of vak bestaat in klasgroep
     if (vak && klasgroep && !klasgroep.vakken.includes(vak))
       throw new BadRequestError("Vak niet gevonden in klasgroep");
 
+    // Voeg bijlagen toe in db
     if (file_uploads && file_uploads.length > 0) {
       const nieuweBijlagen = await uploadBijlagen(file_uploads, gebruiker);
       bijlagen.push(...nieuweBijlagen);
     }
 
+    // Wijzig taak
     const updated = await Taak.findByIdAndUpdate(
       id,
       {
@@ -203,11 +221,14 @@ export const updateTaak = async (req: Request, res: Response) => {
       { new: true }
     ).populate([vakPath]);
     if (!updated) throw new NotFoundError("Taak niet gevonden");
+
+    // Check of bijlagen mogen verwijderd worden
     await cleanupBijlagen(
       await checkCleanupBijlagen(taak.bijlagen, updated.bijlagen)
     );
 
-    res.status(201).json(updated);
+    // Success response met taak; 200 - OK
+    res.status(200).json(updated);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -218,13 +239,18 @@ export const dupliceerTaak = async (req: Request, res: Response) => {
     const { taakId } = req.params;
     const { klasgroepId } = req.body;
 
-    if (!klasgroepId) throw new BadRequestError("klasgroepId zijn verplicht");
-
+    // Check of taak bestaat
     const taak = await Taak.findById(taakId);
-    const klasgroep = await Klasgroep.findById(klasgroepId);
     if (!taak) throw new NotFoundError("Taak niet gevonden");
+
+    // Check of klasgroepId in req.body is meegegeven
+    if (!klasgroepId) throw new BadRequestError("'klasgroepId' is verplicht");
+
+    // Check of klasgroep bestaat
+    const klasgroep = await Klasgroep.findById(klasgroepId);
     if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
 
+    // Maak nieuwe taak aan van bestaande taak
     const middernacht = new Date().setUTCHours(24, 0, 0, 0);
     const nieuweTaak = await Taak.create({
       type: taak.type,
@@ -237,6 +263,7 @@ export const dupliceerTaak = async (req: Request, res: Response) => {
       bijlagen: [...taak.bijlagen],
     });
 
+    // Success response met taak; 201 - Created
     res.status(201).json(nieuweTaak);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -245,21 +272,31 @@ export const dupliceerTaak = async (req: Request, res: Response) => {
 
 export const deleteTaak = async (req: Request, res: Response) => {
   try {
+    // Check of taak bestaat
     const { taakId } = req.params;
     const taak = await Taak.findByIdAndDelete(taakId);
     if (!taak) throw new NotFoundError("Taak niet gevonden");
 
+    // Loop door inzendingen van taak
     for (let inzending of taak.inzendingen) {
+      // Verwijder inzending
       let deleted = await Inzending.findByIdAndDelete(inzending);
       if (deleted) {
+        // Check of bijlagen van inzending verwijderd kunnen worden
         await cleanupBijlagen(deleted.bijlagen);
+
+        // Loop door gradering van inzending
         for (let gradering of deleted.gradering) {
+          // Verwijder gradering
           await Gradering.findByIdAndDelete(gradering);
         }
       }
     }
+
+    // Check of bijlagen van taak verwijderd kunnen worden
     await cleanupBijlagen(taak.bijlagen);
 
+    // Success response met verwijderde taak; 204 - No Content
     res.status(204).json(taak);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
@@ -269,6 +306,8 @@ export const deleteTaak = async (req: Request, res: Response) => {
 export const getAverage = async (req: Request, res: Response) => {
   try {
     const { taakId } = req.params;
+
+    // Check of taak bestaat
     const taak = await Taak.findById(taakId).populate<{
       inzendingen: (Omit<TInzending, "gradering"> & {
         gradering: TGradering[];
@@ -277,9 +316,9 @@ export const getAverage = async (req: Request, res: Response) => {
       path: "inzendingen",
       populate: { path: "gradering" },
     });
-
     if (!taak) throw new NotFoundError("Taak niet gevonden");
 
+    // Haal het gemiddelde van alle graderingen op alle inzendingen op
     const graderingen = taak.inzendingen
       .map((inzending) => inzending.gradering)
       .flat();
@@ -287,6 +326,7 @@ export const getAverage = async (req: Request, res: Response) => {
       graderingen.reduce((acc, gradering) => acc + gradering.score, 0) /
       graderingen.length;
 
+    // Success response met gemiddelde; 200 - OK
     res.status(200).json(average);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);

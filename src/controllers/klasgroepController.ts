@@ -69,7 +69,7 @@ export const pushStudentToKlasgroep = async (req: Request, res: Response) => {
     // Check of studentId in req.body is meegegeven
     const { klasgroepId } = req.params;
     const { studentId } = req.body;
-    if (!studentId) throw new BadRequestError("StudentId is verplicht");
+    if (!studentId) throw new BadRequestError("'studentId' is verplicht");
 
     // Check of klasgroep bestaat
     const klasgroep = await Klasgroep.findById(klasgroepId);
@@ -102,7 +102,7 @@ export const removeStudentFromKlasgroep = async (
     // Check of studentId in req.body is meegegeven
     const { klasgroepId } = req.params;
     const { studentId } = req.body;
-    if (!studentId) throw new BadRequestError("studentId is verplicht");
+    if (!studentId) throw new BadRequestError("'studentId' is verplicht");
 
     // Check of klasgroep bestaat
     const klasgroep = await Klasgroep.findById(klasgroepId).populate([
@@ -137,7 +137,7 @@ export const pushVakToKlasgroep = async (req: Request, res: Response) => {
     // Check of naam in req.body is meegegeven
     const { klasgroepId } = req.params;
     const { naam } = req.body;
-    if (!naam) throw new BadRequestError("naam is verplicht");
+    if (!naam) throw new BadRequestError("'naam' is verplicht");
 
     // Check of klasgroep bestaat
     const klasgroep = await Klasgroep.findById(klasgroepId).populate(vakPath2);
@@ -161,7 +161,7 @@ export const removeVakFromKlasgroep = async (req: Request, res: Response) => {
     // Check of vakId in req.body is meegegeven
     const { klasgroepId } = req.params;
     const { vakId } = req.body;
-    if (!vakId) throw new BadRequestError("vakId is verplicht");
+    if (!vakId) throw new BadRequestError("'vakId' is verplicht");
 
     // Check of vak bestaat
     const vak = await Vak.findById(vakId);

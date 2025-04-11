@@ -126,10 +126,6 @@ export const addDag = async (req: Request, res: Response) => {
 
     // Check of stagedagboek bestaat
     const dagboek = await Stagedagboek.findById(dagboekId)
-      .populate("stageverslag")
-      .populate("stagedagen")
-      .populate("klasgroep", "_id naam beginjaar eindjaar")
-      .populate("student", "-wachtwoord");
     if (!dagboek) throw new NotFoundError("Dagboek niet gevonden");
 
     // Voeg bijlagen toe aan db
@@ -344,6 +340,7 @@ export const updateVerslag = async (req: Request, res: Response) => {
       await checkCleanupBijlagen(verslag.bijlagen, updated.bijlagen)
     );
 
+    // Success response met stageverslag; 200 - OK
     res.status(200).json(updated);
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
