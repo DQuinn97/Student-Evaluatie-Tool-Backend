@@ -338,6 +338,7 @@ const options = {
               items: {
                 $ref: "#/components/schemas/Bijlage",
               },
+              uniqueItems: true,
             },
           },
         },
@@ -371,18 +372,21 @@ const options = {
               items: {
                 $ref: "#/components/schemas/GebruikerDump",
               },
+              uniqueItems: true,
             },
             vakken: {
               type: "array",
               items: {
                 $ref: "#/components/schemas/VakDump",
               },
+              uniqueItems: true,
             },
             taken: {
               type: "array",
               items: {
                 $ref: "#/components/schemas/TaakDump",
               },
+              uniqueItems: true,
             },
           },
         },
@@ -412,12 +416,14 @@ const options = {
               items: {
                 $ref: "#/components/schemas/VakDump",
               },
+              uniqueItems: true,
             },
             taken: {
               type: "array",
               items: {
                 $ref: "#/components/schemas/TaakDump",
               },
+              uniqueItems: true,
             },
             dagboek: {
               $ref: "#/components/schemas/DagboekDump",
@@ -498,12 +504,14 @@ const options = {
               items: {
                 $ref: "#/components/schemas/Bijlage",
               },
+              uniqueItems: true,
             },
             inzendingen: {
               type: "array",
               items: {
                 $ref: "#/components/schemas/InzendingDump",
               },
+              uniqueItems: true,
             },
           },
         },
@@ -533,12 +541,14 @@ const options = {
               items: {
                 $ref: "#/components/schemas/Bijlage",
               },
+              uniqueItems: true,
             },
             gradering: {
               type: "array",
               items: {
                 $ref: "#/components/schemas/GraderingDump",
               },
+              uniqueItems: true,
             },
           },
         },
@@ -593,6 +603,7 @@ const options = {
               items: {
                 $ref: "#/components/schemas/Stagedag",
               },
+              uniqueItems: true,
             },
             verslag: {
               $ref: "#/components/schemas/Stageverslag",
@@ -660,13 +671,14 @@ const options = {
         description: '"Dump" endpoints - alle mogelijke data in één object',
       },
       {
-        name: "Profiel",
-        description: "Gebruiker endpoints",
-      },
-      {
         name: "Auth",
         description: "Authentication endpoints",
       },
+      {
+        name: "Profiel",
+        description: "Gebruiker endpoints",
+      },
+
       {
         name: "Dagboek",
         description: "Stagedagboek endpoints",
