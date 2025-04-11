@@ -15,7 +15,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag alle bijlagen op
- *     tags: [Bijlage]
+ *     tags: [Bijlagen]
  *     responses:
  *       '200':
  *         content:
@@ -34,7 +34,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag een bijlage op
- *     tags: [Bijlage]
+ *     tags: [Bijlagen]
  *     parameters:
  *       - name: bijlageId
  *         in: path

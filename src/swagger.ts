@@ -6,7 +6,7 @@ const options = {
     openapi: "3.0.0",
     info: {
       title: "Student Evaluatie Tool API",
-      version: "1.0.8",
+      version: "1.1.0",
       description: "API documentatie voor Student Evaluatie Tool",
     },
     servers: isProduction

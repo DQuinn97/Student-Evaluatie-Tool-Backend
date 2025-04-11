@@ -18,7 +18,7 @@ import { file, file_uploads_student } from "../middleware/multerMiddleware";
 const router = express.Router();
 /**
  * @swagger
- * "/taken/":
+ * "/taken":
  *   get:
  *     security:
  *       - cookieAuth: []
