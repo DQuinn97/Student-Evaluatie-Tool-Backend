@@ -201,7 +201,7 @@ export const updateTaak = async (req: Request, res: Response) => {
         bijlagen,
       },
       { new: true }
-    );
+    ).populate([vakPath]);
     if (!updated) throw new NotFoundError("Taak niet gevonden");
     await cleanupBijlagen(
       await checkCleanupBijlagen(taak.bijlagen, updated.bijlagen)
