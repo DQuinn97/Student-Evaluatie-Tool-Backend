@@ -11,17 +11,6 @@ import {
 } from "../utils/errors";
 import { hashWachtwoord, mailData } from "../utils/helpers";
 
-/**
- * @description Registreer een gebruiker met een random wachtwoord per mail
- *
- * @param {Request} req - De Request object
- * @param {Response} res - De Response object
- *
- * @throws {BadRequestError} Als er geen email is meegegeven in req.body
- * @throws {BadRequestError} Als de email al is geregistreerd
- *
- * @returns {Response} - success response; 201 - Created
- */
 export const register = async (req: Request, res: Response) => {
   try {
     // Check of email is meegegeven in req.body
@@ -66,19 +55,7 @@ export const register = async (req: Request, res: Response) => {
     ErrorHandler(error, req, res);
   }
 };
-/**
- * @description Log een gebruiker in met email en wachtwoord
- *
- * @param {Request} req - De Request object
- * @param {Response} res - De Response object
- *
- * @throws {BadRequestError} Als er geen email of wachtwoord is meegegeven in req.body
- * @throws {UnauthorizedError} Als de gebruiker niet bestaat
- * @throws {UnauthorizedError} Als het wachtwoord onjuist is
- * @throws {Error} Als er geen JWT_SECRET is
- *
- * @returns {Response} - success response met token en cookie; 200 - OK
- */
+
 export const login = async (req: Request, res: Response) => {
   try {
     // Check of email en wachtwoord zijn meegegeven in req.body
@@ -123,14 +100,6 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * @description Log de huidige gebruiker uit door de JWT token cookie te wissen
- *
- * @param {Request} req - De Request object
- * @param {Response} res - De Response object
- *
- * @returns {Response} - Success response; 200 - OK
- */
 export const logout = async (req: Request, res: Response) => {
   try {
     // Verwijder de JWT token cookie
@@ -148,18 +117,6 @@ export const logout = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * @description Stuur een wachtwoord reset token naar de gebruiker
- *
- * @param {Request} req - De Request object
- * @param {Response} res - De Response object
- *
- * @throws {BadRequestError} Als er geen email is meegegeven in req.body
- * @throws {BadRequestError} Als de email niet is geregistreerd
- * @throws {BadRequestError} Als er geen reset link is meegegeven in req.body
- *
- * @returns {Response} - Success response; 201 - Created
- */
 export const resetWachtwoordRequest = async (req: Request, res: Response) => {
   try {
     // Check of email en reset_link zijn meegegeven in req.body
@@ -209,22 +166,7 @@ export const resetWachtwoordRequest = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * Reset een gebruikers wachtwoord aan de hand van een reset token
- *
- * @summary Reset een gebruikers wachtwoord
- *
- * @param {Request} req - De Request object
- * @param {Response} res - De Response object
- *
- *
- * @throws {BadRequestError} Als wachtwoord of resetToken niet zijn meegegeven
- * @throws {BadRequestError} Als de resetToken ongeldig is
- * @throws {UnauthorizedError} Als de gebruiker niet bestaat of een foutieve reset link meegaf
- * @throws {Error} Als er geen JWT_SECRET is
- *
- *  @returns {Response} - Success response; 200 - OK
- */
+
 export const resetWachtwoord = async (req: Request, res: Response) => {
   try {
     // Check of wachtwoord en resetToken zijn meegegeven in req.body
