@@ -22,7 +22,7 @@ const router = express.Router();
  *   get:
  *     security:
  *       - cookieAuth: []
- *     summary: Vraag alle taken op
+ *     summary: [Docent] Vraag alle taken op
  *     tags: [Taken]
  *     responses:
  *       '200':
@@ -65,7 +65,7 @@ const router = express.Router();
  *   patch:
  *     security:
  *       - cookieAuth: []
- *     summary: Wijzig een taak
+ *     summary: [Docent] Wijzig een taak
  *     tags: [Taken]
  *     parameters:
  *       - name: taakId
@@ -119,7 +119,7 @@ const router = express.Router();
  *   delete:
  *     security:
  *       - cookieAuth: []
- *     summary: Verwijder een taak
+ *     summary: [Docent] Verwijder een taak
  *     tags: [Taken]
  *     parameters:
  *       - name: taakId
@@ -172,7 +172,7 @@ const router = express.Router();
  *   post:
  *     security:
  *       - cookieAuth: []
- *     summary: Dupliceer een taak
+ *     summary: [Docent] Dupliceer een taak
  *     tags: [Taken]
  *     parameters:
  *       - name: taakId
@@ -257,7 +257,7 @@ const router = express.Router();
  *   get:
  *     security:
  *       - cookieAuth: []
- *     summary: Vraag alle inzendingen van een taak op
+ *     summary: [Docent] Vraag alle inzendingen van een taak op
  *     tags: [Taken, Inzendingen]
  *     parameters:
  *       - name: taakId

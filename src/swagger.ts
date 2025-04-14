@@ -1,5 +1,4 @@
 import swaggerJsdoc from "swagger-jsdoc";
-import { Inzending } from "./models/InzendingModel";
 const isProduction = process.env.NODE_ENV === "production";
 const options = {
   definition: {

@@ -85,7 +85,7 @@ const router = express.Router();
  *   get:
  *     security:
  *       - cookieAuth: []
- *     summary: Vraag een gebruiker op
+ *     summary: [Docent] Vraag een gebruiker op
  *     tags: [Profiel]
  *     parameters:
  *       - name: gebruikerId
@@ -111,7 +111,7 @@ const router = express.Router();
  *   get:
  *     security:
  *       - cookieAuth: []
- *     summary: Vraag alle inzendingen van een gebruiker op
+ *     summary: [Docent] Vraag alle inzendingen van een gebruiker op
  *     tags: [Profiel, Inzendingen]
  *     parameters:
  *       - name: gebruikerId

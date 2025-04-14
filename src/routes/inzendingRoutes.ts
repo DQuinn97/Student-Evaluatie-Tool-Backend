@@ -105,7 +105,7 @@ const router = express.Router();
  *   post:
  *     security:
  *       - cookieAuth: []
- *     summary: Voeg een gradering toe aan een inzending
+ *     summary: [Docent] Voeg een gradering toe aan een inzending
  *     tags: [Inzendingen, Graderingen]
  *     parameters:
  *       - name: inzendingId

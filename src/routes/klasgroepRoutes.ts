@@ -44,7 +44,7 @@ const router = express.Router();
  *   post:
  *     security:
  *       - cookieAuth: []
- *     summary: Maak een nieuwe klasgroep aan
+ *     summary: [Docent] Maak een nieuwe klasgroep aan
  *     tags: [Klassen]
  *     requestBody:
  *       required: true
@@ -105,7 +105,7 @@ const router = express.Router();
  *   get:
  *     security:
  *       - cookieAuth: []
- *     summary: De totale data dump van een klasgroep
+ *     summary: [Docent] De totale data dump van een klasgroep
  *     tags: [Klassen, Dump]
  *     parameters:
  *       - name: klasgroepId
@@ -131,7 +131,7 @@ const router = express.Router();
  *   post:
  *     security:
  *       - cookieAuth: []
- *     summary: Voeg een student toe aan een klasgroep
+ *     summary: [Docent] Voeg een student toe aan een klasgroep
  *     tags: [Klassen]
  *     parameters:
  *       - name: klasgroepId
@@ -166,7 +166,7 @@ const router = express.Router();
  *   patch:
  *     security:
  *       - cookieAuth: []
- *     summary: Verwijder een student uit een klasgroep
+ *     summary: [Docent] Verwijder een student uit een klasgroep
  *     tags: [Klassen]
  *     parameters:
  *       - name: klasgroepId
@@ -235,7 +235,7 @@ const router = express.Router();
  *   post:
  *     security:
  *       - cookieAuth: []
- *     summary: Voeg een klas toe aan een klasgroep
+ *     summary: [Docent] Voeg een klas toe aan een klasgroep
  *     tags: [Klassen]
  *     parameters:
  *       - name: klasgroepId
@@ -272,7 +272,7 @@ const router = express.Router();
  *   patch:
  *     security:
  *       - cookieAuth: []
- *     summary: Verwijder een vak uit een klasgroep
+ *     summary: [Docent] Verwijder een vak uit een klasgroep
  *     tags: [Klassen]
  *     parameters:
  *       - name: klasgroepId
@@ -335,7 +335,7 @@ const router = express.Router();
  *   post:
  *     security:
  *       - cookieAuth: []
- *     summary: Voeg een taak toe aan een klasgroep
+ *     summary: [Docent] Voeg een taak toe aan een klasgroep
  *     tags: [Klassen, Taken]
  *     parameters:
  *       - name: klasgroepId
