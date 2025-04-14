@@ -47,7 +47,7 @@ const router = express.Router();
  *   delete:
  *     security:
  *       - cookieAuth: []
- *     summary: Vraag een stagedagboek op
+ *     summary: Verwijder een stagedagboek
  *     tags: [Dagboek]
  *     parameters:
  *       - name: dagboekId
