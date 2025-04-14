@@ -8,7 +8,18 @@ import { TStagedag } from "../models/StagedagModel";
 import { TStageverslag } from "../models/StageverslagModel";
 import { TTaak } from "../models/TaakModel";
 import { TVak } from "../models/VakModel";
+import { Request as Req, Response as Res, NextFunction as Next } from "express";
 
+/** 
+ * Vervangende Express types
+ */
+export type Request = Req & { gebruiker?: any };
+export type Response = Res;
+export type NextFunction = Next;
+
+/**
+ * Dump types: pakt type van het model en voegt iets toe
+*/
 export type GraderingDump = Omit<TGradering, "docent"> & {
   docent: TGebruiker;
 };
@@ -64,15 +75,3 @@ export type KlasgroepDump = TKlasgroep & {
   taken: TaakDumpPlus[];
 };
 
-/**
- * Gebruiker - klasgroep:
- * * Vakken
- * * Taken: -> isGepubliceerd
- * * * Inzendingen: -> Gebruiker
- * * * * Gradering
- * * Dagboek
- *
- *
- * Klasgroep:
- * * GebruikerDump[]
- */

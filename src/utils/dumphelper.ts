@@ -16,18 +16,20 @@ import {
   VakDumpPlus,
 } from "../utils/types";
 
-// dump voor alle taken
+/**
+ * Zoek alle taken in een klasgroep en genereer alle gerelateerde data
+ */
 const taakDump = async (
   klasgroepId: string,
   isGepubliceerd: boolean | null | undefined = undefined
 ): Promise<TaakDump[]> => {
-  // zoek alle taken in een klasgroep en populate
+  // maak de filter aan
   let filter = {
     klasgroep: klasgroepId,
   } as { klasgroep: string; isGepubliceerd: boolean | undefined };
   if (typeof isGepubliceerd === "boolean")
     filter.isGepubliceerd = isGepubliceerd;
-
+  // zoek alle taken in een klasgroep en populate
   const taken = (await Taak.find(filter)
     .populate([
       { path: "bijlagen" },
@@ -50,10 +52,13 @@ const taakDump = async (
     ])
     .select("-createdAt -updatedAt -__v")) as unknown as TaakDump[];
 
+  // return de dump
   return taken;
 };
 
-// komplete dump voor alle scores van een student in een klasgroep
+/**
+ * Zoek een gebruiker in een klasgroep en genereer alle gerelateerde data
+ */
 export const gebruikerDump = async (
   klasgroepId: string,
   studentId: string
@@ -148,10 +153,13 @@ export const gebruikerDump = async (
     )[0];
     taakDump.score = inzendingVanStudent?.score || null;
 
+    // return de dump
     return taakDump;
   }) as TaakDumpPlus[];
 
-  // maak de dump van alle vakken, met gemiddelde scores en klasgemiddelden
+  /**
+   * Zoek alle vakken met alle gerelateerde data, gemiddelde scores en klasgemiddelden
+   */
   const vakkenDump = vakken.map((vak) => {
     // dump voorbereiden
     let vakDump = {
@@ -218,9 +226,13 @@ export const gebruikerDump = async (
     stagedagboek: dagboek,
   } as GebruikerDump;
 
+  // return de dump
   return gebruikerDump;
 };
 
+/**
+ * Zoek een klasgroep op met alle gerelateerde data, gemiddelden per vak en gemiddelden per taak
+ */
 export const klasgroepDump = async (klasgroepId: string) => {
   // check of klasgroep bestaat
   const klasgroep = await Klasgroep.findById(klasgroepId).select(
@@ -260,5 +272,6 @@ export const klasgroepDump = async (klasgroepId: string) => {
     });
   }
 
+  // return de dump
   return klasgroepDump;
 };

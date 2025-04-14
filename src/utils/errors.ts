@@ -2,6 +2,12 @@ import { Request, Response } from "express";
 import { Error as MongooseError } from "mongoose";
 import multer from "multer";
 const { ValidationError } = MongooseError;
+
+/** 
+ * Error voor verboden toegang;
+ * - 401: niet ingelogd
+ * - 403: ingelogd maar geen toegang
+ */
 export class UnauthorizedError extends Error {
   constructor(
     message: string = "Unauthorized access",
@@ -13,6 +19,12 @@ export class UnauthorizedError extends Error {
   }
 }
 
+/** 
+ * Error voor foutieve request;
+ * - 400: foutieve of ontbrekende data in body
+ * - 409: data bestaat al
+ * - 415: foutieve file upload
+*/
 export class BadRequestError extends Error {
   constructor(
     message: string = "Bad request",
@@ -24,6 +36,10 @@ export class BadRequestError extends Error {
   }
 }
 
+/**
+ * Error voor niet gevonden pagina
+ * - 404: pagina of item bestaat niet
+ */
 export class NotFoundError extends Error {
   constructor(
     message: string = "Page not found",
@@ -35,6 +51,9 @@ export class NotFoundError extends Error {
   }
 }
 
+/**
+ * ErrorHandler: behandeld alle errors in dit project
+ */
 export const ErrorHandler = (error: unknown, req: Request, res: Response) => {
   if (
     error instanceof BadRequestError ||
