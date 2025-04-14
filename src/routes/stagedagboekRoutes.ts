@@ -113,9 +113,6 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               datum:
- *                 type: string
- *                 format: date
  *               voormiddag:
  *                 type: string
  *               namiddag:
