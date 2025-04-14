@@ -38,7 +38,7 @@ const router = express.Router();
  *   patch:
  *     security:
  *       - cookieAuth: []
- *     summary: [Docent] Update een gradering
+ *     summary: "[Docent] Update een gradering"
  *     tags: [Graderingen]
  *     parameters:
  *       - name: graderingId

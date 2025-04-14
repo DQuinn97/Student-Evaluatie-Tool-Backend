@@ -31,7 +31,7 @@ const router = express.Router();
  *   post:
  *     security:
  *       - cookieAuth: []
- *     summary: [Docent] Voeg een bijlage toe (deze wordt wel terug verwijderd als ze niet word gebruikt)
+ *     summary: "[Docent] Voeg een bijlage toe (deze wordt wel terug verwijderd als ze niet word gebruikt)"
  *     tags: [Bijlagen]
  *     requestBody:
  *       required: true
@@ -52,7 +52,7 @@ const router = express.Router();
  *   delete:
  *     security:
  *       - cookieAuth: []
- *     summary: [Docent] Verwijder een bijlage
+ *     summary: "[Docent] Verwijder een bijlage"
  *     tags: [Bijlagen]
  *     parameters:
  *       - name: bijlageId
