@@ -7,6 +7,7 @@ import {
   deleteVerslag,
   getDag,
   getDagboek,
+  getDagboek2,
   getVerslag,
   updateDag,
   updateVerslag,
@@ -426,6 +427,7 @@ router
     file.any(),
     file_uploads_student,
     addDag
-  );
+  )
+  .get("/:klasgroepId/:studentId", isAuth, hasAccess, getDagboek2);
 
 export default router;

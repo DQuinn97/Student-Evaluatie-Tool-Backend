@@ -30,6 +30,27 @@ export const getDagboek = async (req: Request, res: Response) => {
   }
 };
 
+export const getDagboek2 = async (req: Request, res: Response) => {
+  try {
+    // Check of dagboek bestaat
+    const { klasgroepId, studentId } = req.params;
+    const dagboek = await Stagedagboek.findOne({
+      klasgroep: klasgroepId,
+      student: studentId,
+    })
+      .lean()
+      .populate(["stageverslag", "stagedagen"])
+      .populate("klasgroep", "_id naam beginjaar eindjaar")
+      .populate("student", "-wachtwoord");
+    if (!dagboek) throw new NotFoundError("Dagboek niet gevonden");
+
+    // Success response met dagboek; 200 - OK
+    res.status(200).json(dagboek);
+  } catch (error: unknown) {
+    ErrorHandler(error, req, res);
+  }
+};
+
 export const getAuthDagboek = async (req: Request, res: Response) => {
   try {
     const { klasgroepId } = req.params;
