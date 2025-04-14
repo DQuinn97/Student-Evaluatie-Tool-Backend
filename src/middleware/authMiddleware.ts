@@ -126,7 +126,7 @@ export const hasAccess = async (
     }
     if (verslagId) {
       const verslag = await Stagedagboek.findOne({
-        verslag: verslagId,
+        stageverslag: verslagId,
         student: gebruiker.id,
       });
       if (!verslag)
@@ -134,7 +134,7 @@ export const hasAccess = async (
     }
     if (dagId) {
       const dag = await Stagedagboek.findOne({
-        dagen: dagId,
+        stagedagen: dagId,
         student: gebruiker.id,
       });
       if (!dag)

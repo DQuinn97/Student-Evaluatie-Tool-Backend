@@ -132,15 +132,8 @@ export const addDag = async (req: Request, res: Response) => {
 export const updateDag = async (req: Request, res: Response) => {
   try {
     const { dagId: id } = req.params;
-    const {
-      datum,
-      voormiddag,
-      namiddag,
-      tools,
-      resultaat,
-      bijlagen,
-      file_uploads,
-    } = req.body;
+    const { voormiddag, namiddag, tools, resultaat, bijlagen, file_uploads } =
+      req.body;
 
     //@ts-ignore
     const gebruiker = req.gebruiker;
@@ -155,12 +148,21 @@ export const updateDag = async (req: Request, res: Response) => {
 
     const updated = await Stagedag.findByIdAndUpdate(
       id,
-      { datum, voormiddag, namiddag, tools, resultaat, bijlagen },
+      {
+        datum: dag.datum,
+        voormiddag,
+        namiddag,
+        tools,
+        resultaat,
+        bijlagen,
+      },
       { new: true }
     );
     if (!updated) throw new NotFoundError("Dag niet gevonden");
 
-    await cleanupBijlagen(await checkCleanupBijlagen(dag.bijlagen, updated.bijlagen));
+    await cleanupBijlagen(
+      await checkCleanupBijlagen(dag.bijlagen, updated.bijlagen)
+    );
 
     res.status(200).json(updated);
   } catch (error: unknown) {
@@ -294,7 +296,9 @@ export const updateVerslag = async (req: Request, res: Response) => {
 
     if (!updated) throw new NotFoundError("Verslag niet gevonden");
 
-    await cleanupBijlagen(await checkCleanupBijlagen(verslag.bijlagen, updated.bijlagen));
+    await cleanupBijlagen(
+      await checkCleanupBijlagen(verslag.bijlagen, updated.bijlagen)
+    );
 
     res.status(200).json(updated);
   } catch (error: unknown) {
