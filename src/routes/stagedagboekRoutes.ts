@@ -70,6 +70,38 @@ const router = express.Router();
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
  *
+ * /dagboek/{klasgroepId}/{studentId}:
+ *   get:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Vraag een stagedagboek op
+ *     tags: [Dagboek]
+ *     parameters:
+ *       - name: klasgroepId
+ *         in: path
+ *         description: ID van de klasgroep gerelateerd aan stagedagboek
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - name: studentId
+ *         in: path
+ *         description: ID van de student gerelateerd aan stagedagboek
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Stagedagboek'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized_Resource'
+ *       '404':
+ *         $ref: '#/components/responses/PageNotFound'
+ *
  * /dagboek/dag/{dagId}:
  *   get:
  *     security:
