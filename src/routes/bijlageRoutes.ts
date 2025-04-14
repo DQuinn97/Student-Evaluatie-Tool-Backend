@@ -15,7 +15,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag alle bijlagen op
- *     tags: [Bijlage]
+ *     tags: [Bijlagen]
  *     responses:
  *       '200':
  *         content:
@@ -28,13 +28,32 @@ const router = express.Router();
  *         $ref: '#/components/responses/Unauthorized'
  *       '403':
  *         $ref: '#/components/responses/Unauthorized'
+ *   post:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: "[Docent] Voeg een bijlage toe (deze wordt wel terug verwijderd als ze niet word gebruikt)"
+ *     tags: [Bijlagen]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nieuweBijlagen:
+ *                 type: string
+ *                 format: binary
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '403':
+ *         $ref: '#/components/responses/Unauthorized'
  *
  * /bijlagen/{bijlageId}:
  *   delete:
  *     security:
  *       - cookieAuth: []
- *     summary: Vraag een bijlage op
- *     tags: [Bijlage]
+ *     summary: "[Docent] Verwijder een bijlage"
+ *     tags: [Bijlagen]
  *     parameters:
  *       - name: bijlageId
  *         in: path
@@ -51,7 +70,7 @@ const router = express.Router();
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       '403':
- *         $ref: '#/components/responses/Unauthorized_Resource'
+ *         $ref: '#/components/responses/Unauthorized'
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
  *

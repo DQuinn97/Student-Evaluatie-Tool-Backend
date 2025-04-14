@@ -1,3 +1,7 @@
+/**
+ * Cloudinary config en types
+ */
+
 import {
   v2 as cloudinary,
   UploadApiOptions,

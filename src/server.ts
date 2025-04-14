@@ -3,8 +3,6 @@ import "dotenv/config";
 import cors from "cors";
 import express from "express";
 import { notFound } from "./controllers/notFoundController";
-import testRoutes from "./routes/exampleRoutes";
-import { helloMiddleware } from "./middleware/exampleMiddleware";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import swaggerUi from "swagger-ui-express";
