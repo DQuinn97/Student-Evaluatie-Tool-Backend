@@ -90,10 +90,7 @@ export const createAuthDagboek = async (req: Request, res: Response) => {
   // Success response met dagboek; 201 - Created
   res.status(201).json(dagboek);
 };
-
-export const deleteDagboek = async (req: Request, res: Response) => {
-  // Check of dagboek bestaat
-  const { dagboekId } = req.params;
+export const deleteDagboekFunc = async (dagboekId: string) => {
   const dagboek = await Stagedagboek.findByIdAndDelete(dagboekId);
   if (!dagboek) throw new NotFoundError("Verslag niet gevonden");
 
@@ -110,6 +107,14 @@ export const deleteDagboek = async (req: Request, res: Response) => {
     if (dag_) await cleanupBijlagen(dag_.bijlagen);
   }
 
+  return dagboek;
+}
+
+export const deleteDagboek = async (req: Request, res: Response) => {
+  // Check of dagboek bestaat
+  const { dagboekId } = req.params;
+  
+  const dagboek = await deleteDagboekFunc(dagboekId);
   // Success response met verwijderde dagboek; 204 - No Content
   res.status(204).json(dagboek);
 };

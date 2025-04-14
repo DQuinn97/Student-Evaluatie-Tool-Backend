@@ -4,6 +4,8 @@ import { Vak } from "../models/VakModel";
 import { BadRequestError, ErrorHandler, NotFoundError } from "../utils/errors";
 import { vakPath2 as vakPath, vakPath2 } from "../utils/helpers";
 import { Gebruiker } from "../models/GebruikerModel";
+import { Stagedagboek } from "../models/StagedagboekModel";
+import { deleteDagboekFunc } from "./stagedagboekController";
 
 export const getKlasgroepen = async (req: Request, res: Response) => {
   try {
@@ -83,6 +85,9 @@ export const pushStudentToKlasgroep = async (req: Request, res: Response) => {
     klasgroep.studenten.push(studentId);
     await klasgroep.save();
 
+    // maak stagedagboek aan voor de student in deze klasgroep
+    await Stagedagboek.create({ klasgroep: klasgroepId, student: studentId });
+
     // Success response met klasgroep; 200 - OK
     const response = await Klasgroep.populate(klasgroep, [
       vakPath2,
@@ -120,6 +125,13 @@ export const removeStudentFromKlasgroep = async (
       (student) => student.id !== studentId
     );
     await klasgroep.save();
+
+    // verwijder stagedagboek van verwijderde student om db opslag te besparen
+    const dagboek = await Stagedagboek.findOne({
+      klasgroep: klasgroepId,
+      student: studentId,
+    });
+    if (dagboek) await deleteDagboekFunc(dagboek.id);
 
     // Success response met klasgroep; 204 - No Content
     const response = await Klasgroep.populate(klasgroep, [
