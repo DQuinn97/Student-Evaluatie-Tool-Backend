@@ -134,6 +134,8 @@ export const addTaak = async (req: Request, res: Response) => {
     const klasgroep = await Klasgroep.findById(klasgroepId);
     if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
 
+    console.log(req.body);
+
     // Check of titel, beschrijving, deadline en weging in req.body zijn meegegeven
     if (!titel || !beschrijving || !deadline || !weging)
       throw new BadRequestError(

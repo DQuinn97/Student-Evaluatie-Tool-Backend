@@ -19,6 +19,7 @@ import {
   createAuthDagboek,
   getAuthDagboek,
 } from "../controllers/stagedagboekController";
+import { file, file_uploads_docent } from "../middleware/multerMiddleware";
 
 const router = express.Router();
 /**
@@ -470,7 +471,7 @@ router
   .post("/:klasgroepId/vakken", isAuth, isDocent, isUnique, pushVakToKlasgroep)
   .patch("/:klasgroepId/vakken", isAuth, isDocent, removeVakFromKlasgroep)
   .get("/:klasgroepId/taken", isAuth, hasAccess, getTaken)
-  .post("/:klasgroepId/taken", isAuth, isDocent, addTaak)
+  .post("/:klasgroepId/taken", isAuth, isDocent, file.any(), file_uploads_docent,  addTaak)
   .get("/:klasgroepId/dagboek", isAuth, hasAccess, getAuthDagboek)
   .post(
     "/:klasgroepId/dagboek",

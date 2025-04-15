@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { EmailParams, MailerSend, Recipient, Sender } from "mailersend";
 import bcrypt from "bcrypt";
+import Mailjet from "node-mailjet";
 
 /**
  * MailerSend configs en functies
@@ -14,6 +15,13 @@ export const mailData = async (
   // MailerSend init
   const mailerSend = new MailerSend({
     apiKey: process.env.MAILERSEND_API_KEY as string,
+  });
+
+  const apiKey = process.env.MAILJET_API_KEY as string;
+  const apiSecret = process.env.MAILJET_API_SECRET as string;
+  const mailer = Mailjet.apiConnect(apiKey, apiSecret, {
+    config: {},
+    options: {},
   });
 
   // Applicatie data

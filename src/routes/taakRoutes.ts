@@ -13,7 +13,11 @@ import {
   getInzendingenPerTaak,
 } from "../controllers/inzendingController";
 import { isUnique } from "../middleware/uniqueMiddleware";
-import { file, file_uploads_student } from "../middleware/multerMiddleware";
+import {
+  file,
+  file_uploads_docent,
+  file_uploads_student,
+} from "../middleware/multerMiddleware";
 
 const router = express.Router();
 /**
@@ -284,7 +288,14 @@ const router = express.Router();
 router
   .get("/", isAuth, isDocent, getAlleTaken)
   .get("/:taakId", isAuth, hasAccess, getTaak)
-  .patch("/:taakId", isAuth, isDocent, updateTaak)
+  .patch(
+    "/:taakId",
+    isAuth,
+    isDocent,
+    file.any(),
+    file_uploads_docent,
+    updateTaak
+  )
   .post("/:taakId/dupliceer", isAuth, isDocent, dupliceerTaak)
   .delete("/:taakId", isAuth, isDocent, deleteTaak)
   .get("/:taakId/inzendingen", isAuth, isDocent, getInzendingenPerTaak)
