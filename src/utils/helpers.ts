@@ -2,6 +2,7 @@ import "dotenv/config";
 import { EmailParams, MailerSend, Recipient, Sender } from "mailersend";
 import bcrypt from "bcrypt";
 import Mailjet from "node-mailjet";
+import { RequestConfig } from "node-mailjet/declarations/request/Request";
 
 /**
  * MailerSend configs en functies
@@ -12,29 +13,13 @@ export const mailData = async (
   subject: string,
   template: "REGISTER" | "RESET"
 ) => {
-  // MailerSend init
-  // const mailerSend = new MailerSend({
-  //   apiKey: process.env.MAILERSEND_API_KEY as string,
-  // });
-
+  // mailer init
   const apiKey = process.env.MAILJET_API_KEY as string;
   const apiSecret = process.env.MAILJET_API_SECRET as string;
   const mailer = Mailjet.apiConnect(apiKey, apiSecret, {
     config: {},
     options: {},
   });
-
-  // Applicatie data
-  const sentFrom = new Sender(
-    process.env.SMTP_USER as string,
-    "Student Evaluatie Tool"
-  );
-
-  // Gebruiker data
-  const recipients = [new Recipient(email)];
-
-  // data die in de mail header moet staan
-  const personalization = [{ email, data }];
 
   // welke template te gebruiken voor de mail
   let template_id;
@@ -47,6 +32,7 @@ export const mailData = async (
       break;
   }
 
+  // email parameters
   const emailParams = {
     Messages: [
       {
@@ -56,23 +42,16 @@ export const mailData = async (
             Name: data.naam,
           },
         ],
-        TemplateID: template_id,
+        TemplateID: +template_id,
         TemplateLanguage: true,
         Variables: data,
       },
     ],
   };
-
-  // MailerSend parameters configuratie
-  // const emailParams = new EmailParams()
-  //   .setFrom(sentFrom)
-  //   .setTo(recipients)
-  //   .setSubject(`Student Evalutie Tool - ${subject}`)
-  //   .setTemplateId(template_id)
-  //   .setPersonalization(personalization);
+  const v = { version: "v3.1" } as Partial<RequestConfig>;
 
   // return de config en parameter config
-  return { mailer, emailParams };
+  return { mailer, v, emailParams };
 };
 
 // Hash wachtwoord
