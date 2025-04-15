@@ -7,7 +7,7 @@ import { UploadApiResponse } from "cloudinary";
 export const getGebruikerById = async (req: Request, res: Response) => {
   try {
     // Check of gebruiker bestaat
-    const { id } = req.params;
+    const { gebruikerId: id } = req.params;
     const gebruiker = await Gebruiker.findById(id).select("-wachtwoord");
     if (!gebruiker) throw new NotFoundError("Gebruiker niet gevonden");
 

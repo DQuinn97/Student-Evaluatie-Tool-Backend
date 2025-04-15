@@ -8,14 +8,14 @@ import Mailjet from "node-mailjet";
  */
 export const mailData = async (
   email: string,
-  data: object,
+  data: { naam?: string; wachtwoord?: string; reset_link?: string },
   subject: string,
   template: "REGISTER" | "RESET"
 ) => {
   // MailerSend init
-  const mailerSend = new MailerSend({
-    apiKey: process.env.MAILERSEND_API_KEY as string,
-  });
+  // const mailerSend = new MailerSend({
+  //   apiKey: process.env.MAILERSEND_API_KEY as string,
+  // });
 
   const apiKey = process.env.MAILJET_API_KEY as string;
   const apiSecret = process.env.MAILJET_API_SECRET as string;
@@ -40,23 +40,39 @@ export const mailData = async (
   let template_id;
   switch (template) {
     case "REGISTER":
-      template_id = process.env.MAILERSEND_TEMPLATE_ID_REGISTER as string;
+      template_id = process.env.MAILJET_TEMPLATE_ID_REGISTER as string;
       break;
     case "RESET":
-      template_id = process.env.MAILERSEND_TEMPLATE_ID_RESET as string;
+      template_id = process.env.MAILJET_TEMPLATE_ID_RESET as string;
       break;
   }
 
+  const emailParams = {
+    Messages: [
+      {
+        To: [
+          {
+            Email: email,
+            Name: data.naam,
+          },
+        ],
+        TemplateID: template_id,
+        TemplateLanguage: true,
+        Variables: data,
+      },
+    ],
+  };
+
   // MailerSend parameters configuratie
-  const emailParams = new EmailParams()
-    .setFrom(sentFrom)
-    .setTo(recipients)
-    .setSubject(`Student Evalutie Tool - ${subject}`)
-    .setTemplateId(template_id)
-    .setPersonalization(personalization);
+  // const emailParams = new EmailParams()
+  //   .setFrom(sentFrom)
+  //   .setTo(recipients)
+  //   .setSubject(`Student Evalutie Tool - ${subject}`)
+  //   .setTemplateId(template_id)
+  //   .setPersonalization(personalization);
 
   // return de config en parameter config
-  return { mailerSend, emailParams };
+  return { mailer, emailParams };
 };
 
 // Hash wachtwoord

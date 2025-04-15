@@ -30,15 +30,15 @@ export const register = async (req: Request, res: Response) => {
     });
 
     // Genereer de data die in de mailerSend moet worden verzonden
-    const { mailerSend, emailParams } = await mailData(
-      email,
-      { naam: email.split("@")[0], wachtwoord },
-      "register",
-      "REGISTER"
-    );
+    // const { mailerSend, emailParams } = await mailData(
+    //   email,
+    //   { naam: email.split("@")[0], wachtwoord },
+    //   "register",
+    //   "REGISTER"
+    // );
 
     // Verstuur de mail naar de nieuwe gebruiker
-    await mailerSend.email.send(emailParams);
+    // await mailerSend.email.send(emailParams);
 
     // Hash het wachtwoord voordat het in de db word gestoken
     const hashedWachtwoord = await hashWachtwoord(wachtwoord);
@@ -145,19 +145,19 @@ export const resetWachtwoordRequest = async (req: Request, res: Response) => {
     const naam = gebruiker.naam
       ? `${gebruiker.naam} ${gebruiker.achternaam}`
       : email.split("@")[0];
-    const { mailerSend, emailParams } = await mailData(
-      email,
-      { naam, reset_link: `${reset_link}/${resetToken}` },
-      "reset wachtwoord",
-      "RESET"
-    );
+    // const { mailerSend, emailParams } = await mailData(
+    //   email,
+    //   { naam, reset_link: `${reset_link}/${resetToken}` },
+    //   "reset wachtwoord",
+    //   "RESET"
+    // );
 
     // Sla reset token op in gebruiker in db
     gebruiker.resetToken = resetToken;
     await gebruiker.save();
 
     // Verstuur de email naar de gebruiker
-    await mailerSend.email.send(emailParams);
+    // await mailerSend.email.send(emailParams);
 
     // Verstuur een success response; 201 - Created
     res.status(201).json({ message: "Wachtwoord reset aanvraag verstuurd" });
