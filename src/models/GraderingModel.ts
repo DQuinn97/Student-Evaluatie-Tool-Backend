@@ -5,7 +5,6 @@ const graderingSchema = new mongoose.Schema(
   {
     feedback: {
       type: String,
-      required: true,
       trim: true,
     },
     score: {

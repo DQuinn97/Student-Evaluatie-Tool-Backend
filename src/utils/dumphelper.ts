@@ -42,7 +42,7 @@ const taakDump = async (
               path: "docent",
               select: "_id naam achternaam email foto",
             },
-            select: "_id docent score maxscore feedback",
+            select: "_id docent score feedback",
           },
           { path: "bijlagen" },
         ],
@@ -54,6 +54,65 @@ const taakDump = async (
 
   // return de dump
   return taken;
+};
+/**
+ * Zoek een taken in een klasgroep en genereer alle gerelateerde data van de meegegeven student
+ */
+export const taakDumpPlus = (
+  taak: TaakDump,
+  studentId: string | undefined = undefined
+): TaakDumpPlus => {
+  // dump voorbereiden
+  let taakDump = {
+    ...taak.toObject(),
+    score: undefined,
+    klasgemiddelde: null,
+    volledigGegradeerd: false,
+  } as unknown as TaakDumpPlus;
+
+  // maak de dump van alle inzendingen, met scores doorgegeven van gradering
+  taakDump.inzendingen = taak.inzendingen.map((inzending) => {
+    // dump voorbereiden
+    let inzendingDump = {
+      ...inzending.toObject(),
+      score: undefined,
+    } as unknown as InzendingDumpPlus;
+
+    // inzending score uit gradering halen
+    inzendingDump.score = inzending.gradering
+      ? inzending.gradering.score / taak.maxScore
+      : undefined;
+    return inzendingDump;
+  }) as InzendingDumpPlus[];
+
+  // alle gegradeerde inzendingen ophalen voor tijdelijke gemiddelde berekening
+  let gegradeerdeInzendingen = taakDump.inzendingen.filter(
+    (inzending) => inzending.score
+  );
+
+  // geef aan als alle inzendingen gegradeerd zijn
+  if (
+    taakDump.inzendingen.length &&
+    gegradeerdeInzendingen.length === taakDump.inzendingen.length
+  )
+    taakDump.volledigGegradeerd = true;
+
+  // klasgemiddelde berekenen
+  taakDump.klasgemiddelde =
+    gegradeerdeInzendingen.reduce(
+      (acc: number, inzending) => acc + inzending.score!,
+      0
+    ) / gegradeerdeInzendingen.length;
+
+  if (studentId) {
+    // taak score uit inzending halen
+    const inzendingVanStudent = taakDump.inzendingen.filter(
+      (inzending) => inzending.student.toString() == studentId
+    )[0];
+    taakDump.score = inzendingVanStudent?.score || null;
+  }
+  // return de dump
+  return taakDump;
 };
 
 /**
@@ -101,61 +160,9 @@ export const gebruikerDump = async (
   ])) as StagedagboekDump;
 
   // maak de dump van alle taken, met scores en klasgemiddelden
-  const takenDump = taken.map((taak) => {
-    // dump voorbereiden
-    let taakDump = {
-      ...taak.toObject(),
-      score: undefined,
-      klasgemiddelde: null,
-      volledigGegradeerd: false,
-    } as unknown as TaakDumpPlus;
-
-    // maak de dump van alle inzendingen, met scores doorgegeven van gradering
-    taakDump.inzendingen = taak.inzendingen.map((inzending) => {
-      // dump voorbereiden
-      let inzendingDump = {
-        ...inzending.toObject(),
-        score: undefined,
-      } as unknown as InzendingDumpPlus;
-
-      // inzending score uit gradering halen
-      inzendingDump.score =
-        inzending.gradering.reduce(
-          (acc: number, gradering) =>
-            acc + gradering.score / gradering.maxscore,
-          0
-        ) / inzending.gradering.length;
-      return inzendingDump;
-    }) as InzendingDumpPlus[];
-
-    // alle gegradeerde inzendingen ophalen voor tijdelijke gemiddelde berekening
-    let gegradeerdeInzendingen = taakDump.inzendingen.filter(
-      (inzending) => inzending.score
-    );
-
-    // geef aan als alle inzendingen gegradeerd zijn
-    if (
-      taakDump.inzendingen.length &&
-      gegradeerdeInzendingen.length === taakDump.inzendingen.length
-    )
-      taakDump.volledigGegradeerd = true;
-
-    // klasgemiddelde berekenen
-    taakDump.klasgemiddelde =
-      gegradeerdeInzendingen.reduce(
-        (acc: number, inzending) => acc + inzending.score!,
-        0
-      ) / gegradeerdeInzendingen.length;
-
-    // taak score uit inzending halen
-    const inzendingVanStudent = taakDump.inzendingen.filter(
-      (inzending) => inzending.student.toString() == studentId
-    )[0];
-    taakDump.score = inzendingVanStudent?.score || null;
-
-    // return de dump
-    return taakDump;
-  }) as TaakDumpPlus[];
+  const takenDump = taken.map((taak) =>
+    taakDumpPlus(taak, studentId)
+  ) as TaakDumpPlus[];
 
   /**
    * Zoek alle vakken met alle gerelateerde data, gemiddelde scores en klasgemiddelden
@@ -259,16 +266,13 @@ export const klasgroepDump = async (klasgroepId: string) => {
     klasgroepDump.vakken = klasgroepDump.studenten[0].vakken.map((vak) => {
       return {
         ...vak,
-        score: undefined,
+        gemiddelde: undefined,
       } as unknown as VakDumpPlus;
     });
 
     // maak de dump van alle taken
     klasgroepDump.taken = (await taakDump(klasgroepId)).map((taak) => {
-      return {
-        ...taak.toObject(),
-        score: undefined,
-      } as unknown as TaakDumpPlus;
+      return taakDumpPlus(taak) as TaakDumpPlus;
     });
   }
 

@@ -97,6 +97,8 @@ const router = express.Router();
  *                 type: string
  *               weging:
  *                 type: number
+ *               maxScore:
+ *                 type: number
  *               vak:
  *                 type: string
  *               isGepubliceerd:

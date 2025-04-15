@@ -186,11 +186,7 @@ const options = {
               default: Date.now,
             },
             gradering: {
-              type: "array",
-              items: {
-                $ref: "#/components/schemas/Gradering",
-              },
-              uniqueItems: true,
+              $ref: "#/components/schemas/Gradering",
             },
           },
         },
@@ -468,6 +464,9 @@ const options = {
               format: "date",
             },
             weging: {
+              type: "number",
+            },
+            maxScore: {
               type: "number",
             },
             isGepubliceerd: {

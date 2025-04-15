@@ -32,6 +32,10 @@ const taakSchema = new mongoose.Schema(
       min: 0,
       max: 1,
     },
+    maxScore: {
+      type: Number,
+      required: true,
+    },
     isGepubliceerd: {
       type: Boolean,
       required: true,

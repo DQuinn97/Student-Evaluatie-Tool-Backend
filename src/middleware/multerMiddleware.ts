@@ -123,16 +123,22 @@ export const file_uploads_docent = async (
 
       // genereer unieke filename
       const filename =
-        file.fieldname +
+        "bijlagen" +
         "-" +
         Date.now() +
         "-" +
-        sanitize(file.originalname.replace(/[\s-]/g, "_").replace(/_+/g, "_"));
+        sanitize(
+          file.originalname
+            .split(".")[0]
+            .replace(/[\s-]/g, "_")
+            .replace(/_+/g, "_")
+        );
 
       // base64 -> upload met docent file config
       const cldRes = await handleUpload(dataURI, "bijlagen", filename);
 
       // zet resultaat in req.body
+      req.body.bijlagen = req.body.bijlagen || [];
       req.body.file_uploads.push(cldRes);
     }
     next();
@@ -169,11 +175,16 @@ export const file_uploads_student = async (
 
       // genereer unieke filename
       const filename =
-        file.fieldname +
+        "bijlagen" +
         "-" +
         Date.now() +
         "-" +
-        sanitize(file.originalname.replace(/[\s-]/g, "_").replace(/_+/g, "_"));
+        sanitize(
+          file.originalname
+            .split(".")[0]
+            .replace(/[\s-]/g, "_")
+            .replace(/_+/g, "_")
+        );
 
       // base64 -> upload met student file config
       const cldRes = await handleUpload(
@@ -183,6 +194,7 @@ export const file_uploads_student = async (
       );
 
       // zet resultaat in req.body
+      req.body.bijlagen = req.body.bijlagen || [];
       req.body.file_uploads.push(cldRes);
     }
     next();

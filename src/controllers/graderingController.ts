@@ -43,7 +43,7 @@ export const getGradering = async (req: Request, res: Response) => {
 export const addGradering = async (req: Request, res: Response) => {
   try {
     const { inzendingId } = req.params;
-    const { score, maxscore, feedback } = req.body;
+    const { score, feedback } = req.body;
     const gebruiker = req.gebruiker;
 
     // Check of inzending bestaat
@@ -53,14 +53,13 @@ export const addGradering = async (req: Request, res: Response) => {
     // Maak gradering aan van huidig ingelogde gebruiker
     const gradering = await Gradering.create({
       score,
-      maxscore: maxscore || 100,
       feedback,
       docent: gebruiker._id,
     });
 
     // Voeg gradering toe aan inzending
     await Inzending.findByIdAndUpdate(inzendingId, {
-      $push: { gradering: gradering._id },
+      gradering: gradering._id,
     });
 
     // Voeg taak en inzending toe
@@ -77,10 +76,10 @@ export const updateGradering = async (req: Request, res: Response) => {
   try {
     // Check of gradering bestaat en update deze
     const { graderingId: id } = req.params;
-    const { score, maxscore, feedback } = req.body;
+    const { score, feedback } = req.body;
     const gradering = await Gradering.findByIdAndUpdate(
       id,
-      { score, feedback, maxscore },
+      { score, feedback },
       { new: true }
     );
     if (!gradering) throw new NotFoundError("Gradering niet gevonden");

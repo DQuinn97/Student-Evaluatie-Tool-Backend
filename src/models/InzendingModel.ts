@@ -34,12 +34,10 @@ const inzendingSchema = new mongoose.Schema(
         trim: true,
       },
     ],
-    gradering: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: Gradering,
-      },
-    ],
+    gradering: {
+      type: Schema.Types.ObjectId,
+      ref: Gradering,
+    },
     inzending: {
       type: Date,
       required: true,

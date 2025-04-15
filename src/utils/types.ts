@@ -10,7 +10,7 @@ import { TTaak } from "../models/TaakModel";
 import { TVak } from "../models/VakModel";
 import { Request as Req, Response as Res, NextFunction as Next } from "express";
 
-/** 
+/**
  * Vervangende Express types
  */
 export type Request = Req & { gebruiker?: any };
@@ -19,12 +19,12 @@ export type NextFunction = Next;
 
 /**
  * Dump types: pakt type van het model en voegt iets toe
-*/
+ */
 export type GraderingDump = Omit<TGradering, "docent"> & {
   docent: TGebruiker;
 };
 export type InzendingDump = Omit<TInzending, "gradering" | "bijlagen"> & {
-  gradering: GraderingDump[];
+  gradering: GraderingDump;
   bijlagen: TBijlage[];
 };
 
@@ -74,4 +74,3 @@ export type KlasgroepDump = TKlasgroep & {
   vakken: VakDumpPlus[];
   taken: TaakDumpPlus[];
 };
-

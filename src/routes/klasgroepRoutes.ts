@@ -362,6 +362,8 @@ const router = express.Router();
  *                 type: string
  *               weging:
  *                 type: number
+ *               maxScore:
+ *                 type: number
  *               vak:
  *                 type: string
  *               isGepubliceerd:
@@ -471,7 +473,14 @@ router
   .post("/:klasgroepId/vakken", isAuth, isDocent, isUnique, pushVakToKlasgroep)
   .patch("/:klasgroepId/vakken", isAuth, isDocent, removeVakFromKlasgroep)
   .get("/:klasgroepId/taken", isAuth, hasAccess, getTaken)
-  .post("/:klasgroepId/taken", isAuth, isDocent, file.any(), file_uploads_docent,  addTaak)
+  .post(
+    "/:klasgroepId/taken",
+    isAuth,
+    isDocent,
+    file.any(),
+    file_uploads_docent,
+    addTaak
+  )
   .get("/:klasgroepId/dagboek", isAuth, hasAccess, getAuthDagboek)
   .post(
     "/:klasgroepId/dagboek",

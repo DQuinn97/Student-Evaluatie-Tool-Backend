@@ -125,6 +125,7 @@ export const addTaak = async (req: Request, res: Response) => {
       deadline,
       weging,
       vak,
+      maxScore,
       isGepubliceerd,
       bijlagen,
       file_uploads,
@@ -161,6 +162,7 @@ export const addTaak = async (req: Request, res: Response) => {
       weging,
       klasgroep: klasgroepId,
       vak,
+      maxScore,
       isGepubliceerd,
       bijlagen,
     });
@@ -184,6 +186,7 @@ export const updateTaak = async (req: Request, res: Response) => {
       deadline,
       weging,
       vak,
+      maxScore,
       isGepubliceerd,
       bijlagen,
       file_uploads,
@@ -217,6 +220,7 @@ export const updateTaak = async (req: Request, res: Response) => {
         deadline: deadline ? deadline : taak?.deadline,
         weging: weging ? weging : taak?.weging,
         vak: vak ? vak : taak?.vak,
+        maxScore: maxScore ? maxScore : taak?.maxScore,
         isGepubliceerd: isGepubliceerd ? isGepubliceerd : taak?.isGepubliceerd,
         bijlagen,
       },
@@ -287,11 +291,8 @@ export const deleteTaak = async (req: Request, res: Response) => {
         // Check of bijlagen van inzending verwijderd kunnen worden
         await cleanupBijlagen(deleted.bijlagen);
 
-        // Loop door gradering van inzending
-        for (let gradering of deleted.gradering) {
-          // Verwijder gradering
-          await Gradering.findByIdAndDelete(gradering);
-        }
+        // Verwijder gradering
+        await Gradering.findByIdAndDelete(deleted.gradering);
       }
     }
 
