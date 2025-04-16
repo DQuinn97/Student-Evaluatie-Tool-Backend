@@ -23,6 +23,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: process.env.ORIGIN, credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.static("public"));
 
 // Routes
 app.get("/", (req, res) => res.redirect("/docs"));
@@ -33,7 +34,11 @@ app.use("/api/klassen", klasgroepRoutes);
 app.use("/api/taken", taakRoutes);
 app.use("/api/inzendingen", inzendingenRoutes);
 app.use("/api/graderingen", graderingRoutes);
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use(
+  "/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, { customCssUrl: "/theme-material.css" })
+);
 app.all("*", notFound);
 
 // Database connection

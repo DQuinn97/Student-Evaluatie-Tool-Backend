@@ -5,8 +5,13 @@ const options = {
     openapi: "3.0.0",
     info: {
       title: "Student Evaluatie Tool API",
-      version: "1.1.4",
-      description: "API documentatie voor Student Evaluatie Tool",
+      version: "1.2.0",
+      description:
+        "API documentatie voor de Student Evaluatie Tool, ontworpen voor Syntra AB - 2025",
+    },
+    externalDocs: {
+      description: "Project informatie op Git repo",
+      url: "https://github.com/DQuinn97/Student-Evaluatie-Tool-Backend",
     },
     servers: isProduction
       ? [
@@ -19,6 +24,10 @@ const options = {
           {
             url: "http://localhost:3000/api",
             description: "Development server",
+          },
+          {
+            url: "https://student-evaluatie-tool.onrender.com/api",
+            description: "Production server",
           },
         ],
     components: {
