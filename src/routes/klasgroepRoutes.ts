@@ -29,6 +29,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag alle klasgroepen op
+ *     operationId: getKlasgroepen
  *     tags: [Klassen]
  *     responses:
  *       '200':
@@ -46,6 +47,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Maak een nieuwe klasgroep aan"
+ *     operationId: addKlasgroep
  *     tags: [Klassen]
  *     requestBody:
  *       required: true
@@ -81,6 +83,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag een klasgroep op
+ *     operationId: getKlasgroep
  *     tags: [Klassen]
  *     parameters:
  *       - name: klasgroepId
@@ -107,6 +110,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] De totale data dump van een klasgroep"
+ *     operationId: getKlasgroepDump
  *     tags: [Klassen, Dump]
  *     parameters:
  *       - name: klasgroepId
@@ -133,6 +137,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Voeg een student toe aan een klasgroep"
+ *     operationId: addStudentToKlasgroep
  *     tags: [Klassen]
  *     parameters:
  *       - name: klasgroepId
@@ -168,6 +173,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Verwijder een student uit een klasgroep"
+ *     operationId: removeStudentFromKlasgroep
  *     tags: [Klassen]
  *     parameters:
  *       - name: klasgroepId
@@ -205,6 +211,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: De totale data dump van een student in een klasgroep
+ *     operationId: getGebruikerDump
  *     tags: [Klassen, Profiel, Dump]
  *     parameters:
  *       - name: klasgroepId
@@ -236,7 +243,8 @@ const router = express.Router();
  *   post:
  *     security:
  *       - cookieAuth: []
- *     summary: "[Docent] Voeg een klas toe aan een klasgroep"
+ *     summary: "[Docent] Voeg een vak toe aan een klasgroep"
+ *     operationId: addVakToKlasgroep
  *     tags: [Klassen]
  *     parameters:
  *       - name: klasgroepId
@@ -274,6 +282,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Verwijder een vak uit een klasgroep"
+ *     operationId: removeVakFromKlasgroep
  *     tags: [Klassen]
  *     parameters:
  *       - name: klasgroepId
@@ -311,6 +320,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag alle taken van een klasgroep
+ *     operationId: getTaken
  *     tags: [Klassen, Taken]
  *     parameters:
  *       - name: klasgroepId
@@ -337,6 +347,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Voeg een taak toe aan een klasgroep"
+ *     operationId: addTaak
  *     tags: [Klassen, Taken]
  *     parameters:
  *       - name: klasgroepId
@@ -397,6 +408,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag het stagedagboek van de ingelogde gebruiker op voor deze klasgroep
+ *     operationId: getAuthDagboek
  *     tags: [Klassen, Dagboek]
  *     parameters:
  *       - name: klasgroepId
@@ -421,6 +433,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Maak een stagedagboek aan voor de ingelogde gebruiker op deze klasgroep
+ *     operationId: createAuthDagboek
  *     tags: [Klassen, Dagboek]
  *     parameters:
  *       - name: klasgroepId

@@ -27,6 +27,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Vraag alle taken op"
+ *     operationId: getAlleTaken
  *     tags: [Taken]
  *     responses:
  *       '200':
@@ -36,6 +37,21 @@ const router = express.Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Taak'
+ *         links:
+ *           GetTaak:
+ *             operationId: getTaak
+ *             parameters:
+ *               taakId: '$response.body#/_id'
+ *             description: >
+ *               Het '_id' dat teruggegeven wordt kan als
+ *               parameter 'taakId' in `GET /taken/{taakId}` gebruikt worden.
+ *           UpdateTaak:
+ *             operationId: updateTaak
+ *             parameters:
+ *               taakId: '$response.body#/_id'
+ *             description: >
+ *               Het '_id' dat teruggegeven wordt kan als
+ *               parameter 'taakId' in `PATCH /taken/{taakId}` gebruikt worden.
  *       '401':
  *        $ref: '#/components/responses/Unauthorized'
  *       '403':
@@ -46,6 +62,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag een taak op
+ *     operationId: getTaak
  *     tags: [Taken]
  *     parameters:
  *       - name: taakId
@@ -70,6 +87,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Wijzig een taak"
+ *     operationId: updateTaak
  *     tags: [Taken]
  *     parameters:
  *       - name: taakId
@@ -130,6 +148,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Verwijder een taak"
+ *     operationId: deleteTaak
  *     tags: [Taken]
  *     parameters:
  *       - name: taakId
@@ -157,6 +176,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag de gemiddelde score van een taak op
+ *     operationId: getAverage
  *     tags: [Taken]
  *     parameters:
  *       - name: taakId
@@ -183,6 +203,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Dupliceer een taak"
+ *     operationId: dupliceerTaak
  *     tags: [Taken]
  *     parameters:
  *       - name: taakId
@@ -220,6 +241,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Voeg een inzending toe aan de taak
+ *     operationId: addInzending
  *     tags: [Taken, Inzendingen]
  *     parameters:
  *       - name: taakId
@@ -268,6 +290,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Vraag alle inzendingen van een taak op"
+ *     operationId: getInzendingenPerTaak
  *     tags: [Taken, Inzendingen]
  *     parameters:
  *       - name: taakId

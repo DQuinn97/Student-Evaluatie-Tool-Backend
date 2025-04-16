@@ -13,6 +13,7 @@ const router = express.Router();
  * "/auth/register":
  *   post:
  *     summary: Registreer een gebruiker met een random wachtwoord per mail
+ *     operationId: register
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -40,6 +41,7 @@ const router = express.Router();
  * /auth/login:
  *   post:
  *     summary: Log een gebruiker in
+ *     operationId: login
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -69,6 +71,7 @@ const router = express.Router();
  * /auth/logout:
  *   post:
  *     summary: Log de huidige gebruiker uit
+ *     operationId: logout
  *     tags: [Auth]
  *     responses:
  *       '200':
@@ -87,6 +90,7 @@ const router = express.Router();
  * /auth/reset/request:
  *   post:
  *     summary: Stuur een wachtwoord reset link per mail
+ *     operationId: resetWachtwoordRequest
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -118,6 +122,7 @@ const router = express.Router();
  * /auth/reset:
  *   post:
  *     summary: Reset een gebruikers wachtwoord
+ *     operationId: resetWachtwoord
  *     tags: [Auth]
  *     requestBody:
  *       required: true

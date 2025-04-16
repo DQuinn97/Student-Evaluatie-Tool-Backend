@@ -15,6 +15,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag alle bijlagen op
+ *     operationId: getBijlagen
  *     tags: [Bijlagen]
  *     responses:
  *       '200':
@@ -32,6 +33,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Voeg een bijlage toe (deze wordt wel terug verwijderd als ze niet word gebruikt)"
+ *     operationId: addBijlagen
  *     tags: [Bijlagen]
  *     requestBody:
  *       required: true
@@ -53,6 +55,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Verwijder een bijlage"
+ *     operationId: deleteBijlage
  *     tags: [Bijlagen]
  *     parameters:
  *       - name: bijlageId

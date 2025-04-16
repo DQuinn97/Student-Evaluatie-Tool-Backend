@@ -17,6 +17,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Krijg de data van de huidig ingelogde gebruiker
+ *     operationId: getAuthGebruiker
  *     tags: [Profiel]
  *     responses:
  *       '200':
@@ -32,6 +33,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Update een gebruiker zijn/haar naam, achternaam en/of tel.
+ *     operationId: setGebruikerData
  *     tags: [Profiel]
  *     requestBody:
  *       required: true
@@ -61,6 +63,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Update een gebruiker zijn/haar profielfoto
+ *     operationId: setGebruikerFoto
  *     tags: [Profiel]
  *     requestBody:
  *       required: true
@@ -86,6 +89,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Vraag een gebruiker op"
+ *     operationId: getGebruikerById
  *     tags: [Profiel]
  *     parameters:
  *       - name: gebruikerId
@@ -112,6 +116,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Vraag alle inzendingen van een gebruiker op"
+ *     operationId: getInzendingenPerStudent
  *     tags: [Profiel, Inzendingen]
  *     parameters:
  *       - name: gebruikerId

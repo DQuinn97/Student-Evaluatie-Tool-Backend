@@ -24,6 +24,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag een stagedagboek op
+ *     operationId: getDagboek
  *     tags: [Dagboek]
  *     parameters:
  *       - name: dagboekId
@@ -48,6 +49,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Verwijder een stagedagboek
+ *     operationId: deleteDagboek
  *     tags: [Dagboek]
  *     parameters:
  *       - name: dagboekId
@@ -75,6 +77,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag een stagedagboek op
+ *     operationId: getDagboek2
  *     tags: [Dagboek]
  *     parameters:
  *       - name: klasgroepId
@@ -107,6 +110,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag een stagedag op
+ *     operationId: getDag
  *     tags: [Dagboek]
  *     parameters:
  *       - name: dagId
@@ -131,6 +135,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Update een stagedag
+ *     operationId: updateDag
  *     tags: [Dagboek]
  *     parameters:
  *       - name: dagId
@@ -180,6 +185,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Verwijder een stagedag
+ *     operationId: deleteDag
  *     tags: [Dagboek]
  *     parameters:
  *       - name: dagId
@@ -207,6 +213,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag een stageverslag op
+ *     operationId: getVerslag
  *     tags: [Dagboek]
  *     parameters:
  *       - name: verslagId
@@ -231,6 +238,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Update een stageverslag
+ *     operationId: updateVerslag
  *     tags: [Dagboek]
  *     parameters:
  *       - name: verslagId
@@ -283,6 +291,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Verwijder een stageverslag
+ *     operationId: deleteVerslag
  *     tags: [Dagboek]
  *     parameters:
  *       - name: verslagId
@@ -310,6 +319,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Maak een nieuwe stagedag
+ *     operationId: addDag
  *     tags: [Dagboek]
  *     parameters:
  *       - name: dagboekId
@@ -362,6 +372,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Maak een nieuw stageverslag
+ *     operationId: addVerslag
  *     tags: [Dagboek]
  *     parameters:
  *       - name: dagboekId

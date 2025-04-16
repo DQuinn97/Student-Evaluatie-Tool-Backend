@@ -16,6 +16,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Krijg alle inzendingen van de huidig ingelogde gebruiker
+ *     operationId: getInzendingen
  *     tags: [Inzendingen]
  *     responses:
  *       '200':
@@ -33,6 +34,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag een inzending op
+ *     operationId: getInzending
  *     tags: [Inzendingen]
  *     parameters:
  *       - name: inzendingId
@@ -57,6 +59,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Update een inzending
+ *     operationId: updateInzending
  *     tags: [Inzendingen]
  *     parameters:
  *       - name: inzendingId
@@ -106,6 +109,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Voeg een gradering toe aan een inzending"
+ *     operationId: addGradering
  *     tags: [Inzendingen, Graderingen]
  *     parameters:
  *       - name: inzendingId

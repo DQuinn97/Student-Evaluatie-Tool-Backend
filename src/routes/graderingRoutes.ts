@@ -13,6 +13,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: Vraag een gradering op
+ *     operationId: getGradering
  *     tags: [Graderingen]
  *     parameters:
  *       - name: graderingId
@@ -39,6 +40,7 @@ const router = express.Router();
  *     security:
  *       - cookieAuth: []
  *     summary: "[Docent] Update een gradering"
+ *     operationId: updateGradering
  *     tags: [Graderingen]
  *     parameters:
  *       - name: graderingId
