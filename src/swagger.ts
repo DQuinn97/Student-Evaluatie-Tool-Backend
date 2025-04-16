@@ -36,6 +36,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "gebruikerId",
             },
             naam: {
               type: "string",
@@ -64,6 +65,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "klasgroepId",
             },
             naam: {
               type: "string",
@@ -100,6 +102,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "vakId",
             },
             naam: {
               type: "string",
@@ -112,6 +115,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "taakId",
             },
             type: {
               type: "string",
@@ -160,6 +164,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "inzendingId",
             },
             git: {
               type: "string",
@@ -196,6 +201,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "graderingId",
             },
             feedback: {
               type: "string",
@@ -218,6 +224,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "bijlageId",
             },
             URL: {
               type: "string",
@@ -236,6 +243,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "dagboekId",
             },
             student: {
               $ref: "#/components/schemas/Gebruiker",
@@ -261,6 +269,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "dagId",
             },
             datum: {
               type: "string",
@@ -302,6 +311,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "verslagId",
             },
             datum: {
               type: "string",
@@ -350,6 +360,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "klasgroepId",
             },
             naam: {
               type: "string",
@@ -390,6 +401,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "gebruikerId",
             },
             naam: {
               type: "string",
@@ -430,6 +442,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "vakId",
             },
             naam: {
               type: "string",
@@ -447,6 +460,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "taakId",
             },
             type: {
               type: "string",
@@ -475,6 +489,7 @@ const options = {
             },
             klasgroep: {
               type: "string",
+              example: "klasgroepId",
             },
             score: {
               type: "number",
@@ -491,6 +506,7 @@ const options = {
               properties: {
                 _id: {
                   type: "string",
+                  example: "vakId",
                 },
                 naam: {
                   type: "string",
@@ -518,6 +534,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "inzendingId",
             },
             git: {
               type: "string",
@@ -530,6 +547,7 @@ const options = {
             },
             student: {
               type: "string",
+              example: "gebruikerId",
             },
             score: {
               type: "number",
@@ -555,6 +573,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "graderingId",
             },
             docent: {
               $ref: "#/components/schemas/DocentDump",
@@ -575,6 +594,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "gebruikerId",
             },
             naam: {
               type: "string",
@@ -595,6 +615,7 @@ const options = {
           properties: {
             _id: {
               type: "string",
+              example: "dagboekId",
             },
             dagen: {
               type: "array",

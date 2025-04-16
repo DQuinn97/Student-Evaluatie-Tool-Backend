@@ -34,7 +34,8 @@
     "pkgroll": "^2.6.1",
     "sanitize-filename": "^1.6.3",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "swagger-ui-plugin-hierarchical-tags": "^1.0.4"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
