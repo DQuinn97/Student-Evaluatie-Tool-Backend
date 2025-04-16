@@ -67,7 +67,12 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Wachtwoord succesvol ingelogd
+ *                   example: Gebruiker succesvol ingelogd
+ *         headers:
+ *           Set-Cookie:
+ *             schema:
+ *               type: string
+ *               example: token=abcde12345; Path=/; HttpOnly
  *       '400':
  *         $ref: '#/components/responses/BadRequest_MissingField'
  *
@@ -87,6 +92,11 @@ const router = express.Router();
  *                 message:
  *                   type: string
  *                   example: Wachtwoord succesvol uitgelogd
+ *         headers:
+ *           Set-Cookie:
+ *             schema:
+ *               type: string
+ *               example: token=; Path=/; HttpOnly
  *       '400':
  *         $ref: '#/components/responses/BadRequest_MissingField'
  *
