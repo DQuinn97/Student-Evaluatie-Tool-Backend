@@ -57,10 +57,6 @@ const router = express.Router();
  *               score:
  *                 type: number
  *                 minimum: 0
- *               maxscore:
- *                 type: number
- *                 minimum: 1
- *                 default: 100
  *               feedback:
  *                 type: string
  *     responses:

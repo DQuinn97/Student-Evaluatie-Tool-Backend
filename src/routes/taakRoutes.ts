@@ -107,6 +107,10 @@ const router = express.Router();
  *                 type: array
  *                 items:
  *                   type: string
+ *               nieuweBijlagen:
+ *                 type: array
+ *                 items:
+ *                   type: string
  *                   format: binary
  *     responses:
  *       '200':
