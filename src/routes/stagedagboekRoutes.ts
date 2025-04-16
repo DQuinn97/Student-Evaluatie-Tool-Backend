@@ -140,7 +140,7 @@ const router = express.Router();
  *     parameters:
  *       - name: dagId
  *         in: path
- *         description: ID van het te updaten stagedag
+ *         description: ID van de te wijzigen stagedag
  *         required: true
  *         schema:
  *           type: string
@@ -190,7 +190,7 @@ const router = express.Router();
  *     parameters:
  *       - name: dagId
  *         in: path
- *         description: ID van het te verwijderen stagedag
+ *         description: ID van de te verwijderen stagedag
  *         required: true
  *         schema:
  *           type: string
@@ -243,7 +243,7 @@ const router = express.Router();
  *     parameters:
  *       - name: verslagId
  *         in: path
- *         description: ID van het te updaten stageverslag
+ *         description: ID van het te wijzigen stageverslag
  *         required: true
  *         schema:
  *           type: string

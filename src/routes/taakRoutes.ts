@@ -88,24 +88,32 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               voormiddag:
- *                 type: string
  *               type:
  *                 type: string
+ *                 enum: [taak, test]
+ *                 example: "taak"
  *               titel:
  *                 type: string
+ *                 example: "React Todo-app"
  *               beschrijving:
  *                 type: string
+ *                 example: "Maak nog maar eens een todo app met een nieuw framework"
  *               deadline:
  *                 type: string
+ *                 format: date
+ *                 example: 2024-04-05T00:00:00.000+00:00
  *               weging:
  *                 type: number
+ *                 example: 0.2
  *               maxScore:
  *                 type: number
+ *                 example: 100
  *               vak:
  *                 type: string
+ *                 example: vakId
  *               isGepubliceerd:
  *                 type: boolean
+ *                 example: true
  *               bijlagen:
  *                 type: array
  *                 items:
@@ -176,6 +184,7 @@ const router = express.Router();
  *           application/json:
  *             schema:
  *               type: number
+ *               example: 56.8
  *       '401':
  *        $ref: '#/components/responses/Unauthorized'
  *       '403':
@@ -193,7 +202,7 @@ const router = express.Router();
  *     parameters:
  *       - name: taakId
  *         in: path
- *         description: ID van de te dupliceer taak
+ *         description: ID van de te dupliceren taak
  *         required: true
  *         schema:
  *           type: string
@@ -206,6 +215,7 @@ const router = express.Router();
  *             properties:
  *               klasgroepId:
  *                 type: string
+ *                 example: klasgroepId
  *     responses:
  *       '200':
  *         content:
@@ -231,7 +241,7 @@ const router = express.Router();
  *     parameters:
  *       - name: taakId
  *         in: path
- *         description: ID van de te dupliceren taak
+ *         description: ID van de te taak waarop je een inzending wil doen
  *         required: true
  *         schema:
  *           type: string
@@ -244,14 +254,18 @@ const router = express.Router();
  *             properties:
  *               git:
  *                 type: string
+ *                 example: github.com/gebruiker/repo
  *               live:
  *                 type: string
+ *                 example: todo-app-van-gebruiker.surge.sh
  *               beschrijving:
  *                 type: string
+ *                 example: ""
  *               bijlagen:
  *                 type: array
  *                 items:
  *                   type: string
+ *                 example: []
  *               nieuweBijlagen:
  *                 type: array
  *                 items:
@@ -280,7 +294,7 @@ const router = express.Router();
  *     parameters:
  *       - name: taakId
  *         in: path
- *         description: ID van de taak
+ *         description: ID van de op te vragen taak
  *         required: true
  *         schema:
  *           type: string

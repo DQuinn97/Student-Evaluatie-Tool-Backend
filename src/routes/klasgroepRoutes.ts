@@ -352,7 +352,7 @@ const router = express.Router();
  *     parameters:
  *       - name: klasgroepId
  *         in: path
- *         description: ID van de te bewerken klasgroep
+ *         description: ID van de klasgroep waarin de taak moet worden aangemaakt
  *         required: true
  *         schema:
  *           type: string
@@ -364,21 +364,31 @@ const router = express.Router();
  *             type: object
  *             properties:
  *               type:
- *                 type: string
+ *                 type : string
+ *                 enum: ["taak", "test"]
+ *                 example: "taak"
  *               titel:
  *                 type: string
+ *                 example: "React Todo-app"
  *               beschrijving:
  *                 type: string
+ *                 example: "Maak nog maar eens een todo app met een nieuw framework"
  *               deadline:
  *                 type: string
+ *                 format: date
+ *                 example: 2024-04-05T00:00:00.000+00:00
  *               weging:
  *                 type: number
+ *                 example: 0.2
  *               maxScore:
  *                 type: number
+ *                 example: 100
  *               vak:
  *                 type: string
+ *                 example: vakId
  *               isGepubliceerd:
  *                 type: boolean
+ *                 example: true
  *               bijlagen:
  *                 type: array
  *                 items:

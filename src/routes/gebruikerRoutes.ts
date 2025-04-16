@@ -44,10 +44,13 @@ const router = express.Router();
  *             properties:
  *               naam:
  *                 type: string
+ *                 example: John
  *               achternaam:
  *                 type: string
+ *                 example: Doe
  *               gsm:
  *                 type: string
+ *                 example: 0412345678
  *     responses:
  *       '200':
  *         description: Gebruiker aangepast

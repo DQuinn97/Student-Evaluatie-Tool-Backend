@@ -59,8 +59,10 @@ const router = express.Router();
  *               score:
  *                 type: number
  *                 minimum: 0
+ *                 example: 56.8
  *               feedback:
  *                 type: string
+ *                 example: "Kan beter!"
  *     responses:
  *       '200':
  *         description: Gradering bijgewerkt

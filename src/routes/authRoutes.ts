@@ -24,6 +24,7 @@ const router = express.Router();
  *             properties:
  *               email:
  *                 type: string
+ *                 example: example@mail.com
  *     responses:
  *       '200':
  *         description: Gebruiker succesvol geregistreerd, wachtwoord per mail verzonden
@@ -52,8 +53,10 @@ const router = express.Router();
  *             properties:
  *               email:
  *                 type: string
+ *                 example: example@mail.com
  *               wachtwoord:
  *                 type: string
+ *                 example: ditiseenWachtwoord123!
  *     responses:
  *       '200':
  *         description: Gebruiker succesvol ingelogd
@@ -101,8 +104,10 @@ const router = express.Router();
  *             properties:
  *               email:
  *                 type: string
+ *                 example: example@mail.com
  *               reset_link:
  *                 type: string
+ *                 example: https://student-evaluatie-tool.surge.sh/reset
  *     responses:
  *       '200':
  *         description: Geen herkende gebruiker
@@ -133,8 +138,10 @@ const router = express.Router();
  *             properties:
  *               wachtwoord:
  *                 type: string
+ *                 example: ditiseenWactwoord123!
  *               resetToken:
  *                 type: string
+ *                 example: resetToken
  *     responses:
  *       '200':
  *         description: Wachtwoord succesvol gereset

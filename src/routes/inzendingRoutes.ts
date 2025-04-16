@@ -77,18 +77,22 @@ const router = express.Router();
  *             properties:
  *               git:
  *                 type: string
+ *                 example: github.com/gebruiker/repo
  *               live:
  *                 type: string
+ *                 example: todo-app-van-gebruiker.surge.sh
  *               beschrijving:
  *                 type: string
+ *                 example: ""
  *               bijlagen:
  *                 type: array
  *                 items:
  *                   type: string
+ *                 example: []
  *               nieuweBijlagen:
  *                 type: array
  *                 items:
- *                   type: file
+ *                   type: string
  *                   format: binary
  *     responses:
  *       '200':
@@ -128,8 +132,10 @@ const router = express.Router();
  *               score:
  *                 type: number
  *                 minimum: 0
+ *                 example: 56.8
  *               feedback:
  *                 type: string
+ *                 example: "kan beter!"
  *     responses:
  *       '200':
  *         description: Gradering toegevoegd
