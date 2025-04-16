@@ -647,6 +647,43 @@ const options = {
           },
         },
       },
+      // links: {
+      //   GetTaak: {
+      //     operationId: "getTaak",
+      //     parameters: {
+      //       taakId: "$response.body#/_id",
+      //     },
+      //     description: "`_id -> taakId` in `GET /taken/{taakId}`",
+      //   },
+      //   UpdateTaak: {
+      //     operationId: "updateTaak",
+      //     parameters: {
+      //       taakId: "$response.body#/_id",
+      //     },
+      //     description: "`_id -> taakId` in `PATCH /taken/{taakId}`",
+      //   },
+      //   DeleteTaak: {
+      //     operationId: "deleteTaak",
+      //     parameters: {
+      //       taakId: "$response.body#/_id",
+      //     },
+      //     description: "`_id -> taakId` in `DELETE /taken/{taakId}`",
+      //   },
+      //   DupliceerTaak: {
+      //     operationId: "dupliceerTaak",
+      //     requestBody: "$response.body#/_id",
+
+      //     description: "`_id -> taakId` in `POST /taken/{taakId}/dupliceer`",
+      //   },
+      //   GetInzending: {
+      //     operationId: "getInzending",
+      //     parameters: {
+      //       inzendingId: "$response.body#/_id",
+      //     },
+      //     description:
+      //       "Het '_id' dat teruggegeven wordt kan als parameter 'inzendingId' in `GET /inzendingen/{inzendingId}` gebruikt worden.",
+      //   },
+      // },
     },
     definitions: {
       Error: {

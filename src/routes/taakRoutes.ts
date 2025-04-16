@@ -37,21 +37,6 @@ const router = express.Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Taak'
- *         links:
- *           GetTaak:
- *             operationId: getTaak
- *             parameters:
- *               taakId: '$response.body#/_id'
- *             description: >
- *               Het '_id' dat teruggegeven wordt kan als
- *               parameter 'taakId' in `GET /taken/{taakId}` gebruikt worden.
- *           UpdateTaak:
- *             operationId: updateTaak
- *             parameters:
- *               taakId: '$response.body#/_id'
- *             description: >
- *               Het '_id' dat teruggegeven wordt kan als
- *               parameter 'taakId' in `PATCH /taken/{taakId}` gebruikt worden.
  *       '401':
  *        $ref: '#/components/responses/Unauthorized'
  *       '403':
