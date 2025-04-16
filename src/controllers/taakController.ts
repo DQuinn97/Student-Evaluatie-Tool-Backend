@@ -264,6 +264,7 @@ export const dupliceerTaak = async (req: Request, res: Response) => {
       beschrijving: taak.beschrijving,
       deadline: middernacht,
       weging: taak.weging,
+      maxScore: taak.maxScore,
       klasgroep: klasgroepId,
       isGepubliceerd: false,
       bijlagen: [...taak.bijlagen],
