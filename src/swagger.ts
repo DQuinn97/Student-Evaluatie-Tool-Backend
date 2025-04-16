@@ -40,15 +40,19 @@ const options = {
             },
             naam: {
               type: "string",
+              example: "John",
             },
             achternaam: {
               type: "string",
+              example: "Doe",
             },
             email: {
               type: "string",
+              example: "example@mail.com",
             },
             gsm: {
               type: "string",
+              example: "0412345678",
             },
             isDocent: {
               type: "boolean",
@@ -56,6 +60,8 @@ const options = {
             },
             foto: {
               type: "string",
+              example:
+                "http://res.cloudinary.com/dqcloud/image/upload/profielen/profiel-00000000000000",
             },
           },
         },
@@ -69,16 +75,19 @@ const options = {
             },
             naam: {
               type: "string",
+              example: "Full Stack",
             },
             beginjaar: {
               type: "number",
               minimum: new Date().getFullYear() - 2,
               maximum: new Date().getFullYear() + 5,
+              example: new Date().getFullYear(),
             },
             eindjaar: {
               type: "number",
               minimum: new Date().getFullYear() - 2,
               maximum: new Date().getFullYear() + 5,
+              example: new Date().getFullYear() + 1,
             },
             studenten: {
               type: "array",
@@ -106,6 +115,7 @@ const options = {
             },
             naam: {
               type: "string",
+              example: "Javascript",
             },
           },
         },
@@ -124,16 +134,25 @@ const options = {
             },
             titel: {
               type: "string",
+              example: "React Todo-app",
             },
             beschrijving: {
               type: "string",
+              example:
+                "Maak nog maar eens een todo app met een nieuw framework",
             },
             deadline: {
               type: "string",
               format: "date",
+              example: new Date(),
             },
             weging: {
               type: "number",
+              example: 0.2,
+            },
+            maxScore: {
+              type: "number",
+              example: 100,
             },
             isGepubliceerd: {
               type: "boolean",
@@ -168,12 +187,15 @@ const options = {
             },
             git: {
               type: "string",
+              example: "github.com/gebruiker/repo",
             },
             live: {
               type: "string",
+              example: "todo-app-van-gebruiker.surge.sh",
             },
             beschrijving: {
               type: "string",
+              example: " / ",
             },
             student: {
               $ref: "#/components/schemas/Gebruiker",
@@ -205,13 +227,11 @@ const options = {
             },
             feedback: {
               type: "string",
+              example: "Goed gedaan!",
             },
             score: {
               type: "number",
-            },
-            maxscore: {
-              type: "number",
-              default: 100,
+              example: 85,
             },
             docent: {
               $ref: "#/components/schemas/Gebruiker",
@@ -228,12 +248,15 @@ const options = {
             },
             URL: {
               type: "string",
+              example:
+                "http://res.cloudinary.com/dqcloud/image/upload/bijlagen-gebruikerId/bijlage-00000000-naam.png",
             },
             gebruiker: {
               $ref: "#/components/schemas/Gebruiker",
             },
             publicId: {
               type: "string",
+              example: "bijlagen-gebruikerId/bijlage-00000000-naam.png",
             },
           },
         },
@@ -274,18 +297,24 @@ const options = {
             datum: {
               type: "string",
               format: "date",
+              example: Date.now(),
             },
             voormiddag: {
               type: "string",
+              example: "- intro werkvloer\n- kennismaking collegas / omgeving",
             },
             namiddag: {
               type: "string",
+              example: "- intro stageproject",
             },
             tools: {
               type: "string",
+              example: "- ddev\n- drupal\n- docker",
             },
             resultaat: {
               type: "string",
+              example:
+                "Kennismaking ging vlot, ik hoop dat de opdracht ook zo vlot gaat",
             },
             bijlagen: {
               type: "array",
@@ -316,27 +345,35 @@ const options = {
             datum: {
               type: "string",
               format: "date",
+              example: Date.now(),
             },
             stagebedrijf: {
               type: "string",
+              example: "Drupal Bedrijf in Antwerpen",
             },
             uitvoering: {
               type: "string",
+              example: "Opdracht vervolledigd",
             },
             ervaring: {
               type: "string",
+              example: "Ging vlot",
             },
             bijgeleerd: {
               type: "string",
+              example: "Tis nog altijd drupal",
             },
             conclusie: {
               type: "string",
+              example: "Drupal is even moeilijk op de werkvloer als in de klas",
             },
             score: {
               type: "number",
+              example: 9,
             },
             reflectie: {
               type: "string",
+              example: "Ik heb dit goed gedaan",
             },
             bijlagen: {
               type: "array",
@@ -352,6 +389,7 @@ const options = {
           properties: {
             message: {
               type: "string",
+              example: "Geen toegang tot deze { ... }",
             },
           },
         },
@@ -364,14 +402,15 @@ const options = {
             },
             naam: {
               type: "string",
+              example: "Full Stack",
             },
             beginjaar: {
               type: "number",
-              example: 2024,
+              example: new Date().getFullYear(),
             },
             eindjaar: {
               type: "number",
-              example: 2025,
+              example: new Date().getFullYear() + 1,
             },
             studenten: {
               type: "array",
@@ -405,18 +444,24 @@ const options = {
             },
             naam: {
               type: "string",
+              example: "John",
             },
             achternaam: {
               type: "string",
+              example: "Doe",
             },
             email: {
               type: "string",
+              example: "example@mail.com",
             },
             foto: {
               type: "string",
+              example:
+                "http://res.cloudinary.com/dqcloud/image/upload/profielen/profiel-00000000000000",
             },
             isDocent: {
               type: "boolean",
+              default: false,
             },
             vakken: {
               type: "array",
@@ -446,12 +491,15 @@ const options = {
             },
             naam: {
               type: "string",
+              example: "Javascript",
             },
             gemiddelde: {
               type: "number",
+              example: 56.8,
             },
             klasgemiddelde: {
               type: "number",
+              example: 75.3,
             },
           },
         },
@@ -465,27 +513,33 @@ const options = {
             type: {
               type: "string",
               enum: ["taak", "test"],
-              example: "taak",
+              default: "taak",
             },
             titel: {
               type: "string",
+              example: "React Todo-app",
             },
             beschrijving: {
               type: "string",
+              example:
+                "Maak nog maar eens een todo app met een nieuw framework",
             },
             deadline: {
               type: "string",
               format: "date",
+              example: new Date(),
             },
             weging: {
               type: "number",
+              example: 0.2,
             },
             maxScore: {
               type: "number",
+              example: 100,
             },
             isGepubliceerd: {
               type: "boolean",
-              example: true,
+              default: false,
             },
             klasgroep: {
               type: "string",
@@ -493,9 +547,11 @@ const options = {
             },
             score: {
               type: "number",
+              example: 56.8,
             },
             klasgemiddelde: {
               type: "number",
+              example: 75.3,
             },
             volledigGegradeerd: {
               type: "boolean",
@@ -510,6 +566,7 @@ const options = {
                 },
                 naam: {
                   type: "string",
+                  example: "Javascript",
                 },
               },
             },
@@ -538,12 +595,15 @@ const options = {
             },
             git: {
               type: "string",
+              example: "github.com/gebruiker/repo",
             },
             live: {
               type: "string",
+              example: "todo-app-van-gebruiker.surge.sh",
             },
             beschrijving: {
               type: "string",
+              example: " / ",
             },
             student: {
               type: "string",
@@ -551,6 +611,7 @@ const options = {
             },
             score: {
               type: "number",
+              example: 56.8,
             },
             bijlagen: {
               type: "array",
@@ -580,12 +641,11 @@ const options = {
             },
             score: {
               type: "number",
-            },
-            maxscore: {
-              type: "number",
+              example: 56.8,
             },
             feedback: {
               type: "string",
+              example: "Kan beter!",
             },
           },
         },
@@ -598,15 +658,20 @@ const options = {
             },
             naam: {
               type: "string",
+              example: "John",
             },
             achternaam: {
               type: "string",
+              example: "Doe",
             },
             email: {
               type: "string",
+              example: "example@mail.com",
             },
             foto: {
               type: "string",
+              example:
+                "http://res.cloudinary.com/dqcloud/image/upload/profielen/profiel-00000000000000",
             },
           },
         },
