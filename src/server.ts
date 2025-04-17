@@ -27,7 +27,7 @@ app.use(
       if (
         [
           process.env.ORIGIN as string,
-          "https://qr-dev-testing.surge.sh/",
+          "https://qr-dev-testing.surge.sh",
         ].includes(origin as string)
       )
         callback(null, origin);
