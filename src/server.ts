@@ -14,6 +14,7 @@ import klasgroepRoutes from "./routes/klasgroepRoutes";
 import taakRoutes from "./routes/taakRoutes";
 import inzendingenRoutes from "./routes/inzendingRoutes";
 import graderingRoutes from "./routes/graderingRoutes";
+import { NextFunction, Request, Response } from "./utils/types";
 
 // Variables
 const app = express();
@@ -22,7 +23,15 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(
   cors({
-    origin: [process.env.ORIGIN as string, "https://qr-dev-testing.surge.sh/"],
+    origin: (origin, callback) => {
+      if (
+        [
+          process.env.ORIGIN as string,
+          "https://qr-dev-testing.surge.sh/",
+        ].includes(origin as string)
+      )
+        callback(null, origin);
+    },
     credentials: true,
     optionsSuccessStatus: 200,
   })
