@@ -99,6 +99,12 @@ export const login = async (req: Request, res: Response) => {
       sameSite: process.env.NODE_ENV === "production" ? "none" : true,
       maxAge: 24 * 60 * 60 * 1000,
     });
+    res.cookie("tokenExists", true, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
 
     // Verstuur een success response met token en cookie; 200 - OK
     res.status(200).json({ message: "Gebruiker succesvol ingelogd", token });
@@ -112,6 +118,12 @@ export const logout = async (req: Request, res: Response) => {
     // Verwijder de JWT token cookie
     res.cookie("token", "", {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : true,
+      maxAge: 10,
+    });
+    res.cookie("tokenExists", false, {
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : true,
       maxAge: 10,
