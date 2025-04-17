@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(
   cors({
-    origin: process.env.ORIGIN,
+    origin: [process.env.ORIGIN as string, "https://qr-dev-testing.surge.sh/"],
     credentials: true,
     optionsSuccessStatus: 200,
   })
