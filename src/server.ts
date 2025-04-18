@@ -23,6 +23,7 @@ const PORT = process.env.PORT || 3000;
 const cors_allowlist = [
   process.env.ORIGIN as string,
   "https://qr-dev-testing.surge.sh",
+  "https://studentevaluatie.onrender.com",
 ];
 // Middleware
 app.use(
