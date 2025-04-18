@@ -91,8 +91,7 @@ export const login = async (req: Request, res: Response) => {
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
-    const origin = req.get("origin");
-    console.log(origin);
+
     // Steek token in cookie om met response te verzenden
     res.cookie("token", token, {
       httpOnly: true,
@@ -105,7 +104,6 @@ export const login = async (req: Request, res: Response) => {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : true,
-      domain: "surge.sh",
       maxAge: 24 * 60 * 60 * 1000,
     });
 
@@ -118,8 +116,6 @@ export const login = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
   try {
-    const origin = req.get("origin");
-    console.log(origin);
     // Verwijder de JWT token cookie
     res.cookie("token", "", {
       httpOnly: true,
@@ -131,7 +127,6 @@ export const logout = async (req: Request, res: Response) => {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : true,
-      domain: "surge.sh",
       maxAge: 10,
     });
 
