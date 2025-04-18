@@ -91,18 +91,20 @@ export const login = async (req: Request, res: Response) => {
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
-
+    const origin = req.get("origin");
     // Steek token in cookie om met response te verzenden
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : true,
+      domain: origin,
       maxAge: 24 * 60 * 60 * 1000,
     });
     res.cookie("tokenExists", true, {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : true,
+      domain: origin,
       maxAge: 24 * 60 * 60 * 1000,
     });
 
@@ -115,17 +117,20 @@ export const login = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
   try {
+    const origin = req.get("origin");
     // Verwijder de JWT token cookie
     res.cookie("token", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : true,
+      domain: origin,
       maxAge: 10,
     });
     res.cookie("tokenExists", false, {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : true,
+      domain: origin,
       maxAge: 10,
     });
 
