@@ -20,17 +20,19 @@ import { NextFunction, Request, Response } from "./utils/types";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const cors_allowlist = [
+  process.env.ORIGIN as string,
+  "https://qr-dev-testing.surge.sh",
+];
 // Middleware
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (
-        [
-          process.env.ORIGIN as string,
-          "https://qr-dev-testing.surge.sh",
-        ].includes(origin as string)
-      )
-        callback(null, origin);
+      if (cors_allowlist.indexOf(origin as string) !== -1) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
     },
     credentials: true,
     optionsSuccessStatus: 200,
