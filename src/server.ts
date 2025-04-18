@@ -34,6 +34,7 @@ app.use(
         callback(null, false);
       }
     },
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
     optionsSuccessStatus: 200,
   })
