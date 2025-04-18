@@ -176,6 +176,6 @@ router
   .post("/logout", logout)
   .post("/reset/request", resetWachtwoordRequest)
   .post("/reset", resetWachtwoord)
-  .post("/test", isAuth, authTest);
+  .get("/test", isAuth, authTest);
 
 export default router;
