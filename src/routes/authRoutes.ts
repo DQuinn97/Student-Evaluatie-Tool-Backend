@@ -5,7 +5,9 @@ import {
   logout,
   resetWachtwoordRequest,
   resetWachtwoord,
+  authTest,
 } from "../controllers/authController";
+import { isAuth } from "../middleware/authMiddleware";
 
 const router = express.Router();
 /**
@@ -173,6 +175,7 @@ router
   .post("/login", login)
   .post("/logout", logout)
   .post("/reset/request", resetWachtwoordRequest)
-  .post("/reset", resetWachtwoord);
+  .post("/reset", resetWachtwoord)
+  .post("/test", isAuth, authTest);
 
 export default router;

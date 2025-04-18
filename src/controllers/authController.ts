@@ -224,3 +224,12 @@ export const resetWachtwoord = async (req: Request, res: Response) => {
     ErrorHandler(error, req, res);
   }
 };
+
+export const authTest = async (req: Request, res: Response) => {
+  try {
+    // Verstuur een success response; 200 - OK
+    res.status(200).json({ message: "Gebruiker kan inloggen" });
+  } catch (error: unknown) {
+    ErrorHandler(error, req, res);
+  }
+};
