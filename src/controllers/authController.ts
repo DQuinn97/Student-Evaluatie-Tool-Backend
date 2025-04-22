@@ -90,13 +90,14 @@ export const login = async (req: Request, res: Response) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : true,
-
+      partitioned: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
     res.cookie("tokenExists", true, {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : true,
+      partitioned: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
 
@@ -114,12 +115,14 @@ export const logout = async (req: Request, res: Response) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : true,
+      partitioned: true,
       maxAge: 10,
     });
     res.cookie("tokenExists", false, {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : true,
+      partitioned: true,
       maxAge: 10,
     });
 
