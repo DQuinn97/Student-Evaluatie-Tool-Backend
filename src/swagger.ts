@@ -398,7 +398,7 @@ const options = {
           properties: {
             message: {
               type: "string",
-              example: "Geen toegang tot deze { ... }",
+              example: "Gebruiker kan inloggen",
             },
           },
         },

@@ -14,17 +14,12 @@ import klasgroepRoutes from "./routes/klasgroepRoutes";
 import taakRoutes from "./routes/taakRoutes";
 import inzendingenRoutes from "./routes/inzendingRoutes";
 import graderingRoutes from "./routes/graderingRoutes";
-import { NextFunction, Request, Response } from "./utils/types";
 
 // Variables
 const app = express();
 const PORT = process.env.PORT || 3000;
+const cors_allowlist = [process.env.ORIGIN as string];
 
-const cors_allowlist = [
-  process.env.ORIGIN as string,
-  "https://qr-dev-testing.surge.sh",
-  "https://studentevaluatie.onrender.com",
-];
 // Middleware
 app.use(
   cors({

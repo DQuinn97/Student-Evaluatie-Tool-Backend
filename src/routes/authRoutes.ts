@@ -169,6 +169,31 @@ const router = express.Router();
  *         $ref: '#/components/responses/BadRequest_MissingField'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
+ *
+ * /auth/test:
+ *   get:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Test of de gebruiker kan inloggen
+ *     description: >
+ *       Test of de gebruiker kan inloggen door een auth-only route aan te spreken; <br>
+ *         - 200 = gebruiker kan inloggen <br>
+ *         - 401 = gebruiker kan niet inloggen
+ *     operationId: authTest
+ *     tags: [Auth]
+ *     responses:
+ *       '200':
+ *         description: Gebruiker kan inloggen
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Gebruiker kan inloggen
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
  */
 router
   .post("/register", register)

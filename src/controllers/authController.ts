@@ -29,14 +29,7 @@ export const register = async (req: Request, res: Response) => {
       uppercase: true,
     });
 
-    // Genereer de data die in de mailerSend moet worden verzonden
-    // const { mailerSend, emailParams } = await mailData(
-    //   email,
-    //   { naam: email.split("@")[0], wachtwoord },
-    //   "register",
-    //   "REGISTER"
-    // );
-
+    // Genereer de data die in de mailer moet worden verzonden
     const { mailer, v, emailParams } = await mailData(
       email,
       { naam: email.split("@")[0], wachtwoord },
@@ -161,7 +154,7 @@ export const resetWachtwoordRequest = async (req: Request, res: Response) => {
       { expiresIn: "1d" }
     );
 
-    // Genereer de data die in de mailerSend moet worden verzonden
+    // Genereer de data die in de mailer moet worden verzonden
     const naam = gebruiker.naam
       ? `${gebruiker.naam} ${gebruiker.achternaam || ""}`
       : email.split("@")[0];
@@ -225,6 +218,13 @@ export const resetWachtwoord = async (req: Request, res: Response) => {
   }
 };
 
+/* Deze functie dient enkel om te testen in de front-end of cookies worden toegelaten
+ * Dus dit test ofdat login wel mogelijk is door op een geauthoriseerde route een GET request te doen
+ *  die enkel een status weergeeft.
+ *
+ * 200 - OK; de gebruiker heeft toegang tot ingelogde data, dus cookies worden opgeslagen
+ * 401 - Unauthorized; de gebruiker heeft geen toegang tot ingelogde data, en kan dus niet inloggen
+ */
 export const authTest = async (req: Request, res: Response) => {
   try {
     // Verstuur een success response; 200 - OK
