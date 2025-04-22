@@ -95,7 +95,7 @@ export const login = async (req: Request, res: Response) => {
     });
 
     // Verstuur een success response met token en cookie; 200 - OK
-    res.status(200).json({ message: "Gebruiker succesvol ingelogd", token });
+    res.status(200).json({ message: "Gebruiker succesvol ingelogd" });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
