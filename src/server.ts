@@ -9,11 +9,12 @@ import swaggerUi from "swagger-ui-express";
 import { specs } from "./swagger";
 import stagedagboekRoutes from "./routes/stagedagboekRoutes";
 import authRoutes from "./routes/authRoutes";
-import gebruikerRoutes from "./routes/gebruikerRoutes";
+import gebruikerRoutes from "./routes/profielRoutes";
 import klasgroepRoutes from "./routes/klasgroepRoutes";
 import taakRoutes from "./routes/taakRoutes";
 import inzendingenRoutes from "./routes/inzendingRoutes";
 import graderingRoutes from "./routes/graderingRoutes";
+import profielRoutes from "./routes/profielRoutes";
 
 // Variables
 const app = express();
@@ -42,8 +43,9 @@ app.use(express.static("public"));
 // Routes
 app.get("/", (req, res) => res.redirect("/docs"));
 app.use("/api/dagboek", stagedagboekRoutes);
+app.use("/api/gebruikers", gebruikerRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/profiel", gebruikerRoutes);
+app.use("/api/profiel", profielRoutes);
 app.use("/api/klassen", klasgroepRoutes);
 app.use("/api/taken", taakRoutes);
 app.use("/api/inzendingen", inzendingenRoutes);
