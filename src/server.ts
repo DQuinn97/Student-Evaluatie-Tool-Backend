@@ -9,7 +9,7 @@ import swaggerUi from "swagger-ui-express";
 import { specs } from "./swagger";
 import stagedagboekRoutes from "./routes/stagedagboekRoutes";
 import authRoutes from "./routes/authRoutes";
-import gebruikerRoutes from "./routes/profielRoutes";
+import gebruikerRoutes from "./routes/gebruikerRoutes";
 import klasgroepRoutes from "./routes/klasgroepRoutes";
 import taakRoutes from "./routes/taakRoutes";
 import inzendingenRoutes from "./routes/inzendingRoutes";

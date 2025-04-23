@@ -8,6 +8,7 @@ export const getGebruikers = async (req: Request, res: Response) => {
   try {
     // Haal alle gebruikers op
     const gebruikers = await Gebruiker.find().select("-wachtwoord");
+    console.log(gebruikers);
 
     // Success response met gebruikers; 200 - OK
     res.status(200).json(gebruikers);

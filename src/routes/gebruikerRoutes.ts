@@ -1,13 +1,9 @@
 import express from "express";
 import {
-  setGebruikerData,
-  setGebruikerFoto,
-  getAuthGebruiker,
   getGebruikerById,
   getGebruikers,
 } from "../controllers/gebruikerController";
 import { isAuth, isDocent } from "../middleware/authMiddleware";
-import { foto, foto_upload } from "../middleware/multerMiddleware";
 import { getInzendingenPerStudent } from "../controllers/inzendingController";
 
 const router = express.Router();
