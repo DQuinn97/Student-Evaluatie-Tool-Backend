@@ -59,13 +59,14 @@ export const register = async (req: Request, res: Response) => {
 
 export const authorize = async (req: Request, res: Response) => {
   try {
+    // Check of email, wachtwoord, code_challenge en redirect_url in req.body zijn meegegeven
     const { email, wachtwoord, code_challenge, redirect_url } = req.body;
-
     if (!email || !wachtwoord || !code_challenge || !redirect_url)
       throw new BadRequestError(
         "'email', 'wachtwoord', 'redirect_url' en 'code_challenge' verplicht"
       );
 
+    // Check of gebruiker met deze email bestaat
     const gebruiker = await Gebruiker.findOne({ email });
     if (!gebruiker) throw new UnauthorizedError("Geen toegang tot deze pagina");
 
@@ -76,6 +77,7 @@ export const authorize = async (req: Request, res: Response) => {
     // Check of JWT_SECRET is geconfigureerd
     if (!process.env.JWT_SECRET) throw new Error("Internal server error");
 
+    // Genereer een JWT token
     const token = jwt.sign(
       {
         id: gebruiker._id,
@@ -95,10 +97,11 @@ export const authorize = async (req: Request, res: Response) => {
 };
 export const login = async (req: Request, res: Response) => {
   try {
-    // Check of parameters kloppen
+    // Check of code_verifier in req.body en token in req.query zijn meegegeven
     const { token } = req.query;
     const { code_verifier } = req.body;
-    if (!token) throw new UnauthorizedError("Geen toegang tot deze pagina");
+    if (!token || !code_verifier)
+      throw new UnauthorizedError("Geen toegang tot deze pagina");
 
     // Check of JWT_SECRET is geconfigureerd
     if (!process.env.JWT_SECRET) throw new Error("Internal server error");
