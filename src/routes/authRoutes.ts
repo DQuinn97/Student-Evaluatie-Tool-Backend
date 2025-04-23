@@ -42,10 +42,10 @@ const router = express.Router();
  *       '400':
  *         $ref: '#/components/responses/BadRequest_MissingField'
  *
- * /auth/login:
+ * /auth/authorize:
  *   post:
- *     summary: Log een gebruiker in
- *     operationId: login
+ *     summary: Authoriseer een gebruiker voor login
+ *     operationId: authorize
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -60,6 +60,48 @@ const router = express.Router();
  *               wachtwoord:
  *                 type: string
  *                 example: ditiseenWachtwoord123!
+ *               code_challenge:
+ *                 type: string
+ *                 example: abcde12345
+ *               redirect_url:
+ *                 type: string
+ *                 example: '/login'
+ *     responses:
+ *       '200':
+ *         description: Gebruiker succesvol ingelogd
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 redirect:
+ *                   type: string
+ *                   example: '/login/abcdefg.hijklmnop.qrstuvw.xyz'
+ *       '400':
+ *         $ref: '#/components/responses/BadRequest_MissingField'
+ *
+ * /auth/login:
+ *   post:
+ *     summary: Log een gebruiker in
+ *     operationId: login
+ *     tags: [Auth]
+ *     parameters:
+ *       - in: query
+ *         name: token
+ *         schema:
+ *           type: string
+ *         description: authenticatie token
+ *         required: true
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               code_verifier:
+ *                 type: string
+ *                 example: xyz-abcde12345
  *     responses:
  *       '200':
  *         description: Gebruiker succesvol ingelogd
@@ -71,16 +113,15 @@ const router = express.Router();
  *                 message:
  *                   type: string
  *                   example: Gebruiker succesvol ingelogd
- *         headers:
- *           Set-Cookie:
- *             schema:
- *               type: string
- *               example: token=abcde12345; Path=/; HttpOnly
+ *                 token:
+ *                   type: string
+ *                   example: abcdefg.hijklmnop.qrstuvw.xyz
  *       '400':
  *         $ref: '#/components/responses/BadRequest_MissingField'
  *
  * /auth/logout:
  *   post:
+ *     deprecated: true
  *     summary: Log de huidige gebruiker uit
  *     operationId: logout
  *     tags: [Auth]
@@ -95,13 +136,6 @@ const router = express.Router();
  *                 message:
  *                   type: string
  *                   example: Wachtwoord succesvol uitgelogd
- *         headers:
- *           Set-Cookie:
- *             schema:
- *               type: string
- *               example: token=; Path=/; HttpOnly
- *       '400':
- *         $ref: '#/components/responses/BadRequest_MissingField'
  *
  * /auth/reset/request:
  *   post:
@@ -174,7 +208,7 @@ const router = express.Router();
  * /auth/test:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Test of de gebruiker kan inloggen
  *     description: >
  *       Test of de gebruiker kan inloggen door een auth-only route aan te spreken; <br>

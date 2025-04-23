@@ -24,7 +24,11 @@ export const isAuth = async (
 
     // Check of token juist is
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string);
-    if (typeof decodedToken === "string" || !("email" in decodedToken))
+    if (
+      typeof decodedToken === "string" ||
+      !("subject" in decodedToken) ||
+      !(decodedToken.subject === "authorize")
+    )
       throw new UnauthorizedError("Geen toegang tot deze pagina");
 
     // Check of gebruiker uit token bestaat

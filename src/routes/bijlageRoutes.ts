@@ -13,7 +13,7 @@ const router = express.Router();
  * /bijlagen:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Vraag alle bijlagen op
  *     operationId: getBijlagen
  *     tags: [Bijlagen]
@@ -31,7 +31,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/Unauthorized'
  *   post:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Voeg een bijlage toe (deze wordt wel terug verwijderd als ze niet word gebruikt)"
  *     operationId: addBijlagen
  *     tags: [Bijlagen]
@@ -53,7 +53,7 @@ const router = express.Router();
  * /bijlagen/{bijlageId}:
  *   delete:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Verwijder een bijlage"
  *     operationId: deleteBijlage
  *     tags: [Bijlagen]

@@ -14,7 +14,7 @@ const router = express.Router();
  * /inzendingen:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Krijg alle inzendingen van de huidig ingelogde gebruiker
  *     operationId: getInzendingen
  *     tags: [Inzendingen]
@@ -32,7 +32,7 @@ const router = express.Router();
  * /inzendingen/{inzendingId}:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Vraag een inzending op
  *     operationId: getInzending
  *     tags: [Inzendingen]
@@ -57,7 +57,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/PageNotFound'
  *   patch:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Update een inzending
  *     operationId: updateInzending
  *     tags: [Inzendingen]
@@ -111,7 +111,7 @@ const router = express.Router();
  * /inzendingen/{inzendingId}/gradering:
  *   post:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Voeg een gradering toe aan een inzending"
  *     operationId: addGradering
  *     tags: [Inzendingen, Graderingen]

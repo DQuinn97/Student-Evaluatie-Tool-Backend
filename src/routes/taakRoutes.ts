@@ -25,7 +25,7 @@ const router = express.Router();
  * "/taken":
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Vraag alle taken op"
  *     operationId: getAlleTaken
  *     tags: [Taken]
@@ -45,7 +45,7 @@ const router = express.Router();
  * "/taken/{taakId}":
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Vraag een taak op
  *     operationId: getTaak
  *     tags: [Taken]
@@ -70,7 +70,7 @@ const router = express.Router();
  *        $ref: '#/components/responses/PageNotFound'
  *   patch:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Wijzig een taak"
  *     operationId: updateTaak
  *     tags: [Taken]
@@ -139,7 +139,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/PageNotFound'
  *   delete:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Verwijder een taak"
  *     operationId: deleteTaak
  *     tags: [Taken]
@@ -167,7 +167,7 @@ const router = express.Router();
  * "/taken/{taakId}/score":
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Vraag de gemiddelde score van een taak op
  *     operationId: getAverage
  *     tags: [Taken]
@@ -195,7 +195,7 @@ const router = express.Router();
  * "/taken/{taakId}/dupliceer":
  *   post:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Dupliceer een taak"
  *     operationId: dupliceerTaak
  *     tags: [Taken]
@@ -234,7 +234,7 @@ const router = express.Router();
  * "/taken/{taakId}/inzendingen":
  *   post:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Voeg een inzending toe aan de taak
  *     operationId: addInzending
  *     tags: [Taken, Inzendingen]
@@ -287,7 +287,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/BadRequest_Duplicate'
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Vraag alle inzendingen van een taak op"
  *     operationId: getInzendingenPerTaak
  *     tags: [Taken, Inzendingen]

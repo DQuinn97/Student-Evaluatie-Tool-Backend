@@ -27,7 +27,7 @@ const router = express.Router();
  * /klassen:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Vraag alle klasgroepen op
  *     operationId: getKlasgroepen
  *     tags: [Klassen]
@@ -45,7 +45,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/Unauthorized'
  *   post:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Maak een nieuwe klasgroep aan"
  *     operationId: addKlasgroep
  *     tags: [Klassen]
@@ -81,7 +81,7 @@ const router = express.Router();
  * /klassen/{klasgroepId}:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Vraag een klasgroep op
  *     operationId: getKlasgroep
  *     tags: [Klassen]
@@ -108,7 +108,7 @@ const router = express.Router();
  * /klassen/{klasgroepId}/dump:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] De totale data dump van een klasgroep"
  *     operationId: getKlasgroepDump
  *     tags: [Klassen, Dump]
@@ -135,7 +135,7 @@ const router = express.Router();
  * /klassen/{klasgroepId}/studenten:
  *   post:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Voeg een student toe aan een klasgroep"
  *     operationId: addStudentToKlasgroep
  *     tags: [Klassen]
@@ -171,7 +171,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/PageNotFound'
  *   patch:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Verwijder een student uit een klasgroep"
  *     operationId: removeStudentFromKlasgroep
  *     tags: [Klassen]
@@ -209,7 +209,7 @@ const router = express.Router();
  * /klassen/{klasgroepId}/studenten/{studentId}/dump:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: De totale data dump van een student in een klasgroep
  *     operationId: getGebruikerDump
  *     tags: [Klassen, Profiel, Dump]
@@ -242,7 +242,7 @@ const router = express.Router();
  * /klassen/{klasgroepId}/vakken:
  *   post:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Voeg een vak toe aan een klasgroep"
  *     operationId: addVakToKlasgroep
  *     tags: [Klassen]
@@ -280,7 +280,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/BadRequest_Duplicate'
  *   patch:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Verwijder een vak uit een klasgroep"
  *     operationId: removeVakFromKlasgroep
  *     tags: [Klassen]
@@ -318,7 +318,7 @@ const router = express.Router();
  * /klassen/{klasgroepId}/taken:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Vraag alle taken van een klasgroep
  *     operationId: getTaken
  *     tags: [Klassen, Taken]
@@ -345,7 +345,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/PageNotFound'
  *   post:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Voeg een taak toe aan een klasgroep"
  *     operationId: addTaak
  *     tags: [Klassen, Taken]
@@ -416,7 +416,7 @@ const router = express.Router();
  * /klasgroepen/{klasgroepId}/dagboek:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Vraag het stagedagboek van de ingelogde gebruiker op voor deze klasgroep
  *     operationId: getAuthDagboek
  *     tags: [Klassen, Dagboek]
@@ -441,7 +441,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/PageNotFound'
  *   post:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Maak een stagedagboek aan voor de ingelogde gebruiker op deze klasgroep
  *     operationId: createAuthDagboek
  *     tags: [Klassen, Dagboek]

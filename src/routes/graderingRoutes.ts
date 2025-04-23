@@ -11,7 +11,7 @@ const router = express.Router();
  * /graderingen/{graderingId}:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Vraag een gradering op
  *     operationId: getGradering
  *     tags: [Graderingen]
@@ -38,7 +38,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/PageNotFound'
  *   patch:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Update een gradering"
  *     operationId: updateGradering
  *     tags: [Graderingen]

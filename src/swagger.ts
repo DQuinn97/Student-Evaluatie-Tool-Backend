@@ -5,7 +5,7 @@ const options = {
     openapi: "3.0.0",
     info: {
       title: "Student Evaluatie Tool API",
-      version: "1.2.0",
+      version: "1.3.0",
       description:
         "API documentatie voor de Student Evaluatie Tool, ontworpen voor Syntra AB - 2025",
     },
@@ -32,10 +32,10 @@ const options = {
         ],
     components: {
       securitySchemes: {
-        cookieAuth: {
-          type: "apiKey",
-          in: "cookie",
-          name: "token",
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
         },
       },
       schemas: {

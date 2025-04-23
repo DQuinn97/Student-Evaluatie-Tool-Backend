@@ -81,7 +81,7 @@ export const authorize = async (req: Request, res: Response) => {
         id: gebruiker._id,
         email: gebruiker.email,
         code_challenge,
-        subject: "authorize",
+        subject: "verify",
       },
       process.env.JWT_SECRET,
       { expiresIn: "15m" }
@@ -111,7 +111,7 @@ export const login = async (req: Request, res: Response) => {
     if (
       typeof decodedToken === "string" ||
       !("subject" in decodedToken) ||
-      !(decodedToken.subject === "authorize")
+      !(decodedToken.subject === "verify")
     )
       throw new UnauthorizedError("Geen toegang tot deze pagina");
 
@@ -132,6 +132,7 @@ export const login = async (req: Request, res: Response) => {
       {
         id: gebruiker._id,
         email: gebruiker.email,
+        subject: "authorize",
       },
       process.env.JWT_SECRET,
       { expiresIn: "15m" }
@@ -146,18 +147,10 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
+// DEPRECATED: doet niets meer in effect, maar kan nog altijd aangeroepen worden om front-end errors te voorkomen
 export const logout = async (req: Request, res: Response) => {
   try {
-    // Verwijder de JWT token cookie
-    res.cookie("token", "", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : true,
-      partitioned: true,
-      maxAge: 10,
-    });
-
-    // Verstuut een success response met verwijderde cookie; 200 - OK
+    // Verstuur een success response met verwijderde cookie; 200 - OK
     res.status(200).json({ message: "Gebruiker succesvol uitgelogd" });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);

@@ -12,7 +12,7 @@ const router = express.Router();
  * /gebruikers:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Geef alle gebruikers weer"
  *     operationId: getAuthGebruiker
  *     tags: [Gebruikers]
@@ -30,7 +30,7 @@ const router = express.Router();
  * /gebruikers/{gebruikerId}:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Vraag een gebruiker op (duplicate)"
  *     operationId: getGebruikerById
  *     tags: [Gebruikers, Profiel]
@@ -57,7 +57,7 @@ const router = express.Router();
  * /gebruikers/{gebruikerId}/inzendingen:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: "[Docent] Vraag alle inzendingen van een gebruiker op (duplicate)"
  *     operationId: getInzendingenPerStudent
  *     tags: [Gebruikers, Inzendingen]

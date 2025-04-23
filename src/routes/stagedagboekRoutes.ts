@@ -22,7 +22,7 @@ const router = express.Router();
  * /dagboek/{dagboekId}:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Vraag een stagedagboek op
  *     operationId: getDagboek
  *     tags: [Dagboek]
@@ -47,7 +47,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/PageNotFound'
  *   delete:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Verwijder een stagedagboek
  *     operationId: deleteDagboek
  *     tags: [Dagboek]
@@ -75,7 +75,7 @@ const router = express.Router();
  * /dagboek/{klasgroepId}/{studentId}:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Vraag een stagedagboek op
  *     operationId: getDagboek2
  *     tags: [Dagboek]
@@ -108,7 +108,7 @@ const router = express.Router();
  * /dagboek/dag/{dagId}:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Vraag een stagedag op
  *     operationId: getDag
  *     tags: [Dagboek]
@@ -133,7 +133,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/PageNotFound'
  *   patch:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Update een stagedag
  *     operationId: updateDag
  *     tags: [Dagboek]
@@ -183,7 +183,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/PageNotFound'
  *   delete:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Verwijder een stagedag
  *     operationId: deleteDag
  *     tags: [Dagboek]
@@ -211,7 +211,7 @@ const router = express.Router();
  * /dagboek/verslag/{verslagId}:
  *   get:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Vraag een stageverslag op
  *     operationId: getVerslag
  *     tags: [Dagboek]
@@ -236,7 +236,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/PageNotFound'
  *   patch:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Update een stageverslag
  *     operationId: updateVerslag
  *     tags: [Dagboek]
@@ -289,7 +289,7 @@ const router = express.Router();
  *         $ref: '#/components/responses/PageNotFound'
  *   delete:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Verwijder een stageverslag
  *     operationId: deleteVerslag
  *     tags: [Dagboek]
@@ -317,7 +317,7 @@ const router = express.Router();
  * /dagboek/{dagboekId}/dag:
  *   post:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Maak een nieuwe stagedag
  *     operationId: addDag
  *     tags: [Dagboek]
@@ -370,7 +370,7 @@ const router = express.Router();
  * /dagboek/{dagboekId}/verslag:
  *   post:
  *     security:
- *       - cookieAuth: []
+ *       - bearerAuth: []
  *     summary: Maak een nieuw stageverslag
  *     operationId: addVerslag
  *     tags: [Dagboek]
