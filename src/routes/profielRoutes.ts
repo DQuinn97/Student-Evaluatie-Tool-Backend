@@ -1,21 +1,24 @@
 import express from "express";
 import {
+  setGebruikerData,
+  setGebruikerFoto,
+  getAuthGebruiker,
   getGebruikerById,
-  getGebruikers,
 } from "../controllers/gebruikerController";
 import { isAuth, isDocent } from "../middleware/authMiddleware";
+import { foto, foto_upload } from "../middleware/multerMiddleware";
 import { getInzendingenPerStudent } from "../controllers/inzendingController";
 
 const router = express.Router();
 /**
  * @swagger
- * /gebruikers:
+ * /profiel:
  *   get:
  *     security:
  *       - cookieAuth: []
- *     summary: "[Docent] Geef alle gebruikers weer"
+ *     summary: Krijg de data van de huidig ingelogde gebruiker
  *     operationId: getAuthGebruiker
- *     tags: [Gebruikers]
+ *     tags: [Profiel]
  *     responses:
  *       '200':
  *         content:
@@ -24,16 +27,73 @@ const router = express.Router();
  *                 $ref: '#/components/schemas/Gebruiker'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
- *       '403':
+ *
+ * /profiel/data:
+ *   post:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Update een gebruiker zijn/haar naam, achternaam en/of tel.
+ *     operationId: setGebruikerData
+ *     tags: [Profiel]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               naam:
+ *                 type: string
+ *                 example: John
+ *               achternaam:
+ *                 type: string
+ *                 example: Doe
+ *               gsm:
+ *                 type: string
+ *                 example: 0412345678
+ *     responses:
+ *       '200':
+ *         description: Gebruiker aangepast
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Gebruiker'
+ *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *
- * /gebruikers/{gebruikerId}:
+ * /profiel/foto:
+ *   post:
+ *     security:
+ *       - cookieAuth: []
+ *     summary: Update een gebruiker zijn/haar profielfoto
+ *     operationId: setGebruikerFoto
+ *     tags: [Profiel]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         image/*:
+ *             schema:
+ *                 type: file
+ *                 format: binary
+ *     responses:
+ *       '200':
+ *         description: Profielfoto aangepast
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Gebruiker'
+ *       '401':
+ *         $ref: '#/components/responses/Unauthorized'
+ *       '415':
+ *         $ref: '#/components/responses/BadRequest_FileUpload'
+ *
+ * /profiel/{gebruikerId}:
  *   get:
  *     security:
  *       - cookieAuth: []
- *     summary: "[Docent] Vraag een gebruiker op (duplicate)"
+ *     summary: "[Docent] Vraag een gebruiker op"
  *     operationId: getGebruikerById
- *     tags: [Gebruikers, Profiel]
+ *     tags: [Profiel]
  *     parameters:
  *       - name: gebruikerId
  *         in: path
@@ -54,13 +114,13 @@ const router = express.Router();
  *       '404':
  *         $ref: '#/components/responses/PageNotFound'
  *
- * /gebruikers/{gebruikerId}/inzendingen:
+ * /profiel/{gebruikerId}/inzendingen:
  *   get:
  *     security:
  *       - cookieAuth: []
- *     summary: "[Docent] Vraag alle inzendingen van een gebruiker op (duplicate)"
+ *     summary: "[Docent] Vraag alle inzendingen van een gebruiker op"
  *     operationId: getInzendingenPerStudent
- *     tags: [Gebruikers, Inzendingen]
+ *     tags: [Profiel, Inzendingen]
  *     parameters:
  *       - name: gebruikerId
  *         in: path
@@ -84,7 +144,9 @@ const router = express.Router();
  *         $ref: '#/components/responses/PageNotFound'
  */
 router
-  .get("/", isAuth, isDocent, getGebruikers)
+  .get("/", isAuth, getAuthGebruiker)
+  .post("/data", isAuth, setGebruikerData)
+  .post("/foto", isAuth, foto.single("foto"), foto_upload, setGebruikerFoto)
   .get("/:gebruikerId", isAuth, isDocent, getGebruikerById)
   .get("/:gebruikedId/inzendingen", isAuth, isDocent, getInzendingenPerStudent);
 

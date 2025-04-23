@@ -806,8 +806,9 @@ const options = {
       },
       {
         name: "Profiel",
-        description: "Gebruiker endpoints",
+        description: "Profiel endpoints",
       },
+      { name: "Gebruikers", description: "Gebruikers endpoints" },
 
       {
         name: "Dagboek",
