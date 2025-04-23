@@ -14,14 +14,16 @@ const router = express.Router();
  *     security:
  *       - bearerAuth: []
  *     summary: "[Docent] Geef alle gebruikers weer"
- *     operationId: getAuthGebruiker
+ *     operationId: getGebruikers
  *     tags: [Gebruikers]
  *     responses:
  *       '200':
  *         content:
  *           application/json:
  *             schema:
- *                 $ref: '#/components/schemas/Gebruiker'
+ *                 type: array
+ *                 items:
+ *                   $ref: '#/components/schemas/Gebruiker'
  *       '401':
  *         $ref: '#/components/responses/Unauthorized'
  *       '403':
