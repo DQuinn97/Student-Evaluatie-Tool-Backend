@@ -20,7 +20,7 @@ export const getDagboek = async (req: Request, res: Response) => {
       .lean()
       .populate(["stageverslag", "stagedagen"])
       .populate("klasgroep", "_id naam beginjaar eindjaar")
-      .populate("student", "-wachtwoord");
+      .populate("student", "-wachtwoord -resetToken -challenge");
     if (!dagboek) throw new NotFoundError("Dagboek niet gevonden");
 
     // Success response met dagboek; 200 - OK
@@ -41,7 +41,7 @@ export const getDagboek2 = async (req: Request, res: Response) => {
       .lean()
       .populate(["stageverslag", "stagedagen"])
       .populate("klasgroep", "_id naam beginjaar eindjaar")
-      .populate("student", "-wachtwoord");
+      .populate("student", "-wachtwoord -resetToken -challenge");
     if (!dagboek) throw new NotFoundError("Dagboek niet gevonden");
 
     // Success response met dagboek; 200 - OK
@@ -64,7 +64,7 @@ export const getAuthDagboek = async (req: Request, res: Response) => {
       .lean()
       .populate(["stageverslag", "stagedagen"])
       .populate("klasgroep", "_id naam beginjaar eindjaar")
-      .populate("student", "-wachtwoord");
+      .populate("student", "-wachtwoord -resetToken -challenge");
 
     if (!dagboek) throw new NotFoundError("Dagboek niet gevonden");
 

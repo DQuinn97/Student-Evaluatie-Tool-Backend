@@ -6,6 +6,7 @@ import {
   resetWachtwoordRequest,
   resetWachtwoord,
   authTest,
+  authorize,
 } from "../controllers/authController";
 import { isAuth } from "../middleware/authMiddleware";
 
@@ -198,6 +199,7 @@ const router = express.Router();
 router
   .post("/register", register)
   .post("/login", login)
+  .post("/authorize", authorize)
   .post("/logout", logout)
   .post("/reset/request", resetWachtwoordRequest)
   .post("/reset", resetWachtwoord)

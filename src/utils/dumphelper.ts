@@ -124,7 +124,7 @@ export const gebruikerDump = async (
 ): Promise<GebruikerDump> => {
   // check of gebruiker bestaat
   const student = await Gebruiker.findById(studentId).select(
-    "-wachtwoord -createdAt -updatedAt -__v"
+    "-wachtwoord -createdAt -updatedAt -__v -resetToken -challenge"
   );
 
   if (!student) throw new NotFoundError("Gebruiker niet gevonden");

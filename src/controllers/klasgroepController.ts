@@ -20,7 +20,7 @@ export const getKlasgroepen = async (req: Request, res: Response) => {
           .select("-studenten")
           .populate(vakPath)
       : await Klasgroep.find().populate([
-          { path: "studenten", select: "-wachtwoord" },
+          { path: "studenten", select: "-wachtwoord -resetToken -challenge" },
           vakPath2,
         ]);
 
@@ -38,7 +38,7 @@ export const getKlasgroep = async (req: Request, res: Response) => {
     // Check of klasgroep bestaat
     const gebruiker = req.gebruiker;
     const klasgroep = await Klasgroep.findById(klasgroepId)
-      .populate([{ path: "studenten", select: "-wachtwoord" }, vakPath2])
+      .populate([{ path: "studenten", select: "-wachtwoord -resetToken -challenge" }, vakPath2])
       .select(gebruiker.isDocent ? "*" : "-studenten");
     if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
 
@@ -111,7 +111,7 @@ export const removeStudentFromKlasgroep = async (
 
     // Check of klasgroep bestaat
     const klasgroep = await Klasgroep.findById(klasgroepId).populate([
-      { path: "studenten", select: "-wachtwoord" },
+      { path: "studenten", select: "-wachtwoord -resetToken -challenge" },
       vakPath,
     ]);
     if (!klasgroep) throw new NotFoundError("Klasgroep niet gevonden");
@@ -136,7 +136,7 @@ export const removeStudentFromKlasgroep = async (
     // Success response met klasgroep; 204 - No Content
     const response = await Klasgroep.populate(klasgroep, [
       vakPath2,
-      { path: "studenten", select: "-wachtwoord" },
+      { path: "studenten", select: "-wachtwoord -resetToken -challenge" },
     ]);
     res.status(204).json(response);
   } catch (error: unknown) {

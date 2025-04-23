@@ -10,6 +10,7 @@ import {
   UnauthorizedError,
 } from "../utils/errors";
 import { hashWachtwoord, mailData } from "../utils/helpers";
+import { verifyChallenge } from "pkce-challenge";
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -56,15 +57,15 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const authorize = async (req: Request, res: Response) => {
   try {
-    // Check of email en wachtwoord zijn meegegeven in req.body
-    const { email, wachtwoord } = req.body;
-    if (!email || !wachtwoord) {
-      throw new BadRequestError("'email' en 'wachtwoord' verplicht");
-    }
+    const { email, wachtwoord, code_challenge, redirect_url } = req.body;
 
-    // Check of gebruiker met deze email bestaat
+    if (!email || !wachtwoord || !code_challenge || !redirect_url)
+      throw new BadRequestError(
+        "'email', 'wachtwoord', 'redirect_url' en 'code_challenge' verplicht"
+      );
+
     const gebruiker = await Gebruiker.findOne({ email });
     if (!gebruiker) throw new UnauthorizedError("Geen toegang tot deze pagina");
 
@@ -75,24 +76,69 @@ export const login = async (req: Request, res: Response) => {
     // Check of JWT_SECRET is geconfigureerd
     if (!process.env.JWT_SECRET) throw new Error("Internal server error");
 
-    // Genereer JWT token
     const token = jwt.sign(
       {
         id: gebruiker._id,
         email: gebruiker.email,
+        code_challenge,
+        subject: "authorize",
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "15m" }
     );
 
-    // Steek token in cookie om met response te verzenden
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : true,
-      partitioned: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
+    // gebruiker.challenge = code_challenge;
+    // await gebruiker.save();
+
+    res.redirect(`${redirect_url}?token=${token}`);
+  } catch (error: unknown) {
+    ErrorHandler(error, req, res);
+  }
+};
+export const login = async (req: Request, res: Response) => {
+  try {
+    // Check of parameters kloppen
+    const { token, redirect_url } = req.query;
+    const { code_verifier } = req.body;
+    if (!token || !redirect_url)
+      throw new UnauthorizedError("Geen toegang tot deze pagina");
+
+    // Check of JWT_SECRET is geconfigureerd
+    if (!process.env.JWT_SECRET) throw new Error("Internal server error");
+
+    // Check of token geldig is
+    const decodedToken = jwt.verify(
+      token as string,
+      process.env.JWT_SECRET as string
+    );
+    if (
+      typeof decodedToken === "string" ||
+      !("subject" in decodedToken) ||
+      !(decodedToken.subject === "authorize")
+    )
+      throw new UnauthorizedError("Geen toegang tot deze pagina");
+
+    // Valideer de PKCE challenge
+    const validateChallenge = await verifyChallenge(
+      code_verifier,
+      decodedToken.code_challenge
+    );
+    if (!validateChallenge)
+      throw new UnauthorizedError("Geen toegang tot deze pagina");
+
+    // Check of gebruiker uit token juist is
+    const gebruiker = await Gebruiker.findById(decodedToken.id);
+    if (!gebruiker) throw new UnauthorizedError("Geen toegang tot deze pagina");
+
+    // Genereer een JWT token
+    const jwtToken = jwt.sign(
+      {
+        id: gebruiker._id,
+        email: gebruiker.email,
+      },
+      process.env.SECRET as string,
+      { expiresIn: "1h" }
+    );
 
     // Verstuur een success response met token en cookie; 200 - OK
     res.status(200).json({ message: "Gebruiker succesvol ingelogd" });

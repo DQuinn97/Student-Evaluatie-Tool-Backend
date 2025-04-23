@@ -28,11 +28,11 @@ export const getTaken = async (req: Request, res: Response) => {
         populate: [
           {
             path: "gradering",
-            populate: { path: "docent", select: "-wachtwoord" },
+            populate: { path: "docent", select: "-wachtwoord -resetToken -challenge" },
           },
           {
             path: "student",
-            select: "-wachtwoord",
+            select: "-wachtwoord -resetToken -challenge",
           },
         ],
         match: gebruiker.isDocent ? {} : { student: gebruiker._id },
@@ -59,11 +59,11 @@ export const getAlleTaken = async (req: Request, res: Response) => {
         populate: [
           {
             path: "gradering",
-            populate: { path: "docent", select: "-wachtwoord" },
+            populate: { path: "docent", select: "-wachtwoord -resetToken -challenge" },
           },
           {
             path: "student",
-            select: "-wachtwoord",
+            select: "-wachtwoord -resetToken -challenge",
           },
         ],
       },
@@ -92,11 +92,11 @@ export const getTaak = async (req: Request, res: Response) => {
         populate: [
           {
             path: "gradering",
-            populate: { path: "docent", select: "-wachtwoord" },
+            populate: { path: "docent", select: "-wachtwoord -resetToken -challenge" },
           },
           {
             path: "student",
-            select: "-wachtwoord",
+            select: "-wachtwoord -resetToken -challenge",
           },
         ],
         match: gebruiker.isDocent ? {} : { student: gebruiker._id },

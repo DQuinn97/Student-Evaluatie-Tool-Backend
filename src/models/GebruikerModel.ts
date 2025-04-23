@@ -41,6 +41,10 @@ const gebruikerSchema = new mongoose.Schema(
       type: String,
       nullable: true,
     },
+    challenge: {
+      type: String,
+      nullable: true,
+    },
   },
   {
     timestamps: true,

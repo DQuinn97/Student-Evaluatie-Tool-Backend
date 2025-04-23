@@ -8,7 +8,9 @@ export const getGebruikerById = async (req: Request, res: Response) => {
   try {
     // Check of gebruiker bestaat
     const { gebruikerId: id } = req.params;
-    const gebruiker = await Gebruiker.findById(id).select("-wachtwoord");
+    const gebruiker = await Gebruiker.findById(id).select(
+      "-wachtwoord -resetToken -challenge"
+    );
     if (!gebruiker) throw new NotFoundError("Gebruiker niet gevonden");
 
     // Success response met gebruiker; 200 - OK
@@ -21,7 +23,12 @@ export const getAuthGebruiker = async (req: Request, res: Response) => {
   try {
     // Transformeer de huidig ingelogde gebruiker data
     const gebruiker = req.gebruiker;
-    const response = { ...gebruiker.toJSON(), wachtwoord: undefined };
+    const response = {
+      ...gebruiker.toJSON(),
+      wachtwoord: undefined,
+      resetToken: undefined,
+      challenge: undefined,
+    };
 
     // Success response met gebruiker; 200 - OK
     res.status(200).json(response);
@@ -42,7 +49,12 @@ export const setGebruikerData = async (req: Request, res: Response) => {
     await gebruiker.save();
 
     // Transformeer de huidig ingelogde gebruiker data
-    const response = { ...gebruiker.toJSON(), wachtwoord: undefined };
+    const response = {
+      ...gebruiker.toJSON(),
+      wachtwoord: undefined,
+      resetToken: undefined,
+      challenge: undefined,
+    };
 
     // Success response met gebruiker; 200 - OK
     res.status(200).json(response);
@@ -69,7 +81,12 @@ export const setGebruikerFoto = async (req: Request, res: Response) => {
     await gebruiker.save();
 
     // Transformeer de huidig ingelogde gebruiker data
-    const response = { ...gebruiker.toJSON(), wachtwoord: undefined };
+    const response = {
+      ...gebruiker.toJSON(),
+      wachtwoord: undefined,
+      resetToken: undefined,
+      challenge: undefined,
+    };
 
     // Success response met gebruiker; 201 - Created
     res.status(201).json(response);
