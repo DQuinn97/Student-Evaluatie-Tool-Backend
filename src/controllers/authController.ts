@@ -87,10 +87,8 @@ export const authorize = async (req: Request, res: Response) => {
       { expiresIn: "15m" }
     );
 
-    // gebruiker.challenge = code_challenge;
-    // await gebruiker.save();
-
-    res.redirect(`${redirect_url}?token=${token}`);
+    // Stuur een success response met de token; 200 - OK
+    res.status(200).json({ redirect: `${redirect_url}/${token}` });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }
@@ -98,10 +96,9 @@ export const authorize = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     // Check of parameters kloppen
-    const { token, redirect_url } = req.query;
+    const { token } = req.query;
     const { code_verifier } = req.body;
-    if (!token || !redirect_url)
-      throw new UnauthorizedError("Geen toegang tot deze pagina");
+    if (!token) throw new UnauthorizedError("Geen toegang tot deze pagina");
 
     // Check of JWT_SECRET is geconfigureerd
     if (!process.env.JWT_SECRET) throw new Error("Internal server error");
@@ -136,12 +133,14 @@ export const login = async (req: Request, res: Response) => {
         id: gebruiker._id,
         email: gebruiker.email,
       },
-      process.env.SECRET as string,
-      { expiresIn: "1h" }
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" }
     );
 
-    // Verstuur een success response met token en cookie; 200 - OK
-    res.status(200).json({ message: "Gebruiker succesvol ingelogd" });
+    // Verstuur een success response met token; 200 - OK
+    res
+      .status(200)
+      .json({ message: "Gebruiker succesvol ingelogd", token: jwtToken });
   } catch (error: unknown) {
     ErrorHandler(error, req, res);
   }

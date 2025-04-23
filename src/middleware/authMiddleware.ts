@@ -52,6 +52,7 @@ export const isDocent = async (
 
     next();
   } catch (error: unknown) {
+    console.log(req);
     ErrorHandler(error, req, res);
   }
 };
