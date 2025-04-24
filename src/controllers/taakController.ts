@@ -28,7 +28,10 @@ export const getTaken = async (req: Request, res: Response) => {
         populate: [
           {
             path: "gradering",
-            populate: { path: "docent", select: "-wachtwoord -resetToken -challenge" },
+            populate: {
+              path: "docent",
+              select: "-wachtwoord -resetToken -challenge",
+            },
           },
           {
             path: "student",
@@ -59,7 +62,10 @@ export const getAlleTaken = async (req: Request, res: Response) => {
         populate: [
           {
             path: "gradering",
-            populate: { path: "docent", select: "-wachtwoord -resetToken -challenge" },
+            populate: {
+              path: "docent",
+              select: "-wachtwoord -resetToken -challenge",
+            },
           },
           {
             path: "student",
@@ -92,7 +98,10 @@ export const getTaak = async (req: Request, res: Response) => {
         populate: [
           {
             path: "gradering",
-            populate: { path: "docent", select: "-wachtwoord -resetToken -challenge" },
+            populate: {
+              path: "docent",
+              select: "-wachtwoord -resetToken -challenge",
+            },
           },
           {
             path: "student",
@@ -327,8 +336,10 @@ export const getAverage = async (req: Request, res: Response) => {
       .map((inzending) => inzending.gradering)
       .flat();
     const average =
-      graderingen.reduce((acc, gradering) => acc + gradering.score, 0) /
-      graderingen.length;
+      graderingen.reduce(
+        (acc, gradering) => acc + (gradering ? gradering.score : 0),
+        0
+      ) / graderingen.length;
 
     // Success response met gemiddelde; 200 - OK
     res.status(200).json(average);
