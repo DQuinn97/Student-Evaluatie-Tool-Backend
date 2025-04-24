@@ -333,6 +333,7 @@ export const getAverage = async (req: Request, res: Response) => {
 
     // Haal het gemiddelde van alle graderingen op alle inzendingen op
     const graderingen = taak.inzendingen
+      .filter((inzending) => inzending.gradering)
       .map((inzending) => inzending.gradering)
       .flat();
     const average =
